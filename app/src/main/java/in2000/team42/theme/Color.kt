@@ -1,4 +1,4 @@
-package in2000.team42.ui.theme
+package in2000.team42.theme
 
 import androidx.compose.ui.graphics.Color
 

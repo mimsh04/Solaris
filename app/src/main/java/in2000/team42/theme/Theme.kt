@@ -1,6 +1,5 @@
-package in2000.team42.ui.theme
+package in2000.team42.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

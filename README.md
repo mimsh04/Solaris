@@ -4,7 +4,7 @@ Noah Ilyas El Meziani Teigen
 
 Mats Herzeth Christiansen 
 
-Miski Mahamud Ali
+~~Miski Mahamud Ali~~
 
 Sindre Rolstad Denby
 

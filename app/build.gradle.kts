@@ -75,4 +75,7 @@ dependencies {
 
     // JSON serialization library, works with the Kotlin serialization plugin
     implementation(libs.kotlinx.serialization.json)
+
+    implementation("com.mapbox.maps:android:11.10.2")
+    implementation("com.mapbox.extension:maps-compose:11.10.2")
 }

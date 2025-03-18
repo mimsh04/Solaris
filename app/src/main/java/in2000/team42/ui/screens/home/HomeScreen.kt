@@ -1,15 +1,29 @@
 package in2000.team42.ui.screens.home
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import com.mapbox.geojson.Point
+import com.mapbox.maps.extension.compose.MapboxMap
+import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
 
 @Composable
 fun HomeScreen (navController: NavHostController, modifier: Modifier = Modifier, viewModel: HomeViewModel) {
     Column (modifier = modifier){
-        Text("Home screen")
+        MapboxMap(
+            Modifier.fillMaxSize(),
+            mapViewportState = rememberMapViewportState {
+                setCameraOptions {
+                    zoom(10.0)
+                    center(Point.fromLngLat(10.7522,59.9139))
+                    pitch(0.0)
+                    bearing(0.0)
+                }
+            },
+        )
     }
 
 }

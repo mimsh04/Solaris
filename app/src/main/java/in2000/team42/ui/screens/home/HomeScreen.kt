@@ -7,8 +7,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.mapbox.geojson.Point
+import com.mapbox.maps.Style
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
+import com.mapbox.maps.extension.compose.style.MapStyle
 
 @Composable
 fun HomeScreen (navController: NavHostController, modifier: Modifier = Modifier, viewModel: HomeViewModel) {
@@ -23,6 +25,9 @@ fun HomeScreen (navController: NavHostController, modifier: Modifier = Modifier,
                     bearing(0.0)
                 }
             },
+            style = {
+                MapStyle(Style.DARK)
+            }
         )
     }
 

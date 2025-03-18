@@ -8,7 +8,6 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -17,14 +16,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import in2000.team42.ui.screens.Screen
 
-
 @Composable
 fun NavBar (navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
     NavigationBar (
-        modifier = Modifier.height(86.dp)
+        modifier = Modifier.height(80.dp)
     ){
         NavigationBarItem(
             icon = { Icon(

@@ -14,6 +14,7 @@ import com.mapbox.maps.extension.compose.style.MapStyle
 
 @Composable
 fun HomeScreen (navController: NavHostController, modifier: Modifier = Modifier, viewModel: HomeViewModel) {
+    val addressAutofill = AddressAutofill.create(mapboxAccessToken)
     Column (modifier = modifier){
         MapboxMap(
             Modifier.fillMaxSize(),

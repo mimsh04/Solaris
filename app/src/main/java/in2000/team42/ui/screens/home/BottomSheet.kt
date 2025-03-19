@@ -31,8 +31,8 @@ fun BottomSheet(
                     .height(500.dp) // Maks høyde når ekspandert
                     .padding(16.dp)
             ) {
-                Text(text = "Dette er en bottom sheet!")
-                Text(text = "Dra meg opp eller ned.")
+                Text(text = "Bottom sheet")
+                Text(text = "Dra meg opp eller ned da vel !?")
             }
         },
         sheetPeekHeight = 120.dp, // Høyde når kollapset, rett over NavBar. Må gjøres mer synlig?

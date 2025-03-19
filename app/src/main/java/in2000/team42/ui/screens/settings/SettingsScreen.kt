@@ -21,6 +21,10 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,12 +40,13 @@ import androidx.navigation.NavHostController
 @Composable
 fun SettingsScreen (navController: NavHostController,modifier : Modifier = Modifier) {
 
-    var gridState= rememberLazyGridState()
+    val gridState= rememberLazyGridState()
 
     Column(
         modifier=Modifier.fillMaxSize()
     ){
         Spacer(modifier=Modifier.padding(16.dp))
+
         Box(
             modifier=Modifier
                 .fillMaxWidth()
@@ -98,7 +103,7 @@ fun SettingsScreen (navController: NavHostController,modifier : Modifier = Modif
                 LazyVerticalGrid(
                     columns=GridCells.Fixed(2),
                     state=gridState,
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -127,14 +132,119 @@ fun SettingsScreen (navController: NavHostController,modifier : Modifier = Modif
 
                     }
 
+
                 }
 
+                Text(
+                    text="Lurer du på noe?",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp,
+                    modifier = Modifier
+                        .padding(top = 25.dp,bottom=10.dp)
+                        .fillMaxWidth()
+                        .wrapContentWidth(Alignment.Start)
+                )
+
+                    LazyVerticalGrid(
+                        columns=GridCells.Fixed(2),
+                        state=gridState,
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+
+                    ) {
+                        items(2){index->
+                            val text= if(index==0) "Installasjons\nGuide" else "FAQs"
+
+                            val icon= when(index){
+                                0->Icons.Default.Build
+                                1->Icons.Default.Info
+                                else->Icons.Default.Edit
+                            }
+
+
+
+                            Box(
+                                modifier=Modifier
+                                    .fillMaxWidth()
+                                    .height(100.dp)
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(Color.White)
+                                    .border(1.dp,Color.Gray,RoundedCornerShape(10.dp))
+                            ){
+                                Row(
+                                    modifier=Modifier.fillMaxWidth()
+                                        .padding(top=30.dp,start=10.dp)
+                                ){
+                                    Icon(
+                                        imageVector = icon,
+                                        contentDescription = "ProfilePicture",
+                                        tint=Color.Black,
+                                        modifier=Modifier.size(30.dp)
+
+                                    )
+                                }
+                                Text(
+                                    text=text,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 20.sp,
+                                    modifier=Modifier.padding(start=50.dp,top=30.dp)
+                                )
+
+                            }
+
+                        }
+                    }
+
+                Text(
+                    text="Solar Panel Data",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp,
+                    modifier = Modifier
+                        .padding(top = 25.dp,bottom=10.dp)
+                        .fillMaxWidth()
+                        .wrapContentWidth(Alignment.Start)
+                )
+
+                Column(
+                    modifier=Modifier.fillMaxWidth()
+                ){
+                    Text(
+                        text="Energy Output",
+                        fontSize = 20.sp,
+                        modifier = Modifier
+                            .padding(top = 25.dp)
+                            .wrapContentWidth(Alignment.Start)
+                    )
+
+                    Text(
+                        text="Battery Status",
+                        fontSize = 20.sp,
+                        modifier = Modifier
+                            .padding(top=50.dp,bottom=10.dp)
+                            .wrapContentWidth(Alignment.Start)
+                    )
+
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             }
-
-
-
-
-
 
 
 
@@ -146,7 +256,14 @@ fun SettingsScreen (navController: NavHostController,modifier : Modifier = Modif
 
 
 
+
+
+
+
+
     }
+
+
 
 
 }

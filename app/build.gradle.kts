@@ -39,7 +39,7 @@ android {
         compose = true
     }
 }
-
+val ktor_version: String by project
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -78,4 +78,7 @@ dependencies {
 
     implementation("com.mapbox.maps:android:11.10.2")
     implementation("com.mapbox.extension:maps-compose:11.10.2")
+
+    implementation("io.ktor:ktor-client-core:$ktor_version")
+    implementation("io.ktor:ktor-client-cio:$ktor_version")
 }

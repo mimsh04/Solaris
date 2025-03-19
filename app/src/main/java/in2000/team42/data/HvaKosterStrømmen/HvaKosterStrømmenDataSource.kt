@@ -11,28 +11,36 @@ import io.ktor.client.request.get
 
 class HvaKosterStrømmenDataSource {
 
-    private val ktorHttpclient=HttpClient(CIO){
-        install(ContentNegotiation){
+    private val ktorHttpclient = HttpClient(CIO) {
+        install(ContentNegotiation) {
             json()
         }
     }
 
-//
-//    private val baseUrl="https://www.hvakosterstrommen.no/api/v1/prices/$year/$month-$day_$area.json"
-//
-//    suspend fun getStrømInfo(year:Int,month:Int,day:Int,area:String):List<HvaKosterStrømmen>{
-//
-//        return try{
-//            val response:List<HvaKosterStrømmen> = ktorHttpclient.get(baseUrl).body()
-//            response
-//        }
-//        catch(e:Exception) {
-//            Log.d("HVAKOSTERSTRØMMENDATASOURCE","Feil ved henting av strøminfo:${e.message}")
-//            emptyList()
-//        }
-//    }
 
 
+    suspend fun getStrømInfo(
+        year: Int.Companion,
+        month: Int.Companion,
+        day: Int.Companion,
+        area: String
+    ): List<HvaKosterStrømmen> {
+
+        val formatMonth="%02d".format(month)
+        val formatDay="%02d".format(day)
+
+
+        val baseUrl = "https://www.hvakosterstrommen.no/api/v1/prices/$year/$formatMonth-$formatDay"+ "_$area.json"
+
+
+        return try {
+            val response: List<HvaKosterStrømmen> = ktorHttpclient.get(baseUrl).body()
+            response
+        } catch (e: Exception) {
+            Log.d("HVAKOSTERSTRØMMENDATASOURCE", "Feil ved henting av strøminfo:${e.message}")
+            emptyList()
+        }
+    }
 
 
 }

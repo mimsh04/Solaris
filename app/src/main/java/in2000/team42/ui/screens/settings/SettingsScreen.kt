@@ -91,7 +91,7 @@ fun SettingsScreen (navController: NavHostController,modifier : Modifier = Modif
 
             Column{
                 Text(
-                    text="Anbefalte produkter",
+                    text="Anbefalte Produkter",
                     fontWeight = FontWeight.Bold,
                     fontSize = 30.sp,
                     modifier = Modifier

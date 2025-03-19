@@ -12,4 +12,14 @@ class PgvisDatasource {
         }
     }
 
+    /**
+     * Hent daglig radiasjon for en gitt måned
+     *
+     * @param lat Latitude
+     * @param lon Longitude
+     * @param month Måned (1 - for januar, 12 - for desember, 0 for alle)
+     */
+    suspend fun getDailyRadiation(lat: Float, lon: Float, month: Int) {
+
+    }
 }

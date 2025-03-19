@@ -23,6 +23,7 @@ fun BottomSheet(
     val scaffoldState = rememberBottomSheetScaffoldState()
 
     BottomSheetScaffold(
+        modifier = modifier,
         scaffoldState = scaffoldState,
         sheetContent = {
             Column(
@@ -36,14 +37,7 @@ fun BottomSheet(
             }
         },
         sheetPeekHeight = 120.dp, // Høyde når kollapset, rett over NavBar. Må gjøres mer synlig?
-        modifier = modifier.fillMaxSize()
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            content()
-        }
+    ) {
+        content()
     }
 }

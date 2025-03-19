@@ -36,10 +36,8 @@ class MainActivity : ComponentActivity() {
                     ) { innerPadding ->
                     NavHost(navController = navController, startDestination = Screen.Home.route) {
                         composable(Screen.Home.route){
-                            BottomSheet(
-                                content = {
-                                    HomeScreen(navController = navController, viewModel = viewModel() )
-                                }
+                            HomeScreen(navController, viewModel = viewModel(), modifier = Modifier
+                                .padding(innerPadding)
                             )
                         }
                         composable(Screen.Settings.route) {

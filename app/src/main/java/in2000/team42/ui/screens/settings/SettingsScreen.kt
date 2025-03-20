@@ -64,7 +64,7 @@ fun SettingsScreen (navController: NavHostController,modifier : Modifier = Modif
                     Icon(
                         imageVector = Icons.Default.AccountCircle,
                         contentDescription = "ProfilePicture",
-                        tint=Color.Black,
+                        tint=Color.Cyan,
                         modifier=Modifier.size(50.dp)
 
                     )
@@ -117,7 +117,7 @@ fun SettingsScreen (navController: NavHostController,modifier : Modifier = Modif
                                 .fillMaxWidth()
                                 .height(200.dp)
                                 .clip(RoundedCornerShape(10.dp))
-                                .background(Color.LightGray)
+                                .background(Color.Cyan)
                                 .border(1.dp,Color.Gray,RoundedCornerShape(10.dp))
                         ){
                             Text(text="High Effiency panels",modifier=Modifier.align(Alignment.TopStart))
@@ -182,8 +182,8 @@ fun SettingsScreen (navController: NavHostController,modifier : Modifier = Modif
                                 ){
                                     Icon(
                                         imageVector = icon,
-                                        contentDescription = "ProfilePicture",
-                                        tint=Color.Black,
+                                        contentDescription = null,
+                                        tint=Color.Unspecified,
                                         modifier=Modifier.size(30.dp)
 
                                     )
@@ -219,8 +219,8 @@ fun SettingsScreen (navController: NavHostController,modifier : Modifier = Modif
                     ){
                         Icon(
                             painter= painterResource(R.drawable.baseline_energy_savings_leaf_24),
+                            tint=Color.Blue,
                             contentDescription = null,
-                            tint=Color.Black,
                             modifier=Modifier
                                 .size(30.dp)
                                 .padding(end=10.dp)
@@ -259,7 +259,7 @@ fun SettingsScreen (navController: NavHostController,modifier : Modifier = Modif
                         Icon(
                             painter= painterResource(R.drawable.baseline_battery_charging_full_24),
                             contentDescription = null,
-                            tint=Color.Black,
+                            tint=Color.Green,
                             modifier=Modifier
                                 .size(30.dp)
                                 .padding(end=10.dp)

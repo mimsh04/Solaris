@@ -2,19 +2,14 @@ package in2000.team42.ui.screens.home
 
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
-import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -23,16 +18,17 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomSheet(
-    content: @Composable () -> Unit, //  kartet sendes som parameter
     modifier: Modifier = Modifier
 ) {
-    val scaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = rememberStandardBottomSheetState(
-            initialValue = SheetValue.PartiallyExpanded,
-            skipHiddenState = true
-        )
-    )
+    val scaffoldState = rememberBottomSheetScaffoldState()
 
+    // Fikser en bug der etter navigering tilbake til skjermen så er det
+    // mulig å hjemme bottomsheten
+    LaunchedEffect (scaffoldState.bottomSheetState.currentValue) {
+        if (scaffoldState.bottomSheetState.currentValue == SheetValue.Hidden) {
+            scaffoldState.bottomSheetState.partialExpand()
+        }
+    }
 
     BottomSheetScaffold(
         modifier = modifier,
@@ -52,7 +48,7 @@ fun BottomSheet(
         sheetPeekHeight = 120.dp, // Høyde når kollapset, rett over NavBar. Må gjøres mer synlig?
         sheetSwipeEnabled = true,
     ) {
-        content()
+
     }
 
 }

@@ -28,7 +28,7 @@ class PgvisDatasource {
         incline: Float,
         retning: Float,
     ) {
-        // https://re.jrc.ec.europa.eu/api/v5_3/DRcalc?lat=59.668&lon=10.789&outputformat=json&month=0&angle=35&aspect=0&global=1
         val url = "https://re.jrc.ec.europa.eu/api/v5_3/DRcalc?lat=$lat&lon=$lon&outputformat=json&month=$month&angle=$incline&aspect=$retning&global=1"
+
     }
 }

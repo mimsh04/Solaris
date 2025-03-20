@@ -26,7 +26,7 @@ fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier, 
                 }
             },
             style = {
-                MapStyle(Style.LIGHT)
+                MapStyle(Style.MAPBOX_STREETS)
             }
         )
     })

@@ -21,7 +21,7 @@ data class Inputs(
 data class Location(
     val latitude: Float? = null,
     val longitude: Float? = null,
-    val elevation: Int? = null
+    val elevation: Float? = null
 )
 
 @Serializable
@@ -47,7 +47,7 @@ data class Fixed(
 
 @Serializable
 data class SlopeAzimuth(
-    val value: Int? = null,
+    val value: Float? = null,
     val optimal: Boolean? = null
 )
 

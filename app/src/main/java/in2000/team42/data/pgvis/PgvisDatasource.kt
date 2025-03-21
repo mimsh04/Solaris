@@ -1,5 +1,6 @@
 package in2000.team42.data.pgvis
 
+import android.util.Log
 import in2000.team42.data.pgvis.model.DailyProfile
 import in2000.team42.data.pgvis.model.RadiationResponse
 import io.ktor.client.HttpClient
@@ -35,7 +36,6 @@ class PgvisDatasource {
         retning: Float,
     ): List<DailyProfile> {
         val url = "https://re.jrc.ec.europa.eu/api/v5_3/DRcalc?lat=$lat&lon=$lon&outputformat=json&month=$month&angle=$incline&aspect=$retning&global=1"
-
         return try {
             val response: RadiationResponse = ktorHttpClient.get(url).body()
             response.outputs?.daily_profile ?: emptyList()

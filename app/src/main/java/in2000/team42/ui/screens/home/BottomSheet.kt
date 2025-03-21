@@ -2,9 +2,12 @@ package in2000.team42.ui.screens.home
 
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomSheetScaffold
@@ -14,15 +17,20 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomSheet(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: HomeViewModel
 ) {
     val scaffoldState = rememberBottomSheetScaffoldState()
+
+    val longitude = viewModel.longitude.collectAsState()
+    val latitude = viewModel.latitude.collectAsState()
 
     // Fikser en bug der etter navigering tilbake til skjermen så er det
     // mulig å hjemme bottomsheten
@@ -37,37 +45,18 @@ fun BottomSheet(
         scaffoldState = scaffoldState,
 
         sheetContent = {
-            Column(
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(1),
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(500.dp) // Maks høyde når ekspandert
+                    .height(570.dp)
                     .padding(16.dp)
-                    .verticalScroll(rememberScrollState())
+                    .padding(bottom = 74.dp)
             ) {
-                Text(text = "Bottom sheet")
-                Text(text = "Dra meg opp eller ned da vel !?")
-                Text(text = "Bottom sheet")
-                Text(text = "Dra meg opp eller ned da vel !?")
-                Text(text = "Bottom sheet")
-                Text(text = "Dra meg opp eller ned da vel !?")
-                Text(text = "Bottom sheet")
-                Text(text = "Dra meg opp eller ned da vel !?")
-                Text(text = "Bottom sheet")
-                Text(text = "Dra meg opp eller ned da vel !?")
-                Text(text = "Bottom sheet")
-                Text(text = "Dra meg opp eller ned da vel !?")
-                Text(text = "Bottom sheet")
-                Text(text = "Dra meg opp eller ned da vel !?")
-                Text(text = "Bottom sheet")
-                Text(text = "Dra meg opp eller ned da vel !?")
-                Text(text = "Bottom sheet")
-                Text(text = "Dra meg opp eller ned da vel !?")
-                Text(text = "Bottom sheet")
-                Text(text = "Dra meg opp eller ned da vel !?")
-                Text(text = "Bottom sheet")
-                Text(text = "Dra meg opp eller ned da vel !?")
-
-
+                item { Text("Bottom Sheet") }
+                item { Row {
+                    Text("Longitude: ${longitude.value}")
+                    Text("Latitude: ${latitude.value}")
+                } }
             }
         },
         sheetPeekHeight = 120.dp, // Høyde når kollapset, rett over NavBar. Må gjøres mer synlig?

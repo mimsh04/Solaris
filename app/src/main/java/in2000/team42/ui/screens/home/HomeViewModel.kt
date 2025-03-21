@@ -15,7 +15,7 @@ class HomeViewModel : ViewModel() {
 
     private val _longitude = MutableStateFlow(0.0)
     private val _latitude = MutableStateFlow(0.0)
-    private val _incline = MutableStateFlow(0f)
+    private val _incline = MutableStateFlow(35f)
     private val _vinkel = MutableStateFlow(0f)
 
     private val _sunRadiation = MutableStateFlow<List<DailyProfile>>(emptyList())

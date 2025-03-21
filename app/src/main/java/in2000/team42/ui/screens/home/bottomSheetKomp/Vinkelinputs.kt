@@ -23,56 +23,20 @@ fun Vinkelinputs(
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         // Angle (Incline) Input
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Default.Build,
-                contentDescription = "Incline angle",
-                modifier = Modifier.padding(end = 12.dp)
-            )
-            OutlinedTextField(
-                value = incline.toInt().toString(),
-                onValueChange = { newValue ->
-                    newValue.toIntOrNull()?.let {
-                        if (it in 0..90) onInclineChange(it.toFloat())
-                    }
-                },
-                label = { Text("Incline (0-90°)") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
+        Vinkelinput(
+            "Angle (0-90°)",
+            incline,
+            onInclineChange,
+            0..90,
+            Icons.Default.Build
+        )
 
-        // Direction (Azimuth) Input
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Default.Build,
-                contentDescription = "Direction angle",
-                modifier = Modifier.padding(end = 12.dp)
-            )
-            OutlinedTextField(
-                value = direction.toInt().toString(),
-                onValueChange = { newValue ->
-                    newValue.toIntOrNull()?.let {
-                        val normalizedValue = it % 360
-                        onDirectionChange(if (normalizedValue < 0) (normalizedValue + 360).toFloat() else normalizedValue.toFloat())
-                    }
-                },
-                label = { Text("Direction (0-360°)") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
+        Vinkelinput(
+            "Direction (-180 - 180°)",
+            direction,
+            onDirectionChange,
+            -180..180,
+            Icons.Default.Build
+        )
     }
 }

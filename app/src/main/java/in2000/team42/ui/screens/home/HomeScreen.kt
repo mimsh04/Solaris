@@ -10,34 +10,3 @@ fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier, 
     BottomSheet(modifier = modifier)
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

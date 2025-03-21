@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetValue
@@ -40,9 +42,32 @@ fun BottomSheet(
                     .fillMaxWidth()
                     .height(500.dp) // Maks høyde når ekspandert
                     .padding(16.dp)
+                    .verticalScroll(rememberScrollState())
             ) {
                 Text(text = "Bottom sheet")
                 Text(text = "Dra meg opp eller ned da vel !?")
+                Text(text = "Bottom sheet")
+                Text(text = "Dra meg opp eller ned da vel !?")
+                Text(text = "Bottom sheet")
+                Text(text = "Dra meg opp eller ned da vel !?")
+                Text(text = "Bottom sheet")
+                Text(text = "Dra meg opp eller ned da vel !?")
+                Text(text = "Bottom sheet")
+                Text(text = "Dra meg opp eller ned da vel !?")
+                Text(text = "Bottom sheet")
+                Text(text = "Dra meg opp eller ned da vel !?")
+                Text(text = "Bottom sheet")
+                Text(text = "Dra meg opp eller ned da vel !?")
+                Text(text = "Bottom sheet")
+                Text(text = "Dra meg opp eller ned da vel !?")
+                Text(text = "Bottom sheet")
+                Text(text = "Dra meg opp eller ned da vel !?")
+                Text(text = "Bottom sheet")
+                Text(text = "Dra meg opp eller ned da vel !?")
+                Text(text = "Bottom sheet")
+                Text(text = "Dra meg opp eller ned da vel !?")
+
+
             }
         },
         sheetPeekHeight = 120.dp, // Høyde når kollapset, rett over NavBar. Må gjøres mer synlig?

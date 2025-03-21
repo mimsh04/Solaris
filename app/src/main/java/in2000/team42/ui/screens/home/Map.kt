@@ -4,11 +4,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.mapbox.geojson.Point
-import com.mapbox.maps.Style
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
-import com.mapbox.maps.extension.compose.style.MapStyle
-
 
 
 @Composable
@@ -17,7 +14,7 @@ fun Map(modifier: Modifier = Modifier, viewModel: HomeViewModel) {
     fun settNyttPunkt(point: Point) : Boolean{
         viewModel.setLongitude(point.longitude())
         viewModel.setLatitude(point.latitude())
-        viewModel.updateLocation()
+        viewModel.updateAllApi()
         return true
     }
 

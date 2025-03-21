@@ -4,8 +4,8 @@ import in2000.team42.data.pgvis.model.DailyProfile
 
 class PgvisRepository (private val pgvisDatasource: PgvisDatasource) {
     suspend fun getRadiationData(
-        lat: Float,
-        lon: Float,
+        lat: Double,
+        lon: Double,
         month: Int,
         incline: Float,
         retning: Float

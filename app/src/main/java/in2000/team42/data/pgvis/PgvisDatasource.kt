@@ -29,8 +29,8 @@ class PgvisDatasource {
      * @return Liste av DailyProfile
      */
     suspend fun getDailyRadiation(
-        lat: Float,
-        lon: Float,
+        lat: Double,
+        lon: Double,
         month: Int,
         incline: Float,
         retning: Float,

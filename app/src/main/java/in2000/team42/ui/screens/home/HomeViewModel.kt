@@ -15,16 +15,15 @@ class HomeViewModel : ViewModel() {
 
     private val _longitude = MutableStateFlow(0.0)
     private val _latitude = MutableStateFlow(0.0)
-    private val _incline = MutableStateFlow(0.0)
-    private val _retning = MutableStateFlow(0.0)
-
+    private val _incline = MutableStateFlow(0f)
+    private val _vinkel = MutableStateFlow(0f)
 
     private val _sunRadiation = MutableStateFlow<List<DailyProfile>>(emptyList())
 
     val longitude = _longitude.asStateFlow()
     val latitude = _latitude.asStateFlow()
     val incline = _incline.asStateFlow()
-    val retning = _retning.asStateFlow()
+    val vinkel = _vinkel.asStateFlow()
 
     fun setLongitude(longitude: Double) {
         _longitude.value = longitude
@@ -34,7 +33,15 @@ class HomeViewModel : ViewModel() {
         _latitude.value = latitude
     }
 
-    fun updateLocation() {
+    fun setIncline(incline: Float) {
+        _incline.value = incline
+    }
+
+    fun setVinkel(vinkel: Float) {
+        _vinkel.value = vinkel
+    }
+
+    fun updateAllApi() {
         updateSolarRadiation()
     }
 
@@ -42,11 +49,11 @@ class HomeViewModel : ViewModel() {
     ) {
         viewModelScope.launch {
             _sunRadiation.value = radiationRepository.getRadiationData(
-                latitude.value.toFloat(),
-                longitude.value.toFloat(),
+                latitude.value,
+                longitude.value,
                 0,
-                incline.value.toFloat(),
-                retning.value.toFloat()
+                incline.value,
+                vinkel.value
             )
             Log.d("HomeViewModel", "Radiation data: ${_sunRadiation.value}")
         }

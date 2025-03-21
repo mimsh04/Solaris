@@ -8,8 +8,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetValue
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -23,10 +23,11 @@ fun BottomSheet(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel
 ) {
-    val scaffoldState = rememberBottomSheetScaffoldState()
 
-    val longitude = viewModel.longitude.collectAsState()
-    val latitude = viewModel.latitude.collectAsState()
+    val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = rememberStandardBottomSheetState(
+        initialValue = SheetValue.PartiallyExpanded,
+        skipHiddenState = true
+    ))
     val incline = viewModel.incline.collectAsState()
     val vinkel = viewModel.vinkel.collectAsState()
 
@@ -34,7 +35,7 @@ fun BottomSheet(
     // mulig å hjemme bottomsheten
     LaunchedEffect (scaffoldState.bottomSheetState.currentValue) {
         if (scaffoldState.bottomSheetState.currentValue == SheetValue.Hidden) {
-            scaffoldState.bottomSheetState.partialExpand()
+             scaffoldState.bottomSheetState.partialExpand()
         }
     }
 
@@ -50,7 +51,6 @@ fun BottomSheet(
                     .padding(16.dp)
                     .padding(bottom = 74.dp)
             ) {
-                item { Text("Bottom Sheet") }
                 item {
                     Vinkelinputs(
                         incline = incline.value,
@@ -63,6 +63,7 @@ fun BottomSheet(
         },
         sheetPeekHeight = 120.dp, // Høyde når kollapset, rett over NavBar. Må gjøres mer synlig?
         sheetSwipeEnabled = true,
+
     ) {
 
     }

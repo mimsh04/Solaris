@@ -16,12 +16,22 @@ class FrostDataSource(private val context: Context) {
     private val clientId = "5fa50311-61ee-4aa0-8f29-2262c21212e5"
     private val TAG = "FrostDataSource" // Variabel for å enklere skrive logcat
 
-    suspend fun fetchFrostData(): FrostData? = suspendCoroutine { continuation ->
+    /**
+     * Henter daglig temperatur, skydekke og snømengde for de siste 24 timene når funksjonen blir kalt
+     * hvis det har blitt gjort målinger for hver time. Kan hende en stasjon ikke måler hver time
+     * eller ikke har utstyret for å målet en type data.
+     *
+     * @param latitude Latitude
+     * @param longitude Longitude
+     *
+     * @return Klasse med temperatur, skydekke og snø (eller mengden snø ekvivalent med vann på bakken)
+     */
+
+    suspend fun fetchFrostDataByCoords(latitude: Double, longitude: Double): FrostData? = suspendCoroutine { continuation ->
         val url = "https://frost.met.no/observations/v0.jsonld?" +
-                // Midlertidlig eksempel data gitt til API call under
-                "sources=SN18700" +
+                "sources=nearest(POINT($longitude $latitude))" + // Eksempel stasjon: sources=SN18700
                 "&elements=air_temperature,accumulated(liquid_water_content_of_surface_snow),cloud_area_fraction" +
-                "&referencetime=2025-03-21T12:00:00Z/2025-03-21T12:59:59Z"
+                "&referencetime=now-PT24H/now"
 
         Log.v(TAG, "Starting API request to: $url")
 

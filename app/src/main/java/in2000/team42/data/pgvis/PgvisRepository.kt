@@ -1,5 +1,15 @@
 package in2000.team42.data.pgvis
 
-class PgvisRepository {
+import in2000.team42.data.pgvis.model.DailyProfile
 
+class PgvisRepository (private val pgvisDatasource: PgvisDatasource) {
+    suspend fun getRadiationData(
+        lat: Double,
+        lon: Double,
+        month: Int,
+        incline: Float,
+        retning: Float
+    ): List<DailyProfile> {
+        return pgvisDatasource.getDailyRadiation(lat, lon, month, incline, retning)
+    }
 }

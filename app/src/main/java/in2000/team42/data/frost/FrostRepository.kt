@@ -1,5 +1,10 @@
 package in2000.team42.data.frost
 
-class FrostRepository {
+import in2000.team42.model.frost.FrostData
 
+class FrostRepository(private val dataSource: FrostDataSource) {
+
+    suspend fun getFrostData(): FrostData? {
+        return dataSource.fetchFrostData()
+    }
 }

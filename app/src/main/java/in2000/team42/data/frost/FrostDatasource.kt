@@ -1,101 +1,63 @@
 package in2000.team42.data.frost
 
 import android.content.Context
-import com.android.volley.AuthFailureError
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
-import in2000.team42.model.frost.FrostData
-import org.json.JSONObject
-import android.util.Base64
 import android.util.Log
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
+import in2000.team42.model.frost.FrostData
+import in2000.team42.model.frost.FrostResponse
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class FrostDataSource(private val context: Context) {
 
-    private val clientId = "5fa50311-61ee-4aa0-8f29-2262c21212e5"
-    private val TAG = "FrostDataSource" // Variabel for å enklere skrive logcat
+    private val TAG = "FrostDataSource"
+    private val apiService = RetrofitClient.frostApiService
 
-    /**
-     * Henter daglig temperatur, skydekke og snømengde for de siste 24 timene når funksjonen blir kalt
-     * hvis det har blitt gjort målinger for hver time. Kan hende en stasjon ikke måler hver time
-     * eller ikke har utstyret for å målet en type data.
-     *
-     * @param latitude Latitude
-     * @param longitude Longitude
-     *
-     * @return Klasse med temperatur, skydekke og snø (eller mengden snø ekvivalent med vann på bakken)
-     */
+    suspend fun fetchFrostDataByCoords(latitude: Double, longitude: Double): FrostData? = withContext(Dispatchers.IO) {
+        val urlParams = mapOf(
+            "sources" to "nearest(POINT($longitude $latitude))",
+            "elements" to "air_temperature,accumulated(liquid_water_content_of_surface_snow),cloud_area_fraction",
+            "referencetime" to "now-PT24H/now"
+        )
 
-    suspend fun fetchFrostDataByCoords(latitude: Double, longitude: Double): FrostData? = suspendCoroutine { continuation ->
-        val url = "https://frost.met.no/observations/v0.jsonld?" +
-                "sources=nearest(POINT($longitude $latitude))" + // Eksempel stasjon: sources=SN18700
-                "&elements=air_temperature,accumulated(liquid_water_content_of_surface_snow),cloud_area_fraction" +
-                "&referencetime=now-PT24H/now"
+        Log.v(TAG, "Starting API request with params: $urlParams")
 
-        Log.v(TAG, "Starting API request to: $url")
+        try {
+            val response = apiService.getFrostData(
+                urlParams["sources"]!!,
+                urlParams["elements"]!!,
+                urlParams["referencetime"]!!
+            )
+            Log.i(TAG, "Response received successfully")
+            Log.d(TAG, "Raw response: $response")
 
-        val queue = Volley.newRequestQueue(context)
-
-        val request = object : StringRequest(
-            Method.GET, url,
-            { response ->
-                Log.i(TAG, "Response received successfully")
-                Log.d(TAG, "Raw response: $response")
-                val data = parseResponse(response)
-                if (data != null) {
-                    Log.i(TAG, "Data parsed: Temp=${data.temperature}, Snow=${data.snowWaterEquivalent}, Clouds=${data.cloudCoverage}")
-                } else {
-                    Log.w(TAG, "Failed to parse response data") // Warn: Parsing returned null
-                }
-
-                continuation.resume(data)
-            },
-            { error ->
-                Log.e(TAG, "API request failed: ${error.message}", error)
-                continuation.resume(null)
-            }
-        ) {
-            // Passer på autorisasjon under API kall
-            @Throws(AuthFailureError::class)
-            override fun getHeaders(): Map<String, String> {
-                val headers = HashMap<String, String>()
-                val auth = Base64.encodeToString("$clientId:".toByteArray(), Base64.NO_WRAP)
-                headers["Authorization"] = "Basic $auth"
-                Log.d(TAG, "Authorization header set: Basic $auth")
-
-                return headers
-            }
+            parseResponse(response)
+        } catch (e: Exception) {
+            Log.e(TAG, "API request failed: ${e.message}", e)
+            null
         }
-        Log.i(TAG, "Adding request to Volley queue")
-        queue.add(request)
     }
 
-    private fun parseResponse(response: String): FrostData? {
+    private fun parseResponse(response: FrostResponse): FrostData? {
         return try {
-            Log.v(TAG, "Starting JSON parsing")
-            val json = JSONObject(response)
-            val dataArray = json.getJSONArray("data")
-            val observation = dataArray.getJSONObject(0)
-            val observationsArray = observation.getJSONArray("observations")
+            Log.v(TAG, "Starting response parsing")
+            val observations = response.data.firstOrNull()?.observations ?: return null
 
             var temp: Double? = null
             var snow: Double? = null
             var clouds: Int? = null
 
-            for (i in 0 until observationsArray.length()) {
-                val obs = observationsArray.getJSONObject(i)
-                when (obs.getString("elementId")) {
+            observations.forEach { obs ->
+                when (obs.elementId) {
                     "air_temperature" -> {
-                        temp = obs.getDouble("value")
+                        temp = obs.value
                         Log.d(TAG, "Parsed air_temperature: $temp")
                     }
                     "accumulated(liquid_water_content_of_surface_snow)" -> {
-                        snow = obs.getDouble("value")
+                        snow = obs.value
                         Log.d(TAG, "Parsed snow_water_equivalent: $snow")
                     }
                     "cloud_area_fraction" -> {
-                        clouds = obs.getInt("value")
+                        clouds = obs.value.toInt()
                         Log.d(TAG, "Parsed cloud_area_fraction: $clouds")
                     }
                 }
@@ -105,7 +67,7 @@ class FrostDataSource(private val context: Context) {
             Log.v(TAG, "Parsing completed successfully")
             weatherData
         } catch (e: Exception) {
-            Log.e(TAG, "Error parsing JSON: ${e.message}", e)
+            Log.e(TAG, "Error parsing response: ${e.message}", e)
             null
         }
     }

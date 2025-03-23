@@ -89,4 +89,14 @@ dependencies {
 
     implementation(libs.vico.compose)
     implementation(libs.vico.compose.m3)
+
+    // Retrofit for geocoding
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson) // For JSON parsing
+
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
+
+    implementation(libs.okhttp)
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 }

@@ -12,6 +12,16 @@ class FrostDataSource(private val context: Context) {
     private val TAG = "FrostDataSource"
     private val apiService = RetrofitClient.frostApiService
 
+    /**
+     * Henter daglig temperatur, skydekke og snømengde for de siste 24 timene når funksjonen blir kalt
+     * hvis det har blitt gjort målinger for hver time. Kan hende en stasjon ikke måler hver time
+     * eller ikke har utstyret for å målet en type data.
+     *
+     * @param latitude Latitude
+     * @param longitude Longitude
+     *
+     * @return Klasse med temperatur, skydekke og snø (eller mengden snø ekvivalent med vann på bakken)
+     */
     suspend fun fetchFrostDataByCoords(latitude: Double, longitude: Double): FrostData? = withContext(Dispatchers.IO) {
         val urlParams = mapOf(
             "sources" to "nearest(POINT($longitude $latitude))",
@@ -63,7 +73,7 @@ class FrostDataSource(private val context: Context) {
                 }
             }
 
-            val weatherData = FrostData(temp, snow, clouds)
+            val weatherData = FrostData(temp, snow, clouds) // Lager data objektet
             Log.v(TAG, "Parsing completed successfully")
             weatherData
         } catch (e: Exception) {

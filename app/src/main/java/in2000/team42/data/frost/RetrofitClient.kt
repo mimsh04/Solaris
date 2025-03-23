@@ -18,10 +18,12 @@ object RetrofitClient {
         val authToken = Base64.encodeToString("$CLIENT_ID:".toByteArray(), Base64.NO_WRAP)
         Log.d(TAG, "Authorization header set: Basic $authToken")
 
+        // Logger API kall for debugging
         val logging = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
 
+        // Legger til autorisasjon header
         val client = OkHttpClient.Builder()
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()
@@ -32,11 +34,12 @@ object RetrofitClient {
             .addInterceptor(logging)
             .build()
 
+        // Bygger API kallet
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
             .build()
-            .create(FrostApiService::class.java)
+            .create(FrostApiService::class.java) // Oppretter API service forekomst
     }
 }

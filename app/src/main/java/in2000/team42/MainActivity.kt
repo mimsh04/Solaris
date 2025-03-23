@@ -36,7 +36,10 @@ class MainActivity : ComponentActivity() {
                     ) { innerPadding ->
                     NavHost(navController = navController, startDestination = Screen.Home.route) {
                         composable(Screen.Home.route){
-                            HomeScreen(navController, viewModel = viewModel(), modifier = Modifier
+                            HomeScreen(navController,
+                                homeViewModel = viewModel(),
+                                hksViewModel = viewModel(),
+                                modifier = Modifier
                                 .padding(innerPadding)
                             )
                         }

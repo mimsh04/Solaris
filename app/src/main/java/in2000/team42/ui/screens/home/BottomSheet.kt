@@ -1,24 +1,18 @@
 package in2000.team42.ui.screens.home
 
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.BottomSheetScaffold
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SheetValue
-import androidx.compose.material3.Text
-import androidx.compose.material3.rememberBottomSheetScaffoldState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import in2000.team42.ui.screens.HKS.HKSViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomSheet(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: HKSViewModel
 ) {
     val scaffoldState = rememberBottomSheetScaffoldState()
 
@@ -41,8 +35,14 @@ fun BottomSheet(
                     .height(500.dp) // Maks høyde når ekspandert
                     .padding(16.dp)
             ) {
-                Text(text = "Bottom sheet")
-                Text(text = "Dra meg opp eller ned da vel !?")
+                Text(
+                    text = "Hva koster strømmen?",
+                    style = MaterialTheme.typography.headlineSmall
+                )
+                DatePicker(viewModel)
+                TimePicker(viewModel)
+                RegionSelector(viewModel)
+                PriceDisplay(viewModel)
             }
         },
         sheetPeekHeight = 120.dp, // Høyde når kollapset, rett over NavBar. Må gjøres mer synlig?

@@ -2,59 +2,41 @@ package in2000.team42.ui.screens.HKS
 
 import androidx.lifecycle.ViewModel
 import in2000.team42.data.HvaKosterStrømmen.HvaKosterStrømmenRepo
-import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
+
+
 import java.util.Calendar
-import java.util.Date
-import java.util.TimeZone
 
-class HKSViewModel : ViewModel() {
-    private val repo = HvaKosterStrømmenRepo()
+class HKSViewModel(
+    private val repo: HvaKosterStrømmenRepo = HvaKosterStrømmenRepo()
+) : ViewModel() {
 
-    private val _selectedDate = MutableStateFlow(getCurrentDate())
-    val selectedDate: StateFlow<Date> get() = _selectedDate
+    private val _selectedDate = MutableLiveData(Calendar.getInstance())
+    val selectedDate: LiveData<Calendar> get() = _selectedDate
 
-    private val _selectedTime = MutableStateFlow(getCurrentHour())
-    val selectedTime: StateFlow<Date> get() = _selectedTime
+    private val _selectedTime = MutableLiveData(Calendar.getInstance())
+    val selectedTime: LiveData<Calendar> get() = _selectedTime
 
-    private val _selectedRegion = MutableStateFlow("NO5")
-    val selectedRegion: StateFlow<String> get() = _selectedRegion
+    private val _selectedRegion = MutableLiveData("NO1")
+    val selectedRegion: LiveData<String> get() = _selectedRegion
 
-    private val _currentPrice = MutableStateFlow<Double?>(null)
-    val currentPrice: StateFlow<Double?> get() = _currentPrice
+    private val _currentPrice = MutableLiveData<Double?>()
+    val currentPrice: LiveData<Double?> get() = _currentPrice
 
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> get() = _isLoading
+    private val _isLoading = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> get() = _isLoading
 
-    private val _error = MutableStateFlow<String?>(null)
-    val error: StateFlow<String?> get() = _error
+    private val _error = MutableLiveData<String?>()
+    val error: LiveData<String?> get() = _error
 
-    private val _showTomorrowMessage = MutableStateFlow(false)
-    val showTomorrowMessage: StateFlow<Boolean> get() = _showTomorrowMessage
+    private val _showTomorrowMessage = MutableLiveData(false)
+    val showTomorrowMessage: LiveData<Boolean> get() = _showTomorrowMessage
 
     init {
         fetchPrice()
-    }
-
-    private fun getCurrentDate(): Date {
-        val cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Oslo"))
-        cal.set(Calendar.HOUR_OF_DAY, 0)
-        cal.set(Calendar.MINUTE, 0)
-        cal.set(Calendar.SECOND, 0)
-        cal.set(Calendar.MILLISECOND, 0)
-        return cal.time
-    }
-
-    private fun getCurrentHour(): Date {
-        val cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Oslo"))
-        cal.set(Calendar.MINUTE, 0)
-        cal.set(Calendar.SECOND, 0)
-        cal.set(Calendar.MILLISECOND, 0)
-        return cal.time
     }
 
     fun fetchPrice() {
@@ -63,88 +45,92 @@ class HKSViewModel : ViewModel() {
             _error.value = null
             _showTomorrowMessage.value = false
 
-            val now = getCurrentDate()
-            val nowTime = Calendar.getInstance(TimeZone.getTimeZone("Europe/Oslo")).time
-            val yesterday13Cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Oslo")).apply {
-                add(Calendar.DAY_OF_YEAR, -1)
+            val now = Calendar.getInstance()
+            val yesterday = Calendar.getInstance().apply {
+                time = now.time
+                add(Calendar.DAY_OF_MONTH, -1)
                 set(Calendar.HOUR_OF_DAY, 13)
                 set(Calendar.MINUTE, 0)
                 set(Calendar.SECOND, 0)
                 set(Calendar.MILLISECOND, 0)
             }
-            val yesterday13 = yesterday13Cal.time
 
-            if (_selectedDate.value.after(now)) {
-                _showTomorrowMessage.value = true
+            // Updated logic for handling tomorrow's URL response
+            if (_selectedDate.value!!.after(now)) {
+                val tomorrowResult = repo.getStrømPriser(
+                    _selectedDate.value!!.get(Calendar.YEAR),
+                    _selectedDate.value!!.get(Calendar.MONTH) + 1,
+                    _selectedDate.value!!.get(Calendar.DAY_OF_MONTH),
+                    _selectedRegion.value!!
+                )
+                if (tomorrowResult.isSuccess) {
+                    _showTomorrowMessage.value = true
+                } else {
+                    _error.value = "URL for morgendagens strømpriser svarer ikke. Prøv igjen senere."
+                }
                 _isLoading.value = false
                 return@launch
-            } else if (_selectedDate.value == now && nowTime.before(yesterday13)) {
+            } else if (_selectedDate.value!!.timeInMillis == now.timeInMillis && now.before(yesterday)) {
                 _error.value = "Dagens priser er ikke tilgjengelige før kl 13 dagen før."
                 _isLoading.value = false
                 return@launch
             }
 
-            val dateCal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Oslo")).apply {
-                time = _selectedDate.value
-            }
             val result = repo.getStrømPriser(
-                dateCal.get(Calendar.YEAR),
-                dateCal.get(Calendar.MONTH) + 1,
-                dateCal.get(Calendar.DAY_OF_MONTH),
-                _selectedRegion.value
+                _selectedDate.value!!.get(Calendar.YEAR),
+                _selectedDate.value!!.get(Calendar.MONTH) + 1,
+                _selectedDate.value!!.get(Calendar.DAY_OF_MONTH),
+                _selectedRegion.value!!
             )
-            when {
-                result.isSuccess -> {
-                    val prices = result.getOrNull() ?: emptyList()
-                    Log.d("VIEWMODEL", "Fetched ${prices.size} prices: $prices")
+
+            if (result.isSuccess) {
+                val prices = result.getOrNull() ?: emptyList()
+
+                if (prices.isEmpty()) {
+                    _error.value = "Ingen tilgjengelige strømpriser for valgt dato. Prøv igjen senere."
+                } else {
                     val selectedPrice = prices.find { price ->
-                        val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
-                        formatter.timeZone = TimeZone.getTimeZone("Europe/Oslo")
-                        val startTime = formatter.parse(price.time_start)
-                        val startCal = Calendar.getInstance().apply { time = startTime }
-                        val selectedCal = Calendar.getInstance().apply { time = _selectedTime.value }
-                        startCal.get(Calendar.HOUR_OF_DAY) == selectedCal.get(Calendar.HOUR_OF_DAY)
+                        val startTime = Calendar.getInstance().apply {
+                            time = repo.parseTime(price.time_start)
+                            set(Calendar.MINUTE, 0)
+                            set(Calendar.SECOND, 0)
+                            set(Calendar.MILLISECOND, 0)
+                        }
+                        val targetTime = Calendar.getInstance().apply {
+                            time = _selectedTime.value!!.time
+                            set(Calendar.MINUTE, 0)
+                            set(Calendar.SECOND, 0)
+                            set(Calendar.MILLISECOND, 0)
+                        }
+                        startTime.timeInMillis == targetTime.timeInMillis
                     }
                     _currentPrice.value = selectedPrice?.NOK_per_kWh
                     if (_currentPrice.value == null && prices.isNotEmpty()) {
-                        Log.d("VIEWMODEL", "No exact match for ${_selectedTime.value}, using first available")
                         _currentPrice.value = prices.first().NOK_per_kWh
                     }
                     if (_currentPrice.value == null) {
                         _error.value = "Ingen pris tilgjengelig for valgt dato"
                     }
                 }
-                result.isFailure -> {
-                    Log.e("VIEWMODEL", "Error: ${result.exceptionOrNull()?.message}")
-                    _error.value = result.exceptionOrNull()?.message ?: "Ukjent feil"
-                }
+            } else {
+                _error.value = result.exceptionOrNull()?.message ?: "Ukjent feil"
             }
+
             _isLoading.value = false
         }
     }
 
     fun changeDate(days: Int) {
-        val cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Oslo")).apply {
-            time = _selectedDate.value
-            add(Calendar.DAY_OF_YEAR, days)
-            set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
+        _selectedDate.value = _selectedDate.value!!.apply {
+            add(Calendar.DAY_OF_MONTH, days)
         }
-        _selectedDate.value = cal.time
         fetchPrice()
     }
 
     fun changeTime(hours: Int) {
-        val cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Oslo")).apply {
-            time = _selectedTime.value
+        _selectedTime.value = _selectedTime.value!!.apply {
             add(Calendar.HOUR_OF_DAY, hours)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
         }
-        _selectedTime.value = cal.time
         fetchPrice()
     }
 

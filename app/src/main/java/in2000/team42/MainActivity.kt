@@ -18,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import in2000.team42.theme.IN2000_team42Theme
 import in2000.team42.ui.NavBar
 import in2000.team42.ui.screens.Screen
+import in2000.team42.ui.screens.home.BottomSheet
 import in2000.team42.ui.screens.home.HomeScreen
 import in2000.team42.ui.screens.settings.SettingsScreen
 
@@ -35,9 +36,8 @@ class MainActivity : ComponentActivity() {
                     ) { innerPadding ->
                     NavHost(navController = navController, startDestination = Screen.Home.route) {
                         composable(Screen.Home.route){
-                            HomeScreen(navController, Modifier
-                                .padding(innerPadding),
-                                viewModel = viewModel()
+                            HomeScreen(navController, viewModel = viewModel(), modifier = Modifier
+                                .padding(innerPadding)
                             )
                         }
                         composable(Screen.Settings.route) {
@@ -46,6 +46,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                     }
+
                 }
             }
         }

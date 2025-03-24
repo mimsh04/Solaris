@@ -86,15 +86,9 @@ dependencies {
     implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
     implementation(libs.ktor.client.logging)
 
-    implementation(libs.vico.compose)
-    implementation(libs.vico.compose.m3)
-
-    // Retrofit for geocoding
-    implementation (libs.retrofit)
-    implementation (libs.converter.gson) // For JSON parsing
-
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
 
-    implementation(libs.okhttp)
+    implementation(libs.vico.compose)
+    implementation(libs.vico.compose.m3)
 }

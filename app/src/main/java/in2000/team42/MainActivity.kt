@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -34,7 +36,14 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = { NavBar(navController) }
                     ) { innerPadding ->
-                    NavHost(navController = navController, startDestination = Screen.Home.route) {
+                    NavHost(
+                        navController = navController,
+                        startDestination = Screen.Home.route,
+                        enterTransition = { EnterTransition.None},
+                        exitTransition = { ExitTransition.None },
+                        popEnterTransition = { EnterTransition.None },
+                        popExitTransition = { ExitTransition.None }
+                    ) {
                         composable(Screen.Home.route){
                             HomeScreen(navController, viewModel = viewModel(), modifier = Modifier
                                 .padding(innerPadding)

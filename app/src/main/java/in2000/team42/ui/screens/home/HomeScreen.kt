@@ -6,38 +6,7 @@ import androidx.navigation.NavHostController
 
 @Composable
 fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier, viewModel: HomeViewModel) {
-    Map(modifier = modifier)
-    BottomSheet(modifier = modifier)
+    Map(modifier = modifier, viewModel = viewModel)
+    BottomSheet(modifier = modifier, viewModel = viewModel)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

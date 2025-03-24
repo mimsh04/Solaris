@@ -1,5 +1,8 @@
 package in2000.team42.model.frost
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class FrostData(
     val temperature: Double?,          // °C
     val snowWaterEquivalent: Double?,  // kg/m²

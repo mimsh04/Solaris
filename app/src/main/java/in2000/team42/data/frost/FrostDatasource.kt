@@ -4,13 +4,16 @@ import android.content.Context
 import android.util.Log
 import in2000.team42.model.frost.FrostData
 import in2000.team42.model.frost.FrostResponse
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class FrostDataSource(private val context: Context) {
 
     private val TAG = "FrostDataSource"
-    private val apiService = RetrofitClient.frostApiService
+    private val client = KtorClient.client
 
     /**
      * Henter daglig temperatur, skydekke og snømengde for de siste 24 timene når funksjonen blir kalt
@@ -23,20 +26,20 @@ class FrostDataSource(private val context: Context) {
      * @return Klasse med temperatur, skydekke og snø (eller mengden snø ekvivalent med vann på bakken)
      */
     suspend fun fetchFrostDataByCoords(latitude: Double, longitude: Double): FrostData? = withContext(Dispatchers.IO) {
-        val urlParams = mapOf(
+        val params = mapOf(
             "sources" to "nearest(POINT($longitude $latitude))",
             "elements" to "air_temperature,accumulated(liquid_water_content_of_surface_snow),cloud_area_fraction",
             "referencetime" to "now-PT24H/now"
         )
 
-        Log.v(TAG, "Starting API request with params: $urlParams")
+        Log.v(TAG, "Starting API request with params: $params")
 
         try {
-            val response = apiService.getFrostData(
-                urlParams["sources"]!!,
-                urlParams["elements"]!!,
-                urlParams["referencetime"]!!
-            )
+            val response: FrostResponse = client.get("observations/v0.jsonld") {
+                params.forEach { (key, value) ->
+                    parameter(key, value)  // Add query parameters
+                }
+            }.body()  // Deserialize til FrostResponse
             Log.i(TAG, "Response received successfully")
             Log.d(TAG, "Raw response: $response")
 

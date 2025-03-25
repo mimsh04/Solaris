@@ -15,7 +15,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import in2000.team42.ui.screens.home.bottomSheetKomp.Vinkelinputs
+import in2000.team42.ui.screens.home.bottomSheetKomp.*
 
 
 @OptIn(ExperimentalMaterial3Api::class)

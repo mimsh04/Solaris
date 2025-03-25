@@ -1,4 +1,4 @@
-package in2000.team42.ui.screens.home
+package in2000.team42.ui.screens.home.map
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,13 +19,16 @@ import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
 import com.mapbox.search.autocomplete.PlaceAutocomplete
 import in2000.team42.R
+import in2000.team42.ui.screens.home.HomeViewModel
+import in2000.team42.ui.screens.home.map.search.SearchBar
 import kotlinx.coroutines.launch
 
 
 @Composable
 fun Map(
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel)
+    viewModel: HomeViewModel
+)
 {
 
     MapboxOptions.accessToken = stringResource(R.string.mapbox_access_token)
@@ -68,20 +71,19 @@ fun Map(
     }
 
 
-    Box(modifier = modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize()) {
 
         MapboxMap(
-            //scaleBar = {},
+            scaleBar = {},
             mapViewportState = mapViewportState,
             modifier = Modifier.fillMaxSize(),
             onMapClickListener = { onMapClicked(it) }
         )
 
-        // Search bar positioned at the top
         SearchBar(
             placeAutocomplete = placeAutoComplete,
             onLocationSelected = { settNyttPunkt(it) },
-            modifier = Modifier.padding(top = 16.dp),
+            modifier = Modifier.padding(top = 26.dp),
             isMapClicked = mapClicked
         )
     }

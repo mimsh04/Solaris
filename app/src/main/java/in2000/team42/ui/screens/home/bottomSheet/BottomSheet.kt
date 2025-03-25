@@ -1,4 +1,4 @@
-package in2000.team42.ui.screens.home
+package in2000.team42.ui.screens.home.bottomSheet
 
 
 import androidx.compose.foundation.layout.height
@@ -16,7 +16,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
-import in2000.team42.ui.screens.home.bottomSheetKomp.Vinkelinputs
+import in2000.team42.ui.screens.home.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

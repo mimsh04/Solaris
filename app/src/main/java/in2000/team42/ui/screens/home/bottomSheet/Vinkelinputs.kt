@@ -1,4 +1,4 @@
-package in2000.team42.ui.screens.home.bottomSheetKomp
+package in2000.team42.ui.screens.home.bottomSheet
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons

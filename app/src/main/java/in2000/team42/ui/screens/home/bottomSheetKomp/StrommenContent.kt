@@ -1,7 +1,5 @@
 package in2000.team42.ui.screens.home.bottomSheetKomp
 
-
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -9,7 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import in2000.team42.ui.screens.strommen.StrommenViewModel
 import java.text.SimpleDateFormat
@@ -39,139 +37,180 @@ fun StrommenContent() {
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.Start
     ) {
+        // Title
         Text(
             text = "Hva koster strøm?",
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(vertical = 16.dp)
+            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(bottom = 16.dp)
         )
 
+        // Date Row
         Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(vertical = 16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(
-                onClick = { viewModel.changeDate(-1) },
-                enabled = !isLoading
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "Forrige dag")
-            }
-            Text(
-                text = "Dato: ${dateFormatter.format(selectedDate)}",
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-            IconButton(
-                onClick = { viewModel.changeDate(1) },
-                enabled = !isLoading
-            ) {
-                Icon(Icons.Default.ArrowForward, contentDescription = "Neste dag")
-            }
-        }
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(vertical = 16.dp)
-        ) {
-            IconButton(
-                onClick = { viewModel.changeTime(-1) },
-                enabled = !isLoading
-            ) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "Forrige time")
-            }
-            Text(
-                text = "Klokkeslett: ${timeFormatter.format(selectedTime)}",
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-            IconButton(
-                onClick = { viewModel.changeTime(1) },
-                enabled = !isLoading
-            ) {
-                Icon(Icons.Default.ArrowForward, contentDescription = "Neste time")
-            }
-        }
-
-        RegionSelector(
-            selectedRegion = selectedRegion,
-            onRegionSelected = { viewModel.setSelectedRegion(it) },
-            enabled = !isLoading
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        when {
-            isLoading -> {
-                CircularProgressIndicator(modifier = Modifier.padding(16.dp))
-            }
-            error != null -> {
+                Icon(
+                    imageVector = Icons.Default.DateRange,
+                    contentDescription = "Dato",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = error!!,
-                    color = Color.Red,
-                    modifier = Modifier.padding(16.dp)
+                    text = "Dato:",
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.width(100.dp)
+                )
+                Text(
+                    text = dateFormatter.format(selectedDate),
+                    style = MaterialTheme.typography.bodyLarge
                 )
             }
-            currentPrice != null -> {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = "Strømpris:",
-                        modifier = Modifier.padding(vertical = 4.dp)
-                    )
-                    Text(
-                        text = "${"%.2f".format(currentPrice!! * 100)} øre/kWh",
-                        style = MaterialTheme.typography.headlineMedium
-                    )
+            NavigationButtons(
+                onPrevious = { viewModel.changeDate(-1) },
+                onNext = { viewModel.changeDate(1) },
+                enabled = !isLoading
+            )
+        }
+
+        // Time Row
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Default.DateRange, // Changed to AccessTime for time
+                    contentDescription = "Klokkeslett",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Klokkeslett:",
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.width(100.dp) // Fixed width for alignment
+                )
+                Text(
+                    text = timeFormatter.format(selectedTime),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+            NavigationButtons(
+                onPrevious = { viewModel.changeTime(-1) },
+                onNext = { viewModel.changeTime(1) },
+                enabled = !isLoading
+            )
+        }
+
+        // Price Row
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            when {
+                isLoading -> {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Strømpris:",
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.width(100.dp)
+                        )
+                        CircularProgressIndicator(
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                }
+                error != null -> {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Strømpris:",
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.width(100.dp)
+                        )
+                        Text(
+                            text = error!!,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
+                }
+                currentPrice != null -> {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Strømpris:",
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.width(100.dp)
+                        )
+                        Text(
+                            text = "${"%.2f".format(currentPrice!! * 100)} øre/kWh",
+                            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+                else -> {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Strømpris:",
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.width(100.dp)
+                        )
+                        Text(
+                            text = "Ingen pris tilgjengelig",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
             }
-            else -> {
-                Text(
-                    text = "Ingen pris tilgjengelig",
-                    modifier = Modifier.padding(16.dp)
-                )
-            }
+        }
+
+        // Region Selector
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            RegionSelector(
+                selectedRegion = selectedRegion,
+                onRegionSelected = { viewModel.setSelectedRegion(it) },
+                enabled = !isLoading,
+                modifier = Modifier.weight(1f)
+            )
         }
     }
 }
 
-@Composable
-fun RegionSelector(
-    selectedRegion: String,
-    onRegionSelected: (String) -> Unit,
-    enabled: Boolean = true
-) {
-    var expanded by remember { mutableStateOf(false) }
-    val regions = listOf(
-        "NO1" to "Oslo / Øst-Norge",
-        "NO2" to "Kristiansand / Sør-Norge",
-        "NO3" to "Trondheim / Midt-Norge",
-        "NO4" to "Tromsø / Nord-Norge",
-        "NO5" to "Bergen / Vest-Norge"
-    )
-
-    val selectedDisplayName = regions.find { it.first == selectedRegion }?.second ?: selectedRegion
-
-    Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
-        Button(
-            onClick = { expanded = true },
-            enabled = enabled
-        ) {
-            Text("Region: $selectedDisplayName")
-        }
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            regions.forEach { (regionCode, displayName) ->
-                DropdownMenuItem(
-                    text = { Text(displayName) },
-                    onClick = {
-                        onRegionSelected(regionCode)
-                        expanded = false
-                    }
-                )
-            }
-        }
-    }
-}

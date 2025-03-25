@@ -20,7 +20,6 @@ import androidx.navigation.compose.rememberNavController
 import in2000.team42.theme.IN2000_team42Theme
 import in2000.team42.ui.NavBar
 import in2000.team42.ui.screens.Screen
-import in2000.team42.ui.screens.home.BottomSheet
 import in2000.team42.ui.screens.home.HomeScreen
 import in2000.team42.ui.screens.settings.SettingsScreen
 
@@ -45,7 +44,8 @@ class MainActivity : ComponentActivity() {
                         popExitTransition = { ExitTransition.None }
                     ) {
                         composable(Screen.Home.route){
-                            HomeScreen(navController, viewModel = viewModel(), modifier = Modifier
+                            HomeScreen(navController,
+                                modifier = Modifier
                                 .padding(innerPadding)
                             )
                         }

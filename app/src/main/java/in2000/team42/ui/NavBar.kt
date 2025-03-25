@@ -3,6 +3,7 @@ package in2000.team42.ui
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
@@ -46,7 +47,7 @@ fun NavBar (navController: NavHostController) {
 
         NavigationBarItem(
             icon = { Icon(
-                Icons.Default.Settings,
+                Icons.Default.AccountCircle,
                 contentDescription = "Settings",
                 modifier = Modifier.size(40.dp)
             )},

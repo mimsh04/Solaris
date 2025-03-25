@@ -31,7 +31,7 @@ class StrommenViewModel(
     private val _selectedTime = MutableStateFlow(getCurrentHour())
     val selectedTime: StateFlow<Date> get() = _selectedTime
 
-    private val _selectedRegion = MutableStateFlow("NO5")
+    private val _selectedRegion = MutableStateFlow("NO1")
     val selectedRegion: StateFlow<String> get() = _selectedRegion
 
     private val _currentPrice = MutableStateFlow<Double?>(null)
@@ -46,7 +46,9 @@ class StrommenViewModel(
     init {
         fetchPrice()
     }
-
+    /**
+     * Returnerer dagens dato satt til midnatt (00:00:00).
+     */
     private fun getCurrentDate(): Date {
         val calendar = Calendar.getInstance(osloTimeZone)
         calendar.set(Calendar.HOUR_OF_DAY, 0)
@@ -55,7 +57,9 @@ class StrommenViewModel(
         calendar.set(Calendar.MILLISECOND, 0)
         return calendar.time
     }
-
+    /**
+     * Returnerer nåværende time, med minutter og sekunder satt til null.
+     */
     private fun getCurrentHour(): Date {
         val calendar = Calendar.getInstance(osloTimeZone)
         calendar.set(Calendar.MINUTE, 0)
@@ -63,7 +67,9 @@ class StrommenViewModel(
         calendar.set(Calendar.MILLISECOND, 0)
         return calendar.time
     }
-
+    /**
+     * Returnerer dagens dato med tidspunkt satt til kl. 13:00.
+     */
     private fun getTodayAt13(): Date {
         return Calendar.getInstance(osloTimeZone).apply {
             set(Calendar.HOUR_OF_DAY, 13)
@@ -72,7 +78,13 @@ class StrommenViewModel(
             set(Calendar.MILLISECOND, 0)
         }.time
     }
-
+    /**
+     * Henter strømpris for den valgte datoen og tiden.
+     * Utfører diverse sjekker før API-kallet, som:
+     * - Om priser for morgendagen er tilgjengelige (etter kl. 13)
+     * - Om brukeren har valgt en dato lenger frem enn i morgen
+     * - Om dagens priser er tilgjengelige (fra kl. 13 dagen før)
+     */
     private fun fetchPrice() {
         viewModelScope.launch {
             _isLoading.value = true
@@ -85,7 +97,6 @@ class StrommenViewModel(
                 add(Calendar.DAY_OF_YEAR, 1)
             }.time
 
-            // Check if selected date is tomorrow
             if (dateFormat.format(_selectedDate.value) == dateFormat.format(tomorrow)) {
                 val currentHour = Calendar.getInstance(osloTimeZone).get(Calendar.HOUR_OF_DAY)
 
@@ -95,14 +106,12 @@ class StrommenViewModel(
                     return@launch
                 }
             }
-            // Check if selected date is after tomorrow
             else if (_selectedDate.value.after(tomorrow)) {
                 _error.value = "Kan bare vise priser for i dag og i morgen"
                 _isLoading.value = false
                 return@launch
             }
 
-            // Check if selected date is today but before 1 PM
             if (dateFormat.format(_selectedDate.value) == dateFormat.format(today) &&
                 now.before(getTodayAt13())) {
                 _error.value = "Dagens priser er ikke tilgjengelige før kl 13 dagen før."
@@ -166,7 +175,9 @@ class StrommenViewModel(
             _isLoading.value = false
         }
     }
-
+    /**
+     * Endrer valgt dato med en gitt mengde dager og henter nye priser.
+     */
     fun changeDate(days: Int) {
         val calendar = Calendar.getInstance(osloTimeZone).apply {
             time = _selectedDate.value
@@ -175,7 +186,9 @@ class StrommenViewModel(
         _selectedDate.value = calendar.time
         fetchPrice()
     }
-
+    /**
+     * Endrer valgt tid med en gitt mengde timer og henter nye priser.
+     */
     fun changeTime(hours: Int) {
         val calendar = Calendar.getInstance(osloTimeZone).apply {
             time = _selectedTime.value
@@ -187,7 +200,9 @@ class StrommenViewModel(
         _selectedTime.value = calendar.time
         fetchPrice()
     }
-
+    /**
+     * Setter valgt region og henter nye priser.
+     */
     fun setSelectedRegion(region: String) {
         _selectedRegion.value = region
         fetchPrice()

@@ -5,22 +5,20 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.mapbox.geojson.Point
@@ -32,11 +30,21 @@ import kotlinx.coroutines.launch
 fun SearchBar(
     placeAutocomplete: PlaceAutocomplete,
     onLocationSelected: (Point) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isMapClicked: Boolean = false
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var suggestions by remember { mutableStateOf<List<PlaceAutocompleteSuggestion>>(emptyList()) }
     var isExpanded by remember { mutableStateOf(false) }
+
+
+
+    LaunchedEffect(isMapClicked) {
+        if (isMapClicked) {
+            isExpanded = false
+        }
+    }
+
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -53,7 +61,6 @@ fun SearchBar(
                         coroutineScope.launch {
                             try {
                                 val response = placeAutocomplete.suggestions(query)
-                                Log.d("SearchBar", "Suggestions: ${response.value}")
                                 suggestions = response.value ?: emptyList()
                                 isExpanded = true
                             } catch (e: Exception) {
@@ -100,15 +107,11 @@ fun SearchBar(
                                     coroutineScope.launch {
                                         try {
                                             val result = placeAutocomplete.select(suggestion)
-                                            result.value?.coordinate?.let { coordinate ->
-                                                val point = Point.fromLngLat(
-                                                    coordinate.longitude(),
-                                                    coordinate.latitude()
-                                                )
-                                                onLocationSelected(point)
-                                                searchQuery = suggestion.name
-                                                isExpanded = false
-                                            }
+                                            val point = result.value?.coordinate!!
+                                            onLocationSelected(point)
+                                            searchQuery = suggestion.name
+                                            isExpanded = false
+
                                         } catch (e: Exception) {
                                             Log.e("SearchBar", "Error selecting place", e)
                                         }

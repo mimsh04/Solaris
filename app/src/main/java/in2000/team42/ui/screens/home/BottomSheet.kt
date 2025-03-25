@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import in2000.team42.ui.screens.home.bottomSheetKomp.Vinkelinputs
 
@@ -31,11 +32,16 @@ fun BottomSheet(
     val incline = viewModel.incline.collectAsState()
     val vinkel = viewModel.vinkel.collectAsState()
 
+    val focusManager = LocalFocusManager.current
+
     // Fikser en bug der etter navigering tilbake til skjermen så er det
     // mulig å hjemme bottomsheten
     LaunchedEffect (scaffoldState.bottomSheetState.currentValue) {
         if (scaffoldState.bottomSheetState.currentValue == SheetValue.Hidden) {
              scaffoldState.bottomSheetState.partialExpand()
+        }
+        if (scaffoldState.bottomSheetState.currentValue == SheetValue.PartiallyExpanded) {
+            focusManager.clearFocus()
         }
     }
 

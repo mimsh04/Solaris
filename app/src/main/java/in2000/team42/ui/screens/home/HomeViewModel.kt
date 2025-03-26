@@ -1,17 +1,22 @@
 package in2000.team42.ui.screens.home
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import in2000.team42.data.frost.FrostRepository
+import in2000.team42.data.frost.FrostDatasource
 import in2000.team42.data.pgvis.PgvisDatasource
 import in2000.team42.data.pgvis.PgvisRepository
 import in2000.team42.data.pgvis.model.DailyProfile
+import in2000.team42.model.frost.FrostData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
     private val radiationRepository = PgvisRepository(PgvisDatasource())
+    private val frostRepository = FrostRepository(FrostDatasource())
 
     private val _longitude = MutableStateFlow(0.0)
     private val _latitude = MutableStateFlow(0.0)
@@ -19,6 +24,7 @@ class HomeViewModel : ViewModel() {
     private val _vinkel = MutableStateFlow(0f)
 
     private val _sunRadiation = MutableStateFlow<List<DailyProfile>>(emptyList())
+    private val _frostData = MutableStateFlow<FrostData?>(null)
 
     val longitude = _longitude.asStateFlow()
     val latitude = _latitude.asStateFlow()
@@ -43,9 +49,10 @@ class HomeViewModel : ViewModel() {
 
     fun updateAllApi() {
         updateSolarRadiation()
+        updateFrostData()
     }
 
-    private fun updateSolarRadiation(
+    fun updateSolarRadiation(
     ) {
         viewModelScope.launch {
             _sunRadiation.value = radiationRepository.getRadiationData(
@@ -56,6 +63,16 @@ class HomeViewModel : ViewModel() {
                 vinkel.value
             )
             Log.d("HomeViewModel", "Radiation data: ${_sunRadiation.value}")
+        }
+
+    }
+
+    fun updateFrostData() {
+        viewModelScope.launch {
+            _frostData.value = frostRepository.fetchFrostDataByCoords(
+                latitude.value,
+                longitude.value
+            )
         }
 
     }

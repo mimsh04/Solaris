@@ -6,7 +6,7 @@ import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.plugins.logging.*
+//import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.header
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
@@ -23,14 +23,14 @@ object KtorClient {
                 ignoreUnknownKeys = true
             })
         }
-        install(Logging) {  // Valgrfitt: lagt til Log requests/responses
+        /*install(Logging) {  // Valgrfitt: lagt til Log requests/responses
             logger = object : Logger {
                 override fun log(message: String) {
                     Log.d(TAG, message)
                 }
             }
             level = LogLevel.BODY
-        }
+        }*/
         defaultRequest {
             val authToken = Base64.encodeToString("$CLIENT_ID:".toByteArray(), Base64.NO_WRAP)
             header("Authorization", "Basic $authToken")  // Basic Auth header

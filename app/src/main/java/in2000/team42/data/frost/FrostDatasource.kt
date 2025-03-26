@@ -1,16 +1,14 @@
 package in2000.team42.data.frost
 
-import android.content.Context
 import android.util.Log
 import in2000.team42.model.frost.FrostData
 import in2000.team42.model.frost.FrostResponse
-import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class FrostDataSource(private val context: Context) {
+class FrostDatasource() {
 
     private val TAG = "FrostDataSource"
     private val client = KtorClient.client
@@ -35,53 +33,35 @@ class FrostDataSource(private val context: Context) {
         Log.v(TAG, "Starting API request with params: $params")
 
         try {
-            val response: FrostResponse = client.get("observations/v0.jsonld") {
+            val response = client.get("observations/v0.jsonld") {
                 params.forEach { (key, value) ->
                     parameter(key, value)  // Add query parameters
                 }
-            }.body()  // Deserialize til FrostResponse
+            }  // Deserialize til FrostResponse
             Log.i(TAG, "Response received successfully")
             Log.d(TAG, "Raw response: $response")
 
-            parseResponse(response)
+            null
         } catch (e: Exception) {
             Log.e(TAG, "API request failed: ${e.message}", e)
             null
         }
     }
 
-    private fun parseResponse(response: FrostResponse): FrostData? {
-        return try {
-            Log.v(TAG, "Starting response parsing")
-            val observations = response.data.firstOrNull()?.observations ?: return null
 
-            var temp: Double? = null
-            var snow: Double? = null
-            var clouds: Int? = null
+    //https://frost.met.no/sources/v0.jsonld?types=SensorSystem&geometry=nearest(POINT(10.5555 59))
+    suspend fun fetchNearestStation(latitude: Double, longitude: Double){
+        val params = mapOf(
+            "types" to "SensorSystem",
+            "geometry" to "nearest(POINT($longitude $latitude))"
+        )
+        try{
+            val response = client.get("source/v0.jsonld")
+        }catch(e: Exception)
+            {
 
-            observations.forEach { obs ->
-                when (obs.elementId) {
-                    "air_temperature" -> {
-                        temp = obs.value
-                        Log.d(TAG, "Parsed air_temperature: $temp")
-                    }
-                    "accumulated(liquid_water_content_of_surface_snow)" -> {
-                        snow = obs.value
-                        Log.d(TAG, "Parsed snow_water_equivalent: $snow")
-                    }
-                    "cloud_area_fraction" -> {
-                        clouds = obs.value.toInt()
-                        Log.d(TAG, "Parsed cloud_area_fraction: $clouds")
-                    }
-                }
-            }
 
-            val weatherData = FrostData(temp, snow, clouds) // Lager data objektet
-            Log.v(TAG, "Parsing completed successfully")
-            weatherData
-        } catch (e: Exception) {
-            Log.e(TAG, "Error parsing response: ${e.message}", e)
-            null
         }
+
     }
 }

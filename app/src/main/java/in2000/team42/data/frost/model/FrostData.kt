@@ -17,21 +17,35 @@ data class FrostData(
             val json = Json { ignoreUnknownKeys = true }
             val response = json.decodeFromString<FrostResponse>(jsonString)
             return response.data.map { item ->
-                val observation = item.observations.firstOrNull() ?: Observation()
+                var temp: Float? = null
+                var precip: Float? = null
+                var cloud: Double? = null
+                var quality: Int? = null
+                item.observations.forEach { obs ->
+                    when (obs.elementId) {
+                        "air_temperature" -> temp = obs.value
+                        "sum(precipitation_amount P1D)" -> precip = obs.value
+                        "cloud_area_fraction" -> cloud = obs.value?.toDouble()
+                    }
+                    quality = obs.qualityCode ?: quality // Use the last non-null quality code
+                }
                 FrostData(
                     stationId = item.sourceId,
                     referenceTime = item.referenceTime,
-                    temperature = if (observation.elementId == "air_temperature") observation.value else null,
-                    precipitation = if (observation.elementId == "sum(precipitation_amount P1D)") observation.value else null,
-                    cloudAreaFraction = ((if (observation.elementId == "cloud_area_fraction") observation.value else null) as Double?),
-                    qualityCode = observation.qualityCode
+                    temperature = temp,
+                    precipitation = precip,
+                    cloudAreaFraction = cloud,
+                    qualityCode = quality
                 )
             }
         }
     }
 }
 
-// Helper classes for deserialization
+
+
+
+// Hjelper klasser for deserialization
 @Serializable
 private data class FrostResponse(
     val data: List<FrostObservation>

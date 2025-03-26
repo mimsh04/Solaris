@@ -1,4 +1,4 @@
-package in2000.team42.ui.screens.home
+package in2000.team42.ui.screens.home.bottomSheet
 
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.layout.height
@@ -14,9 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import in2000.team42.ui.screens.home.bottomSheetKomp.*
-
+import in2000.team42.ui.screens.home.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,11 +33,16 @@ fun BottomSheet(
     val vinkel = viewModel.vinkel.collectAsState()
 
 
+    val focusManager = LocalFocusManager.current
+
     // Fikser en bug der etter navigering tilbake til skjermen så er det
     // mulig å hjemme bottomsheten
     LaunchedEffect (scaffoldState.bottomSheetState.currentValue) {
         if (scaffoldState.bottomSheetState.currentValue == SheetValue.Hidden) {
              scaffoldState.bottomSheetState.partialExpand()
+        }
+        if (scaffoldState.bottomSheetState.currentValue == SheetValue.PartiallyExpanded) {
+            focusManager.clearFocus()
         }
     }
 

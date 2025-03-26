@@ -1,6 +1,5 @@
 package in2000.team42.data.pgvis
 
-import android.util.Log
 import in2000.team42.data.pgvis.model.DailyProfile
 import in2000.team42.data.pgvis.model.RadiationResponse
 import io.ktor.client.HttpClient

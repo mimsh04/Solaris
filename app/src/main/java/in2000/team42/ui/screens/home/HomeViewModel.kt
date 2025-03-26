@@ -23,7 +23,7 @@ class HomeViewModel : ViewModel() {
     private val _vinkel = MutableStateFlow(0f)
 
     private val _sunRadiation = MutableStateFlow<List<DailyProfile>>(emptyList())
-    private val _frostData = MutableStateFlow<FrostData?>(null)
+    private val _weatherData = MutableStateFlow<FrostData?>(null)
 
     val longitude = _longitude.asStateFlow()
     val latitude = _latitude.asStateFlow()
@@ -48,7 +48,7 @@ class HomeViewModel : ViewModel() {
 
     fun updateAllApi() {
         updateSolarRadiation()
-        updateFrostData()
+        updateWeatherData()
     }
 
     fun updateSolarRadiation(
@@ -66,10 +66,18 @@ class HomeViewModel : ViewModel() {
 
     }
 
-    fun updateFrostData() {
+    private fun updateWeatherData() {
         viewModelScope.launch {
-            frostRepository.fetchNearestStation(_latitude.value,_longitude.value)
+            try {
+                val weather = frostRepository.getFrostData(
+                    latitude = _latitude.value,
+                    longitude = _longitude.value
+                )
+                _weatherData.value = weather
+                Log.d("HomeViewModel", "Weather data: $weather")
+            } catch (e: Exception) {
+                Log.e("HomeViewModel", "Failed to fetch weather data: ${e.message}")
+            }
         }
-
     }
 }

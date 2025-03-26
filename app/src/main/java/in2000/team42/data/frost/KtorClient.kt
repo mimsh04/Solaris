@@ -4,8 +4,12 @@ import android.util.Base64
 import android.util.Log
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.auth.Auth
+import io.ktor.client.plugins.auth.providers.BasicAuthCredentials
+import io.ktor.client.plugins.auth.providers.basic
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.request.basicAuth
 //import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.header
 import io.ktor.serialization.kotlinx.json.*
@@ -18,10 +22,12 @@ object KtorClient {
 
     val client = HttpClient(CIO) {
         install(ContentNegotiation) {
-            json(Json {
-                isLenient = true
-                ignoreUnknownKeys = true
-            })
+            json()
+        }
+        install(Auth) {
+            basic {
+                BasicAuthCredentials(CLIENT_ID, "")
+            }
         }
         /*install(Logging) {  // Valgrfitt: lagt til Log requests/responses
             logger = object : Logger {
@@ -31,10 +37,5 @@ object KtorClient {
             }
             level = LogLevel.BODY
         }*/
-        defaultRequest {
-            val authToken = Base64.encodeToString("$CLIENT_ID:".toByteArray(), Base64.NO_WRAP)
-            header("Authorization", "Basic $authToken")  // Basic Auth header
-            url(BASE_URL)
-        }
     }
 }

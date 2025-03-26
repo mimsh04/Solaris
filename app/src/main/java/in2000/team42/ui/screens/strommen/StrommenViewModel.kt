@@ -112,13 +112,6 @@ class StrommenViewModel(
                 return@launch
             }
 
-            if (dateFormat.format(_selectedDate.value) == dateFormat.format(today) &&
-                now.before(getTodayAt13())) {
-                _error.value = "Dagens priser er ikke tilgjengelige før kl 13 dagen før."
-                _isLoading.value = false
-                return@launch
-            }
-
             val calendar = Calendar.getInstance(osloTimeZone).apply {
                 time = _selectedDate.value
             }

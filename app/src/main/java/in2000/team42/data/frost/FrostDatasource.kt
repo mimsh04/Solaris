@@ -1,8 +1,9 @@
 package in2000.team42.data.frost
 
 import android.util.Log
-import in2000.team42.model.frost.FrostData
-import in2000.team42.model.frost.FrostResponse
+import in2000.team42.data.frost.model.FrostData
+import in2000.team42.data.frost.model.SourceResponse
+import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import kotlinx.coroutines.Dispatchers
@@ -50,17 +51,24 @@ class FrostDatasource() {
 
 
     //https://frost.met.no/sources/v0.jsonld?types=SensorSystem&geometry=nearest(POINT(10.5555 59))
-    suspend fun fetchNearestStation(latitude: Double, longitude: Double){
+    suspend fun fetchNearestStation(latitude: Double, longitude: Double): String{
         val params = mapOf(
             "types" to "SensorSystem",
             "geometry" to "nearest(POINT($longitude $latitude))"
         )
-        try{
-            val response = client.get("source/v0.jsonld")
-        }catch(e: Exception)
-            {
+        return try{
+            val response = client.get("source/v0.jsonld"){
+                params.forEach { (key, value) ->
+                    parameter(key, value)
+                }
+            }.body<SourceResponse>()
+            Log.i(TAG, "Response received successfully")
+            Log.d(TAG, "Raw response: $response")
+            response.data[0].id
 
-
+        }catch(e: Exception) {
+            Log.e(TAG,"API request failed: ${e.message}", e)
+            ""
         }
 
     }

@@ -1,6 +1,5 @@
 package in2000.team42.ui.screens.home
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,7 +8,7 @@ import in2000.team42.data.frost.FrostDatasource
 import in2000.team42.data.pgvis.PgvisDatasource
 import in2000.team42.data.pgvis.PgvisRepository
 import in2000.team42.data.pgvis.model.DailyProfile
-import in2000.team42.model.frost.FrostData
+import in2000.team42.data.frost.model.FrostData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -69,10 +68,7 @@ class HomeViewModel : ViewModel() {
 
     fun updateFrostData() {
         viewModelScope.launch {
-            _frostData.value = frostRepository.fetchFrostDataByCoords(
-                latitude.value,
-                longitude.value
-            )
+            frostRepository.fetchNearestStation(_latitude.value,_longitude.value)
         }
 
     }

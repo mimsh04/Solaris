@@ -1,4 +1,4 @@
-package in2000.team42.model.frost
+package in2000.team42.data.frost.model
 
 import kotlinx.serialization.Serializable
 

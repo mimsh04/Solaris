@@ -1,5 +1,6 @@
 package in2000.team42.data.frost
 
+import android.net.Credentials
 import android.util.Base64
 import android.util.Log
 import io.ktor.client.*
@@ -23,19 +24,15 @@ object KtorClient {
     val client = HttpClient(CIO) {
         install(ContentNegotiation) {
             json()
+            ignoreUnknownKeys = true
         }
         install(Auth) {
             basic {
-                BasicAuthCredentials(CLIENT_ID, "")
+                credentials {
+                    BasicAuthCredentials(username = "5fa50311-61ee-4aa0-8f29-2262c21212e5", password = "")
+                }
+
             }
         }
-        /*install(Logging) {  // Valgrfitt: lagt til Log requests/responses
-            logger = object : Logger {
-                override fun log(message: String) {
-                    Log.d(TAG, message)
-                }
-            }
-            level = LogLevel.BODY
-        }*/
     }
 }

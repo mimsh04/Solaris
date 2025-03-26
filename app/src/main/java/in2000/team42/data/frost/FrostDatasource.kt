@@ -48,7 +48,7 @@ class FrostDatasource() {
 
     //https://frost.met.no/sources/v0.jsonld?types=SensorSystem&geometry=nearest(POINT(10.5555 59))
     suspend fun getNearestStation(lat: Double, lon: Double): String? {
-        val url = "https://frost.met.no/sources/v0.jsonld?types=SensorSystem&geometry=nearest(POINT($lon $lat))"
+        val url = "https://frost.met.no/sources/v0.jsonld?types=SensorSystem&geometry=nearest(POINT($lon%20$lat))"
         return try {
             val response: SourceResponse = client.get(url).body()
             Log.d(TAG, "Station response: $response")

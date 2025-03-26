@@ -11,5 +11,5 @@ import in2000.team42.ui.screens.home.map.Map
 
 fun HomeScreen(navController: NavHostController,modifier: Modifier = Modifier, viewModel: HomeViewModel) {
     Map(modifier = modifier, viewModel = viewModel)
-    BottomSheet(modifier = modifier)
+    BottomSheet(modifier = modifier, viewModel = viewModel)
 }

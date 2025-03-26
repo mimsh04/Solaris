@@ -69,7 +69,8 @@ fun BottomSheet(
                     )
                 }
 
-                item { StrommenContent()
+                item {
+                    StrommenContent()
                 }
             }
         },

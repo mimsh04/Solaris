@@ -64,8 +64,7 @@ class MainActivity : ComponentActivity() {
                         popExitTransition = { ExitTransition.None }
                     ) {
                         composable(Screen.Home.route){
-                            HomeScreen(navController,
-                                modifier = Modifier
+                            HomeScreen(navController, viewModel = viewModel(), modifier = Modifier
                                 .padding(innerPadding)
                             )
                         }

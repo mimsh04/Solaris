@@ -47,6 +47,17 @@ class FrostDatasource() {
         }
     }
 
+    /**
+     * Henter daglig temperatur, skydekke og regn for de siste 24 timene når funksjonen blir kalt
+     * hvis det har blitt gjort målinger for hver time. Kan hende en stasjon ikke måler hver time
+     * eller ikke har utstyret for å målet en type data. Altså kan det hende du ikke får noe værdata
+     * på noen adresser.
+     *
+     * @param latitude Latitude
+     * @param longitude Longitude
+     *
+     * @return Klasse med temperatur, skydekke og snø (eller mengden snø ekvivalent med vann på bakken)
+     */
     suspend fun getWeatherData(stationId: String, referenceTime: String): List<FrostData> = withContext(Dispatchers.IO) {
         val url = "$baseUrl/observations/v0.jsonld"
         Log.d(TAG, "Fetching weather data for station $stationId at time $referenceTime")

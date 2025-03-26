@@ -8,8 +8,8 @@ import in2000.team42.ui.screens.home.bottomSheet.BottomSheet
 import in2000.team42.ui.screens.home.map.Map
 
 @Composable
-fun HomeScreen(navController: NavHostController, modifier: Modifier = Modifier) {
-    val viewModel: HomeViewModel = viewModel()
+
+fun HomeScreen(navController: NavHostController,modifier: Modifier = Modifier, viewModel: HomeViewModel) {
     Map(modifier = modifier, viewModel = viewModel)
     BottomSheet(modifier = modifier)
 }

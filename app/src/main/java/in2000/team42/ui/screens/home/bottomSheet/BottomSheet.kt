@@ -1,6 +1,6 @@
 package in2000.team42.ui.screens.home.bottomSheet
 
-import androidx.lifecycle.viewmodel.compose.viewModel
+
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -16,15 +16,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
-import in2000.team42.ui.screens.home.bottomSheetKomp.*
 import in2000.team42.ui.screens.home.HomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomSheet(
-    modifier: Modifier = Modifier
+
+    modifier: Modifier = Modifier,
+    viewModel: HomeViewModel
 ) {
-    val viewModel: HomeViewModel = viewModel()
+
+
     val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = rememberStandardBottomSheetState(
         initialValue = SheetValue.PartiallyExpanded,
         skipHiddenState = true
@@ -66,6 +68,7 @@ fun BottomSheet(
                         onDirectionChange = { viewModel.setVinkel(it) }
                     )
                 }
+
                 item { StrommenContent()
                 }
             }

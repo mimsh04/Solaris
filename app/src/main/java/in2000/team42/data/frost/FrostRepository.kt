@@ -1,8 +1,7 @@
 package in2000.team42.data.frost
 
 import android.util.Log // Added import for Logcat
-import data.FrostDatasource
-import models.FrostData
+import in2000.team42.data.frost.model.FrostData
 
 class FrostRepository(private val dataSource: FrostDatasource) {
     private val TAG = "FrostRepository" // Logcat tag for this class

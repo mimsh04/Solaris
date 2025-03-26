@@ -1,4 +1,4 @@
-package data
+package in2000.team42.data.frost
 
 import android.util.Log // Added import for Logcat
 import io.ktor.client.*
@@ -7,11 +7,11 @@ import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.*
 import io.ktor.client.request.*
-import io.ktor.http.*
-import models.FrostData
+import in2000.team42.data.frost.model.FrostData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
 class FrostDatasource() {
     private val TAG = "FrostDatasource" // LogCat tag for denne klassen
@@ -36,7 +36,7 @@ class FrostDatasource() {
             }.body()
             Log.v(TAG, "Received response from Frost API: $response")
 
-            val json = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
+            val json = Json { ignoreUnknownKeys = true }
             val data = json.decodeFromString<SourceResponse>(response)
             val stationId = data.data.firstOrNull()?.id
             Log.i(TAG, "Found nearest station ID: $stationId")

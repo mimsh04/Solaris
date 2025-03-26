@@ -5,14 +5,14 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import data.FrostDatasource
+import in2000.team42.data.frost.FrostDatasource
 import in2000.team42.data.pgvis.PgvisDatasource
 import in2000.team42.data.pgvis.PgvisRepository
 import in2000.team42.data.pgvis.model.DailyProfile
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import models.FrostData
+import in2000.team42.data.frost.model.FrostData
 import in2000.team42.data.frost.FrostRepository
 import java.time.Instant
 import java.time.ZoneId

@@ -1,26 +1,53 @@
-package in2000.team42.data.frost.model
+package models
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.decodeFromString
 
 @Serializable
 data class FrostData(
-    val temperature: Double?,          // °C
-    val snowWaterEquivalent: Double?,  // kg/m²
-    val cloudCoverage: Int?            // %
+    val stationId: String,
+    val referenceTime: String,
+    val temperature: Float? = null, // I Celsius
+    val precipitation: Float? = null, // I mm
+    val cloudAreaFraction: Double? = null, // I prosent
+    val qualityCode: Int? = null,
+) {
+    companion object {
+        fun fromJson(jsonString: String): List<FrostData> {
+            val json = Json { ignoreUnknownKeys = true }
+            val response = json.decodeFromString<FrostResponse>(jsonString)
+            return response.data.map { item ->
+                val observation = item.observations.firstOrNull() ?: Observation()
+                FrostData(
+                    stationId = item.sourceId,
+                    referenceTime = item.referenceTime,
+                    temperature = if (observation.elementId == "air_temperature") observation.value else null,
+                    precipitation = if (observation.elementId == "sum(precipitation_amount P1D)") observation.value else null,
+                    cloudAreaFraction = ((if (observation.elementId == "cloud_area_fraction") observation.value else null) as Double?),
+                    qualityCode = observation.qualityCode
+                )
+            }
+        }
+    }
+}
+
+// Helper classes for deserialization
+@Serializable
+private data class FrostResponse(
+    val data: List<FrostObservation>
 )
 
-// metadata
-data class FrostResponse(
-    val data: List<ObservationData> // List of observation entries from the API
+@Serializable
+private data class FrostObservation(
+    val sourceId: String,
+    val referenceTime: String,
+    val observations: List<Observation>
 )
 
-// Represents a single observation set in the response
-// Representerer et set med observasjoner i en repsonse
-data class ObservationData(
-    val observations: List<Observation> // Liste av individuelle maalinger (temp, snow, clouds)
-)
-
-data class Observation(
-    val elementId: String, // Identifikator som "air_temperature" eller "cloud_area_fraction"
-    val value: Double // Bruker double for å håndtere både Double og int verdier
+@Serializable
+private data class Observation(
+    val elementId: String? = null,
+    val value: Float? = null,
+    val qualityCode: Int? = null
 )

@@ -5,9 +5,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -22,11 +28,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.mapbox.geojson.Point
 import com.mapbox.search.autocomplete.PlaceAutocomplete
+import com.mapbox.search.autocomplete.PlaceAutocompleteOptions
 import com.mapbox.search.autocomplete.PlaceAutocompleteSuggestion
+import com.mapbox.search.autocomplete.PlaceAutocompleteType
 import kotlinx.coroutines.launch
 
 @Composable
@@ -40,6 +49,8 @@ fun SearchBar(
     var suggestions by remember { mutableStateOf<List<PlaceAutocompleteSuggestion>>(emptyList()) }
     var isExpanded by remember { mutableStateOf(false) }
 
+    val focusManager = LocalFocusManager.current
+    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(isMapClicked) {
         if (isMapClicked) {
@@ -47,13 +58,13 @@ fun SearchBar(
         }
     }
 
-    val coroutineScope = rememberCoroutineScope()
 
     fun handleSuggestionClick(suggestion: PlaceAutocompleteSuggestion) {
         coroutineScope.launch {
             try {
                 val result = placeAutocomplete.select(suggestion)
                 val point = result.value?.coordinate!!
+                focusManager.clearFocus()
                 onLocationSelected(point)
                 searchQuery = suggestion.name
                 isExpanded = false
@@ -68,7 +79,18 @@ fun SearchBar(
         if (query.isNotEmpty()) {
             coroutineScope.launch {
                 try {
-                    val response = placeAutocomplete.suggestions(query)
+                    val response = placeAutocomplete.suggestions(
+                        query,
+                        proximity = Point.fromLngLat(10.74609, 59.91273),
+                        options = PlaceAutocompleteOptions(
+                            limit = 8,
+                            types = listOf(
+                                PlaceAutocompleteType.AdministrativeUnit.Address,
+                                PlaceAutocompleteType.AdministrativeUnit.Street,
+                                PlaceAutocompleteType.AdministrativeUnit.Place
+                            )
+                        )
+                    )
                     suggestions = response.value ?: emptyList()
                     isExpanded = true
                 } catch (e: Exception) {
@@ -86,7 +108,7 @@ fun SearchBar(
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            // Search bar with rounded corners
+
             TextField(
                 value = searchQuery,
                 onValueChange = { query ->
@@ -96,12 +118,25 @@ fun SearchBar(
                     .fillMaxWidth()
                     .padding(horizontal = 40.dp)
                 ,
-                placeholder = { Text("Søk etter adresse") },
+                placeholder = {
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Søk etter adresse")
+                },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                 singleLine = true,
                 shape = MaterialTheme.shapes.extraLarge,
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                ),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Search",
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
             )
-
             // Suggestions dropdown
             if (isExpanded && suggestions.isNotEmpty()) {
                 Column(

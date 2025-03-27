@@ -66,6 +66,7 @@ class PgvisDatasource {
      * @param incline Hellingsvinkel (i grader)
      * @param retning Retning (i grader)
      * @param peakPower Peak power (i kW, hvor mye kan panelene produsere)
+     * Les mer her: [PVGIS FAQ](https://joint-research-centre.ec.europa.eu/photovoltaic-geographical-information-system-pvgis/getting-started-pvgis/using-pvgis-frequently-asked-questions_en)
      * @param pvTech PV teknologi
      *
      * @return Liste av MonthlyKwhData

@@ -58,8 +58,18 @@ class PgvisDatasource {
 
 
 
-
-    // https://re.jrc.ec.europa.eu/api/v5_3/PVcalc?outputformat=json&lat=59.668&lon=10.789&raddatabase=PVGIS-SARAH3&peakpower=2&loss=14&mountingplace=building&pvtechchoice=crystSi&angle=35&aspect=0&js=1
+    /**
+     * Henter månedlig gjennomsnittlig kWh for hver måned mellem årene 2003 - 2023
+     *
+     * @param lat Latitude
+     * @param lon Longitude
+     * @param incline Hellingsvinkel (i grader)
+     * @param retning Retning (i grader)
+     * @param peakPower Peak power (i kW, hvor mye kan panelene produsere)
+     * @param pvTech PV teknologi
+     *
+     * @return Liste av MonthlyKwhData
+     */
     suspend fun getMonthlyKwh(
         lat: Double,
         lon: Double,

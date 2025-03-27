@@ -81,15 +81,15 @@ class PgvisDatasource {
 
     ) :List<KwhMonthlyResponse.MonthlyKwhData> {
         val url = "https://re.jrc.ec.europa.eu/api/v5_3/PVcalc?outputformat=json" +
-                "&lat=$lat" +
-                "&lon=$lon" +
-                "&raddatabase=PVGIS-SARAH3" +
-                "&peakpower=$peakPower" +
-                "&loss=14" +
-                "&mountingplace=building" +
-                "&pvtechchoice=${pvTech.value}" +
-                "&angle=$incline" +
-                "&aspect=$retning"
+            "&lat=$lat" +
+            "&lon=$lon" +
+            "&raddatabase=PVGIS-SARAH3" +
+            "&peakpower=$peakPower" +
+            "&loss=14" +
+            "&mountingplace=building" +
+            "&pvtechchoice=${pvTech.value}" +
+            "&angle=$incline" +
+            "&aspect=$retning"
         return try {
             val response = ktorHttpClient.get(url).body<KwhMonthlyResponse.Response>()
             response.outputs.monthly.fixed

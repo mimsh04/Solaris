@@ -14,9 +14,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import in2000.team42.data.frost.model.FrostData
 import in2000.team42.data.frost.FrostRepository
+import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
+import java.util.Locale
+import java.util.TimeZone
 
 class HomeViewModel : ViewModel() {
     private val radiationRepository = PgvisRepository(PgvisDatasource())
@@ -73,22 +77,24 @@ class HomeViewModel : ViewModel() {
 
     }
 
-    // Måtte legge til minimums krav for API 26, skal se på å finne en løsning
-    // som ikke krever et minimums krav for API
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun getLast24HoursReferenceTime(): String {
-        val now = Instant.now()
-        val start = now.minusSeconds(24 * 60 * 60) // 24 hours ago
-        val formatter = DateTimeFormatter
-            .ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-            .withZone(ZoneId.of("UTC"))
+        val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+        val endTime = calendar.time // Current time
 
-        val startTime = formatter.format(start)
-        val endTime = formatter.format(now)
-        return "$startTime/$endTime" // e.g., "2025-03-25T12:00:00Z/2025-03-26T12:00:00Z"
+        // Subtract 24 hours
+        calendar.add(Calendar.HOUR_OF_DAY, -24)
+        val startTime = calendar.time
+
+        // Create formatter compatible with older APIs
+        val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
+        formatter.timeZone = TimeZone.getTimeZone("UTC")
+
+        val startFormatted = formatter.format(startTime)
+        val endFormatted = formatter.format(endTime)
+
+        return "$startFormatted/$endFormatted"
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun updateWeatherData() {
         viewModelScope.launch {
             try {

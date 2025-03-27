@@ -23,7 +23,6 @@ fun Vinkelinput(
     verdi: Float,
     onValueChange: (Float) -> Unit,
     range: IntRange = 0..90,
-    icon: ImageVector
 ) {
     var showedVal by remember { mutableStateOf(verdi.toInt().toString()) }
 

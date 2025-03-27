@@ -25,7 +25,6 @@ fun Vinkelinputs(
             incline,
             onInclineChange,
             0..90,
-            Icons.Default.Build
         )
 
         Vinkelinput(
@@ -33,7 +32,6 @@ fun Vinkelinputs(
             direction,
             onDirectionChange,
             -180..180,
-            Icons.Default.Build
         )
     }
 }

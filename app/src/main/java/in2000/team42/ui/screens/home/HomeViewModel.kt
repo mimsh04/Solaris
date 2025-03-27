@@ -1,17 +1,30 @@
 package in2000.team42.ui.screens.home
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import in2000.team42.data.frost.FrostDatasource
 import in2000.team42.data.pgvis.PgvisDatasource
 import in2000.team42.data.pgvis.PgvisRepository
 import in2000.team42.data.pgvis.model.DailyProfile
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import in2000.team42.data.frost.model.FrostData
+import in2000.team42.data.frost.FrostRepository
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
+import java.util.Locale
+import java.util.TimeZone
 
 class HomeViewModel : ViewModel() {
     private val radiationRepository = PgvisRepository(PgvisDatasource())
+    private val frostRepository = FrostRepository(FrostDatasource())
 
     private val _longitude = MutableStateFlow(0.0)
     private val _latitude = MutableStateFlow(0.0)
@@ -19,11 +32,13 @@ class HomeViewModel : ViewModel() {
     private val _vinkel = MutableStateFlow(0f)
 
     private val _sunRadiation = MutableStateFlow<List<DailyProfile>>(emptyList())
+    private val _weatherData = MutableStateFlow<List<FrostData>>(emptyList())
 
     val longitude = _longitude.asStateFlow()
     val latitude = _latitude.asStateFlow()
     val incline = _incline.asStateFlow()
     val vinkel = _vinkel.asStateFlow()
+    val weatherData = _weatherData.asStateFlow()
 
     fun setLongitude(longitude: Double) {
         _longitude.value = longitude
@@ -41,11 +56,13 @@ class HomeViewModel : ViewModel() {
         _vinkel.value = vinkel
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun updateAllApi() {
         updateSolarRadiation()
+        updateWeatherData()
     }
 
-    private fun updateSolarRadiation(
+    fun updateSolarRadiation(
     ) {
         viewModelScope.launch {
             _sunRadiation.value = radiationRepository.getRadiationData(
@@ -58,5 +75,41 @@ class HomeViewModel : ViewModel() {
             Log.d("HomeViewModel", "Radiation data: ${_sunRadiation.value}")
         }
 
+    }
+
+    private fun getLast24HoursReferenceTime(): String {
+        val calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Oslo"))
+        val endTime = calendar.time // Current time
+
+        // Subtract 24 hours
+        calendar.add(Calendar.HOUR_OF_DAY, -24)
+        val startTime = calendar.time
+
+        // Formatterer data med
+        val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
+        formatter.timeZone = TimeZone.getTimeZone("Europe/Oslo")
+
+        val startFormatted = formatter.format(startTime)
+        val endFormatted = formatter.format(endTime)
+
+        return "$startFormatted/$endFormatted"
+    }
+
+    private fun updateWeatherData() {
+        viewModelScope.launch {
+            try {
+                val referenceTime = getLast24HoursReferenceTime()
+                val weather = frostRepository.getWeatherByCoordinates(
+                    latitude = _latitude.value,
+                    longitude = _longitude.value,
+                    referenceTime = referenceTime
+                )
+                _weatherData.value = weather
+                Log.d("HomeViewModel", "Weather data: $weather")
+            } catch (e: Exception) {
+                Log.e("HomeViewModel", "Failed to fetch weather data: ${e.message}")
+                _weatherData.value = emptyList()
+            }
+        }
     }
 }

@@ -1,87 +1,85 @@
 package in2000.team42.data.frost
 
-import android.content.Context
-import android.util.Log
-import in2000.team42.model.frost.FrostData
-import in2000.team42.model.frost.FrostResponse
-import io.ktor.client.call.body
-import io.ktor.client.request.get
-import io.ktor.client.request.parameter
+import android.util.Log // Added import for Logcat
+import io.ktor.client.*
+import io.ktor.client.call.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.auth.*
+import io.ktor.client.plugins.auth.providers.*
+import io.ktor.client.request.*
+import in2000.team42.data.frost.model.FrostData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
-class FrostDataSource(private val context: Context) {
+class FrostDatasource() {
+    private val TAG = "FrostDatasource" // LogCat tag for denne klassen
+    private val CLIENTID = "5fa50311-61ee-4aa0-8f29-2262c21212e5"
 
-    private val TAG = "FrostDataSource"
-    private val client = KtorClient.client
+    private val baseUrl = "https://frost.met.no"
+    private val client = HttpClient(CIO) {
+        install(Auth) {
+            basic {
+                credentials { BasicAuthCredentials(username = CLIENTID, password = "") }
+            }
+        }
+    }
+
+    suspend fun getNearestStation(latitude: Double, longitude: Double): String? = withContext(Dispatchers.IO) {
+        val url = "$baseUrl/sources/v0.jsonld"
+        Log.d(TAG, "Searching for nearest station at coordinates: ($latitude, $longitude)")
+        try {
+            val response: String = client.get(url) {
+                parameter("geometry", "nearest(POINT($longitude $latitude))")
+                parameter("nearestmaxcount", 1)
+            }.body()
+            Log.v(TAG, "Received response from Frost API: $response")
+
+            val json = Json { ignoreUnknownKeys = true }
+            val data = json.decodeFromString<SourceResponse>(response)
+            val stationId = data.data.firstOrNull()?.id
+            Log.i(TAG, "Found nearest station ID: $stationId")
+            stationId
+        } catch (e: Exception) {
+            Log.e(TAG, "Error finding station: ${e.message}", e)
+            null
+        }
+    }
 
     /**
-     * Henter daglig temperatur, skydekke og snømengde for de siste 24 timene når funksjonen blir kalt
+     * Henter daglig temperatur, skydekke og regn for de siste 24 timene når funksjonen blir kalt
      * hvis det har blitt gjort målinger for hver time. Kan hende en stasjon ikke måler hver time
-     * eller ikke har utstyret for å målet en type data.
+     * eller ikke har utstyret for å målet en type data. Altså kan det hende du ikke får noe værdata
+     * på noen adresser.
      *
      * @param latitude Latitude
      * @param longitude Longitude
      *
      * @return Klasse med temperatur, skydekke og snø (eller mengden snø ekvivalent med vann på bakken)
      */
-    suspend fun fetchFrostDataByCoords(latitude: Double, longitude: Double): FrostData? = withContext(Dispatchers.IO) {
-        val params = mapOf(
-            "sources" to "nearest(POINT($longitude $latitude))",
-            "elements" to "air_temperature,accumulated(liquid_water_content_of_surface_snow),cloud_area_fraction",
-            "referencetime" to "now-PT24H/now"
-        )
-
-        Log.v(TAG, "Starting API request with params: $params")
-
+    suspend fun getWeatherData(stationId: String, referenceTime: String): List<FrostData> = withContext(Dispatchers.IO) {
+        val url = "$baseUrl/observations/v0.jsonld"
+        Log.d(TAG, "Fetching weather data for station $stationId at time $referenceTime")
         try {
-            val response: FrostResponse = client.get("observations/v0.jsonld") {
-                params.forEach { (key, value) ->
-                    parameter(key, value)  // Add query parameters
-                }
-            }.body()  // Deserialize til FrostResponse
-            Log.i(TAG, "Response received successfully")
-            Log.d(TAG, "Raw response: $response")
+            val response: String = client.get(url) {
+                parameter("sources", stationId)
+                parameter("referencetime", referenceTime)
+                parameter("elements", "air_temperature,sum(precipitation_amount P1D),cloud_area_fraction")
+            }.body()
+            Log.v(TAG, "Received weather data response: $response")
 
-            parseResponse(response)
-        } catch (e: Exception) {
-            Log.e(TAG, "API request failed: ${e.message}", e)
-            null
-        }
-    }
-
-    private fun parseResponse(response: FrostResponse): FrostData? {
-        return try {
-            Log.v(TAG, "Starting response parsing")
-            val observations = response.data.firstOrNull()?.observations ?: return null
-
-            var temp: Double? = null
-            var snow: Double? = null
-            var clouds: Int? = null
-
-            observations.forEach { obs ->
-                when (obs.elementId) {
-                    "air_temperature" -> {
-                        temp = obs.value
-                        Log.d(TAG, "Parsed air_temperature: $temp")
-                    }
-                    "accumulated(liquid_water_content_of_surface_snow)" -> {
-                        snow = obs.value
-                        Log.d(TAG, "Parsed snow_water_equivalent: $snow")
-                    }
-                    "cloud_area_fraction" -> {
-                        clouds = obs.value.toInt()
-                        Log.d(TAG, "Parsed cloud_area_fraction: $clouds")
-                    }
-                }
-            }
-
-            val weatherData = FrostData(temp, snow, clouds) // Lager data objektet
-            Log.v(TAG, "Parsing completed successfully")
+            val weatherData = FrostData.fromJson(response)
+            Log.i(TAG, "Successfully parsed ${weatherData.size} weather data points")
             weatherData
         } catch (e: Exception) {
-            Log.e(TAG, "Error parsing response: ${e.message}", e)
-            null
+            Log.e(TAG, "Error fetching weather data: ${e.message}", e)
+            emptyList()
         }
     }
+
+    @Serializable
+    private data class SourceResponse(val data: List<Source>)
+    @Serializable
+    private data class Source(val id: String)
 }

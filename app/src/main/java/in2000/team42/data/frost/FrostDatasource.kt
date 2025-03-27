@@ -34,7 +34,6 @@ class FrostDatasource() {
                 parameter("geometry", "nearest(POINT($longitude $latitude))")
                 parameter("nearestmaxcount", 1)
             }.body()
-            Log.v(TAG, "Received response from Frost API: $response")
 
             val json = Json { ignoreUnknownKeys = true }
             val data = json.decodeFromString<SourceResponse>(response)
@@ -67,7 +66,6 @@ class FrostDatasource() {
                 parameter("referencetime", referenceTime)
                 parameter("elements", "air_temperature,sum(precipitation_amount P1D),cloud_area_fraction")
             }.body()
-            Log.v(TAG, "Received weather data response: $response")
 
             val weatherData = FrostData.fromJson(response)
             Log.i(TAG, "Successfully parsed ${weatherData.size} weather data points")

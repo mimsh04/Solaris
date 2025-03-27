@@ -56,7 +56,6 @@ class HomeViewModel : ViewModel() {
         _vinkel.value = vinkel
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun updateAllApi() {
         updateSolarRadiation()
         updateWeatherData()

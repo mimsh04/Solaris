@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -36,6 +37,7 @@ import com.mapbox.search.autocomplete.PlaceAutocomplete
 import com.mapbox.search.autocomplete.PlaceAutocompleteOptions
 import com.mapbox.search.autocomplete.PlaceAutocompleteSuggestion
 import com.mapbox.search.autocomplete.PlaceAutocompleteType
+import com.mapbox.search.common.IsoCountryCode
 import kotlinx.coroutines.launch
 
 @Composable
@@ -83,11 +85,13 @@ fun SearchBar(
                         query,
                         proximity = Point.fromLngLat(10.74609, 59.91273),
                         options = PlaceAutocompleteOptions(
+                            countries = listOf(IsoCountryCode.NORWAY),
                             limit = 8,
                             types = listOf(
                                 PlaceAutocompleteType.AdministrativeUnit.Address,
                                 PlaceAutocompleteType.AdministrativeUnit.Street,
-                                PlaceAutocompleteType.AdministrativeUnit.Place
+                                PlaceAutocompleteType.AdministrativeUnit.Postcode
+                                //PlaceAutocompleteType.AdministrativeUnit.Place
                             )
                         )
                     )
@@ -128,6 +132,8 @@ fun SearchBar(
                 colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                 ),
                 leadingIcon = {
                     Icon(
@@ -152,6 +158,9 @@ fun SearchBar(
                         SuggestionItem(suggestion, onClick = {
                             handleSuggestionClick(suggestion)
                         })
+                        HorizontalDivider(
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
                     }
                 }
             }

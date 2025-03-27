@@ -28,6 +28,9 @@ class FrostRepository(private val dataSource: FrostDatasource) {
         return "$startFormatted/$endFormatted"
     }
 
+    /**
+     * @see FrostDatasource.getWeatherData
+     */
     suspend fun getWeatherByCoordinates(latitude: Double, longitude: Double, referenceTime: String): List<FrostData> {
         Log.d(TAG, "Getting weather data for coordinates ($latitude, $longitude) at time $referenceTime")
 

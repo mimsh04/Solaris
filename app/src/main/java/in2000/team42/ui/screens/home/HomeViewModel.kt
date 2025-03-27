@@ -78,16 +78,16 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun getLast24HoursReferenceTime(): String {
-        val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+        val calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Oslo"))
         val endTime = calendar.time // Current time
 
         // Subtract 24 hours
         calendar.add(Calendar.HOUR_OF_DAY, -24)
         val startTime = calendar.time
 
-        // Create formatter compatible with older APIs
+        // Formatterer data med
         val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
-        formatter.timeZone = TimeZone.getTimeZone("UTC")
+        formatter.timeZone = TimeZone.getTimeZone("Europe/Oslo")
 
         val startFormatted = formatter.format(startTime)
         val endFormatted = formatter.format(endTime)

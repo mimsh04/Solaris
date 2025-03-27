@@ -10,6 +10,13 @@ import io.ktor.serialization.kotlinx.json.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.get
 
+enum class PvTech(val value: String) {
+    CRYST_SI("crystSi"),
+    CIS("CIS"),
+    CD_TE("CdTe"),
+    UNKNOWN("Unknown")
+}
+
 class PgvisDatasource {
     private val ktorHttpClient = HttpClient(CIO) {
         install(ContentNegotiation) {
@@ -49,16 +56,11 @@ class PgvisDatasource {
         }
     }
 
-    enum class PvTech(val value: String) {
-        CRYST_SI("crystSi"),
-        CIS("CIS"),
-        CD_TE("CdTe"),
-        UNKNOWN("Unknown")
-    }
+
 
 
     // https://re.jrc.ec.europa.eu/api/v5_3/PVcalc?outputformat=json&lat=59.668&lon=10.789&raddatabase=PVGIS-SARAH3&peakpower=2&loss=14&mountingplace=building&pvtechchoice=crystSi&angle=35&aspect=0&js=1
-    suspend fun getMonnthlyKwh(
+    suspend fun getMonthlyKwh(
         lat: Double,
         lon: Double,
         incline: Float,

@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import in2000.team42.R
+import in2000.team42.ui.screens.settings.komponenter.AnbefalteProdukter
 
 @Composable
 fun SettingsScreen (navController: NavHostController,modifier : Modifier = Modifier) {
@@ -91,53 +92,8 @@ fun SettingsScreen (navController: NavHostController,modifier : Modifier = Modif
 
             }
 
-
-
             Column{
-                Text(
-                    text="Anbefalte Produkter",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 30.sp,
-                    modifier = Modifier
-                        .padding(top = 80.dp,bottom=10.dp)
-                        .fillMaxWidth()
-                        .wrapContentWidth(Alignment.Start)
-                )
-
-                LazyVerticalGrid(
-                    columns=GridCells.Fixed(2),
-                    state=gridState,
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(2){index->
-                        Box(
-                            modifier=Modifier
-                                .fillMaxWidth()
-                                .height(200.dp)
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(Color.Cyan)
-                                .border(1.dp,Color.Gray,RoundedCornerShape(10.dp))
-                        ){
-                            Text(text="High Effiency panels",modifier=Modifier.align(Alignment.TopStart))
-
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(50.dp)
-                                    .align(Alignment.BottomCenter)
-                                    .background(Color.White)
-                                    .clip(RoundedCornerShape(10.dp))
-                            ){
-                                Text(text="Total Savings")
-                            }
-                        }
-
-                    }
-
-
-                }
+                AnbefalteProdukter()
 
                 Text(
                     text="Lurer du på noe?",

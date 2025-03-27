@@ -21,7 +21,6 @@ import in2000.team42.ui.screens.home.HomeViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomSheet(
-
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel
 ) {
@@ -57,7 +56,6 @@ fun BottomSheet(
                 columns = GridCells.Fixed(1),
                 modifier = Modifier
                     .height(570.dp)
-                    .padding(16.dp)
                     .padding(bottom = 74.dp)
             ) {
                 item {

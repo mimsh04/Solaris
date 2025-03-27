@@ -1,5 +1,6 @@
 package in2000.team42.ui.screens.home.bottomSheet
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
@@ -14,14 +15,16 @@ fun Vinkelinputs(
     onInclineChange: (Float) -> Unit,
     onDirectionChange: (Float) -> Unit
 ) {
-    Column(modifier = modifier.fillMaxWidth()) {
+    Row (modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+
         // Angle (Incline) Input
         Vinkelinput(
             "Angle (0-90°)",
             incline,
             onInclineChange,
             0..90,
-            Icons.Default.Build
         )
 
         Vinkelinput(
@@ -29,7 +32,6 @@ fun Vinkelinputs(
             direction,
             onDirectionChange,
             -180..180,
-            Icons.Default.Build
         )
     }
 }

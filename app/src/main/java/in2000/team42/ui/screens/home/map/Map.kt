@@ -53,7 +53,9 @@ fun Map(
         viewModel.updateAllApi()
         mapViewportState.setCameraOptions {
             center(point)
-            zoom(14.0) // Zoom in when a new point is selected
+            zoom(14.0)
+            pitch(0.0)
+            bearing(0.0)
         }
         return true
     }

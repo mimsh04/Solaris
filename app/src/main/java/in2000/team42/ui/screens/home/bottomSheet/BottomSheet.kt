@@ -25,12 +25,14 @@ fun BottomSheet(
     viewModel: HomeViewModel
 ) {
 
+
     val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = rememberStandardBottomSheetState(
         initialValue = SheetValue.PartiallyExpanded,
         skipHiddenState = true
     ))
     val incline = viewModel.incline.collectAsState()
     val vinkel = viewModel.vinkel.collectAsState()
+
 
     val focusManager = LocalFocusManager.current
 
@@ -54,7 +56,6 @@ fun BottomSheet(
                 columns = GridCells.Fixed(1),
                 modifier = Modifier
                     .height(570.dp)
-                    .padding(16.dp)
                     .padding(bottom = 74.dp)
             ) {
                 item {
@@ -65,13 +66,15 @@ fun BottomSheet(
                         onDirectionChange = { viewModel.setVinkel(it) }
                     )
                 }
+
+                item {
+                    StrommenContent()
+                }
             }
         },
         sheetPeekHeight = 120.dp, // Høyde når kollapset, rett over NavBar. Må gjøres mer synlig?
         sheetSwipeEnabled = true,
 
     ) {
-
     }
-
 }

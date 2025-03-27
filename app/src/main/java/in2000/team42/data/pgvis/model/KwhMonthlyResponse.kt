@@ -16,12 +16,7 @@ abstract class KwhMonthlyResponse {
 
     @Serializable
     data class Monthly(
-        val fixed: Fixed
-    )
-
-    @Serializable
-    data class Fixed(
-        val monthly_kwh: List<MonthlyKwhData>
+        val fixed: List<MonthlyKwhData>
     )
 
     @Serializable
@@ -30,7 +25,7 @@ abstract class KwhMonthlyResponse {
         @SerialName("E_d") val avarageDaily: Double,
         @SerialName("E_m")val averageMonthly: Double,
         @SerialName("H(i)_d") val averageDailyRadiation: Double,
-        @SerialName("H(i)_m") val averageMontlyRadiation: Double,
+        @SerialName("H(i)_m") val averageMonhtlyRadiation: Double,
         @SerialName("SD_m") val yearlyVariation: Double
     )
 }

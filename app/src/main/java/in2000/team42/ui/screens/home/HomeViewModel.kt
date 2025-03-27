@@ -60,6 +60,7 @@ class HomeViewModel : ViewModel() {
     fun updateAllApi() {
         updateSolarRadiation()
         updateWeatherData()
+        updateKwhMonthly()
     }
 
     fun updateSolarRadiation(
@@ -77,7 +78,7 @@ class HomeViewModel : ViewModel() {
 
     }
 
-    fun updateKwhMonthly() {
+    fun updateKwhMonthly(peakPower: Float = 2f, pvTech: PvTech = PvTech.CRYST_SI) {
         viewModelScope.launch {
             _kwhMonthlyData.value = radiationRepository.getMonthlyKwh(
                 latitude.value,
@@ -85,34 +86,16 @@ class HomeViewModel : ViewModel() {
                 incline.value,
                 vinkel.value,
                 2f,
-                PvTech.CRYST_SI
+                pvTech
             )
-            Log.d("HomeViewModel", "Radiation data: ${_kwhMonthlyData.value}")
+            Log.d("HomeViewModel", "Monthly kwh data: ${_kwhMonthlyData.value}")
         }
-    }
-
-    private fun getLast24HoursReferenceTime(): String {
-        val calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Oslo"))
-        val endTime = calendar.time // Current time
-
-        // Subtract 24 hours
-        calendar.add(Calendar.HOUR_OF_DAY, -24)
-        val startTime = calendar.time
-
-        // Formatterer data med
-        val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
-        formatter.timeZone = TimeZone.getTimeZone("Europe/Oslo")
-
-        val startFormatted = formatter.format(startTime)
-        val endFormatted = formatter.format(endTime)
-
-        return "$startFormatted/$endFormatted"
     }
 
     private fun updateWeatherData() {
         viewModelScope.launch {
             try {
-                val referenceTime = getLast24HoursReferenceTime()
+                val referenceTime = frostRepository.getLast24HoursReferenceTime()
                 val weather = frostRepository.getWeatherByCoordinates(
                     latitude = _latitude.value,
                     longitude = _longitude.value,

@@ -81,7 +81,7 @@ class PgvisDatasource {
                 "&aspect=$retning"
         return try {
             val response = ktorHttpClient.get(url).body<KwhMonthlyResponse.Response>()
-            response.outputs.monthly.fixed.monthly_kwh
+            response.outputs.monthly.fixed
         } catch (e: Exception) {
             println("Error fetching radiation data: ${e.message}")
             emptyList()

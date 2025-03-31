@@ -39,6 +39,7 @@ fun Vinkelinput(
             value = showedVal,
             onValueChange = { newValue ->
                 showedVal = newValue
+                if (showedVal.isEmpty()) onValueChange(0f)
                 newValue.toFloatOrNull()?.let {
                     if (it.toInt() in range) {
                         onValueChange(it)

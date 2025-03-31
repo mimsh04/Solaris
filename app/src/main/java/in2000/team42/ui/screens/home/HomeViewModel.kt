@@ -1,8 +1,6 @@
 package in2000.team42.ui.screens.home
 
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import in2000.team42.data.frost.FrostDatasource
@@ -14,10 +12,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import in2000.team42.data.frost.model.FrostData
 import in2000.team42.data.frost.FrostRepository
+import in2000.team42.data.pgvis.PvTech
+import in2000.team42.data.pgvis.model.KwhMonthlyResponse
 import java.text.SimpleDateFormat
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
@@ -33,12 +30,16 @@ class HomeViewModel : ViewModel() {
 
     private val _sunRadiation = MutableStateFlow<List<DailyProfile>>(emptyList())
     private val _weatherData = MutableStateFlow<List<FrostData>>(emptyList())
+    private val _kwhMonthlyData = MutableStateFlow<List<KwhMonthlyResponse.MonthlyKwhData>>(emptyList())
 
     val longitude = _longitude.asStateFlow()
     val latitude = _latitude.asStateFlow()
     val incline = _incline.asStateFlow()
     val vinkel = _vinkel.asStateFlow()
+
+    val sizeUnaryOperator = _sunRadiation.asStateFlow()
     val weatherData = _weatherData.asStateFlow()
+    val kwhMonthlyData = _kwhMonthlyData.asStateFlow()
 
     fun setLongitude(longitude: Double) {
         _longitude.value = longitude
@@ -59,6 +60,7 @@ class HomeViewModel : ViewModel() {
     fun updateAllApi() {
         updateSolarRadiation()
         updateWeatherData()
+        updateKwhMonthly()
     }
 
     fun updateSolarRadiation(
@@ -76,28 +78,24 @@ class HomeViewModel : ViewModel() {
 
     }
 
-    private fun getLast24HoursReferenceTime(): String {
-        val calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Oslo"))
-        val endTime = calendar.time // Current time
-
-        // Subtract 24 hours
-        calendar.add(Calendar.HOUR_OF_DAY, -24)
-        val startTime = calendar.time
-
-        // Formatterer data med
-        val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
-        formatter.timeZone = TimeZone.getTimeZone("Europe/Oslo")
-
-        val startFormatted = formatter.format(startTime)
-        val endFormatted = formatter.format(endTime)
-
-        return "$startFormatted/$endFormatted"
+    fun updateKwhMonthly(peakPower: Float = 2f, pvTech: PvTech = PvTech.CRYST_SI) {
+        viewModelScope.launch {
+            _kwhMonthlyData.value = radiationRepository.getMonthlyKwh(
+                latitude.value,
+                longitude.value,
+                incline.value,
+                vinkel.value,
+                2f,
+                pvTech
+            )
+            Log.d("HomeViewModel", "Monthly kwh data: ${_kwhMonthlyData.value}")
+        }
     }
 
     private fun updateWeatherData() {
         viewModelScope.launch {
             try {
-                val referenceTime = getLast24HoursReferenceTime()
+                val referenceTime = frostRepository.getLast24HoursReferenceTime()
                 val weather = frostRepository.getWeatherByCoordinates(
                     latitude = _latitude.value,
                     longitude = _longitude.value,

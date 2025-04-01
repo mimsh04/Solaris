@@ -27,7 +27,7 @@ fun FloatInputField(
     var showedVal by remember { mutableStateOf(verdi.toInt().toString()) }
 
     LaunchedEffect (verdi) {
-        if (verdi == 0f) return@LaunchedEffect
+        if (verdi == maxOf(0f, range.first.toFloat())) return@LaunchedEffect
         showedVal = verdi.toInt().toString()
     }
 

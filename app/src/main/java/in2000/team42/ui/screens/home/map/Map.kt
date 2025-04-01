@@ -33,29 +33,35 @@ import com.mapbox.search.autocomplete.PlaceAutocomplete
 import in2000.team42.R
 import in2000.team42.ui.screens.home.HomeViewModel
 import in2000.team42.ui.screens.home.map.search.SearchBar
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @OptIn(MapboxExperimental::class)
 private suspend fun MapState.queryBuildingCoordinatesAt(point: Point): List<List<Point>>? {
-    val selectedBuildings = queryRenderedFeatures(
-        geometry = RenderedQueryGeometry(pixelForCoordinate(point)),
-        descriptor = TypedFeaturesetDescriptor.Layer("building")
-    )
-    if (selectedBuildings.isEmpty()) {
-        Log.d("HouseClick", "Clicked outside of building")
-        return null
+    // Use withContext to ensure map operations run on the main thread
+    return withContext(Dispatchers.Main) {
+        val selectedBuildings = queryRenderedFeatures(
+            geometry = RenderedQueryGeometry(pixelForCoordinate(point)),
+            descriptor = TypedFeaturesetDescriptor.Layer("building")
+        )
+        if (selectedBuildings.isEmpty()) {
+            Log.d("HouseClick", "Clicked outside of building")
+            null
+        } else {
+            Log.d("HouseClick", "Feature properties: ${selectedBuildings.first().properties}")
+            (selectedBuildings.first().geometry as? Polygon)?.coordinates()?.toList()
+        }
     }
-    Log.d("HouseClick", "Feature properties: ${selectedBuildings.first().properties}")
-    return (selectedBuildings.first().geometry as? Polygon)?.coordinates()?.toList()
 }
 
 private fun calculatePolygonArea(mapPolygon: List<List<Point>>): Double {
-    if (mapPolygon.isNullOrEmpty() || mapPolygon!!.isEmpty()) {
+    if (mapPolygon.isEmpty()) {
         return 0.0
     }
 
     // Use the exterior ring of the polygon (first list of points)
-    val vertices = mapPolygon!![0]
+    val vertices = mapPolygon[0]
     if (vertices.size < 3) {
         return 0.0
     }
@@ -126,7 +132,9 @@ fun Map(
     fun onMapClicked(point: Point): Boolean {
 
         mapViewportState.easeTo(cameraOptions = CameraOptions.Builder()
-            .center(point)
+            .center(point.let {
+                Point.fromLngLat(it.longitude(), it.latitude() - 0.0004)
+            })
             .zoom(18.0)
             .pitch(0.0)
             .bearing(0.0)
@@ -137,11 +145,9 @@ fun Map(
         )
 
         couroutineScope.launch {
-            kotlinx.coroutines.delay(2100)
+            kotlinx.coroutines.delay(2300)
             mapPolygon = mapState.queryBuildingCoordinatesAt(point)
             Log.d("Map", mapPolygon.toString())
-
-
 
             if (mapPolygon.isNullOrEmpty()) {
                 return@launch

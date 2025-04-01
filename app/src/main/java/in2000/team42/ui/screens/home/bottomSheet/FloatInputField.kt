@@ -7,6 +7,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,6 +25,11 @@ fun FloatInputField(
     range: IntRange = 0..90,
 ) {
     var showedVal by remember { mutableStateOf(verdi.toInt().toString()) }
+
+    LaunchedEffect (verdi) {
+        if (verdi == 0f) return@LaunchedEffect
+        showedVal = verdi.toInt().toString()
+    }
 
     fun getOutlineColor(showedText: String): Color {
         return if (showedText.isEmpty()) Color.Red

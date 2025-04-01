@@ -71,7 +71,7 @@ class FrostDatasource() {
         val elements = listOf(
             "mean(air_temperature P1D)",
             "mean(surface_snow_coverage P1D)",
-            "mean(cloud_area_fraction P1D)"
+            "cloud_area_fraction"
         )
 
         val availability = getAvailableTimeSeries(stationIds, elements, referenceTime)
@@ -124,10 +124,12 @@ class FrostDatasource() {
         val url = "$baseUrl/observations/availableTimeSeries/v0.jsonld"
         Log.d(TAG, "Fetching available time series for stations $stationIds at time $referenceTime")
         try {
+
+            // TODO: Noe er galt med URL kallet, kan været at URL-en må konverteres til et annet format?
             val response: String = client.get(url) {
                 parameter("sources", stationIds.joinToString(","))
                 parameter("elements", elements.joinToString(","))
-                parameter("referencetime", "2024-01-01/2024-12-01") // Bruk refrenceTime til vanlig
+                parameter("referencetime", "2024-01-01/2024-12-31") // Bruk refrenceTime til vanlig
             }.body()
             Log.d(TAG, response.decodeURLPart())
             val json = Json { ignoreUnknownKeys = true }

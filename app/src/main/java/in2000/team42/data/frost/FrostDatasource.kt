@@ -1,13 +1,17 @@
 package in2000.team42.data.frost
 
-import android.util.Log // Added import for Logcat
+import android.util.Log
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.*
+import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
+import io.ktor.http.decodeURLPart
+import io.ktor.serialization.kotlinx.json.*
 import in2000.team42.data.frost.model.FrostData
+import in2000.team42.data.frost.model.FrostResponse // Import FrostResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
@@ -32,8 +36,10 @@ class FrostDatasource() {
         try {
             val response: String = client.get(url) {
                 parameter("geometry", "nearest(POINT($longitude $latitude))")
-                parameter("nearestmaxcount", 5)
+                parameter("nearestmaxcount", 5) // Velger de nærmeste antall stasjonene i forhold til long og lat input
             }.body()
+
+            Log.d(TAG, response.decodeURLPart())
 
             val json = Json { ignoreUnknownKeys = true }
             val data = json.decodeFromString<SourceResponse>(response)
@@ -58,27 +64,116 @@ class FrostDatasource() {
      *
      * @return Klasse med temperatur, skydekke og snø (eller mengden snø ekvivalent med vann på bakken)
      */
-    suspend fun getWeatherData(stationId: List<String>, referenceTime: String): List<FrostData> = withContext(Dispatchers.IO) {
-        val url = "$baseUrl/observations/v0.jsonld"
-        Log.d(TAG, "Fetching weather data for station $stationId at time $referenceTime")
+    suspend fun getWeatherData(
+        stationIds: List<String>,
+        referenceTime: String
+    ): List<FrostData> = withContext(Dispatchers.IO) {
+        val elements = listOf(
+            "mean(air_temperature P1D)",
+            "mean(surface_snow_coverage P1D)",
+            "mean(cloud_area_fraction P1D)"
+        )
+
+        val availability = getAvailableTimeSeries(stationIds, elements, referenceTime)
+        if (availability.isEmpty()) {
+            Log.w(TAG, "No available time series found")
+            return@withContext emptyList()
+        }
+
+        val responses = mutableListOf<FrostResponse>()
+        for (element in elements) {
+            val supportingStations = availability.filter { it.value.contains(element) }.keys
+            if (supportingStations.isNotEmpty()) {
+                try {
+                    val response = client.get("$baseUrl/observations/v0.jsonld") {
+                        parameter("sources", supportingStations.joinToString(","))
+                        parameter("elements", element)
+                        parameter("referencetime", referenceTime)
+                    }.body<FrostResponse>()
+                    responses.add(response)
+                    Log.d(TAG, "Fetched data for $element from stations $supportingStations")
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error fetching $element: ${e.message}", e)
+                }
+            } else {
+                Log.w(TAG, "No stations support $element")
+            }
+        }
+
+        val weatherData = aggregateWeatherData(responses)
+        Log.i(TAG, "Aggregated ${weatherData.size} weather data points")
+        weatherData
+    }
+
+    /**
+     * Henter info om hva som blir målt på de forskjellige stasjonene, dvs hva som kan
+     * kalles på i getWeatherData
+     *
+     * @param stationIds Tar stationene fra getNearestStation
+     * @param elements Tar gitte elementer som skal sjekkes for om stasjonene kan måle etter
+     *                  kan manipulere elements i getWeatherData
+     * @param refrenceTime Sjekker for de siste 24 timene
+     *
+     * */
+
+    suspend fun getAvailableTimeSeries(
+        stationIds: List<String>,
+        elements: List<String>,
+        referenceTime: String
+    ): Map<String, List<String>> = withContext(Dispatchers.IO) {
+        val url = "$baseUrl/observations/availableTimeSeries/v0.jsonld"
+        Log.d(TAG, "Fetching available time series for stations $stationIds at time $referenceTime")
         try {
             val response: String = client.get(url) {
-                parameter("sources", stationId.joinToString(","))
-                parameter("referencetime", referenceTime)
-                parameter("elements", "best_estimate_mean(air_temperature P1D),sum(precipitation_amount P1D),mean(cloud_area_fraction P1D)")
+                parameter("sources", stationIds.joinToString(","))
+                parameter("elements", elements.joinToString(","))
+                parameter("referencetime", "2024-01-01/2024-12-01") // Bruk refrenceTime til vanlig
             }.body()
-
-            val weatherData = FrostData.fromJson(response)
-            Log.i(TAG, "Successfully parsed ${weatherData.size} weather data points")
-            weatherData
+            Log.d(TAG, response.decodeURLPart())
+            val json = Json { ignoreUnknownKeys = true }
+            val data = json.decodeFromString<AvailableTimeSeriesResponse>(response)
+            val stationElements = data.data.groupBy({ it.sourceId }, { it.elementId })
+            Log.i(TAG, "Available time series: $stationElements")
+            stationElements
         } catch (e: Exception) {
-            Log.e(TAG, "Error fetching weather data: ${e.message}", e)
-            emptyList()
+            Log.e(TAG, "Error fetching available time series: ${e.message}", e)
+            emptyMap()
         }
+    }
+
+    private fun aggregateWeatherData(responses: List<FrostResponse>): List<FrostData> {
+        val dataByTime = mutableMapOf<String, FrostData.Builder>()
+
+        for (response in responses) {
+            response.data.forEach { observation ->
+                val refTime = observation.referenceTime
+                val builder = dataByTime.getOrPut(refTime) {
+                    FrostData.Builder().setReferenceTime(refTime)
+                }
+                observation.observations.forEach { obs ->
+                    val value = obs.value?.toDouble() // Convert Float? to Double?
+                    when (obs.elementId) {
+                        "mean(air_temperature P1D)" -> value?.let { builder.setTemperature(it) }
+                        "mean(surface_snow_coverage P1D)" -> value?.let { builder.setPrecipitation(it) }
+                        "mean(cloud_area_fraction P1D)" -> value?.let { builder.setCloudAreaFraction(it) }
+                    }
+                }
+                if (builder.stationId == null) {
+                    builder.setStationId(observation.sourceId.split(":")[0])
+                }
+            }
+        }
+
+        return dataByTime.values.map { it.build() }
     }
 
     @Serializable
     private data class SourceResponse(val data: List<Source>)
     @Serializable
     private data class Source(val id: String)
+
+    @Serializable
+    private data class AvailableTimeSeriesResponse(val data: List<TimeSeriesEntry>)
+    @Serializable
+    private data class TimeSeriesEntry(val sourceId: String, val elementId: String)
 }

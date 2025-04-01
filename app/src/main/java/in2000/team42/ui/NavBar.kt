@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
@@ -25,6 +26,27 @@ fun NavBar (navController: NavHostController) {
     NavigationBar (
         modifier = Modifier.height(80.dp)
     ){
+
+        NavigationBarItem(
+            icon = { Icon(
+                Icons.Default.Favorite,
+                contentDescription = "Saved",
+                modifier = Modifier.size(40.dp)
+            )},
+            selected= currentRoute == Screen.Saved.route,
+            onClick = {
+                if (currentRoute != Screen.Saved.route) {
+                    navController.navigate(Screen.Saved.route) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            }
+        )
+
         NavigationBarItem(
             icon = { Icon(
                 Icons.Default.Home,
@@ -64,5 +86,11 @@ fun NavBar (navController: NavHostController) {
                 }
             }
         )
+
+
+
+
+
+
     }
 }

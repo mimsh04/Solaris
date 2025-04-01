@@ -38,12 +38,12 @@ fun FloatInputField(
             value = showedVal,
             onValueChange = { newValue ->
                 showedVal = newValue
-                if (showedVal.isEmpty()) onValueChange(0f)
+                if (showedVal.isEmpty()) onValueChange(maxOf(range.first, 0).toFloat())
                 newValue.toFloatOrNull()?.let {
                     if (it.toInt() in range) {
                         onValueChange(it)
                     } else {
-                        onValueChange(0f)
+                        onValueChange(maxOf(range.first, 0).toFloat())
                     }
                 }
             },

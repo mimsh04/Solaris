@@ -11,8 +11,8 @@ import in2000.team42.ui.screens.home.HomeViewModel
 @Composable
 
 fun SolcelleInputs(viewModel: HomeViewModel) {
-    var solcelleEffekt = viewModel.solcelleEffekt.collectAsState()
-    var areal = viewModel.areal.collectAsState()
+    val solcelleEffekt = viewModel.solcelleEffekt.collectAsState()
+    val areal = viewModel.areal.collectAsState()
 
     Row (modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
@@ -27,7 +27,7 @@ fun SolcelleInputs(viewModel: HomeViewModel) {
             "Areal i m²",
             areal.value,
             { viewModel.setAreal(it) },
-            0..200,
+            1..200,
         )
     }
 }

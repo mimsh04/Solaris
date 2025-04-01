@@ -1,6 +1,7 @@
 package in2000.team42.ui.screens.home.bottomSheet
 
 import android.util.Log
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -23,17 +24,20 @@ fun Produksjon(viewModel: HomeViewModel) {
     }
 
     Row {
-        if (kwhPerMonth.value.size == 0) {
-            Text("Ingen data (velg punkt på kartet)")
+        if (kwhPerMonth.value.isEmpty()) {
+            Text("Ingen data (velg posisjon med search)")
         } else {
-            Text("Årlig produksjon: ${getYearlyProduction(kwhPerMonth.value)} kWh")
-            Button(
-                onClick = {
-                    viewModel.updateAllApi()
+            Column {
+                Text("Årlig produksjon: ${getYearlyProduction(kwhPerMonth.value)} kWh")
+                Button(
+                    onClick = {
+                        viewModel.updateAllApi()
+                    }
+                ) {
+                    Text("Hent på nytt")
                 }
-            ) {
-                Text("Hent på nytt")
             }
+
         }
     }
 

@@ -8,6 +8,7 @@ import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.*
 import io.ktor.client.request.*
 import in2000.team42.data.frost.model.FrostData
+import io.ktor.http.decodeURLPart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
@@ -32,7 +33,7 @@ class FrostDatasource() {
         try {
             val response: String = client.get(url) {
                 parameter("geometry", "nearest(POINT($longitude $latitude))")
-                parameter("nearestmaxcount", 1)
+                parameter("nearestmaxcount", 5)
             }.body()
 
             val json = Json { ignoreUnknownKeys = true }
@@ -47,7 +48,7 @@ class FrostDatasource() {
     }
 
     /**
-     * Henter daglig temperatur, skydekke og regn for de siste 24 timene når funksjonen blir kalt
+     * Henter daglig temperatur, skydekke og snø for de siste 24 timene når funksjonen blir kalt
      * hvis det har blitt gjort målinger for hver time. Kan hende en stasjon ikke måler hver time
      * eller ikke har utstyret for å målet en type data. Altså kan det hende du ikke får noe værdata
      * på noen adresser.
@@ -58,15 +59,18 @@ class FrostDatasource() {
      * @return Klasse med temperatur, skydekke og snø (eller mengden snø ekvivalent med vann på bakken)
      */
     suspend fun getWeatherData(stationId: String, referenceTime: String): List<FrostData> = withContext(Dispatchers.IO) {
+        val referenceTimeTest = "2024-01-01/2024-12-31" // Test for å hente gjennomsnittlig data for alle månedene i 2024
         val url = "$baseUrl/observations/v0.jsonld"
-        Log.d(TAG, "Fetching weather data for station $stationId at time $referenceTime")
+        Log.d(TAG, "Fetching weather data for station $stationId at time $referenceTimeTest")
         try {
             val response: String = client.get(url) {
-                parameter("sources", stationId)
-                parameter("referencetime", referenceTime)
-                parameter("elements", "air_temperature,sum(precipitation_amount P1D),cloud_area_fraction")
+                parameter("sources", "SN18700"/*stationId*/)
+                parameter("referencetime", "2024-01-01/2024-02-01")
+                parameter("elements", "best_estimate_mean(air_temperature P1Y),mean(snow_coverage_type P1Y),mean(cloud_area_fraction P1Y)")
+                parameter("timeoffsets", "default")
+                parameter("levels", "default")
             }.body()
-
+            Log.d(TAG, response.decodeURLPart())
             val weatherData = FrostData.fromJson(response)
             Log.i(TAG, "Successfully parsed ${weatherData.size} weather data points")
             weatherData

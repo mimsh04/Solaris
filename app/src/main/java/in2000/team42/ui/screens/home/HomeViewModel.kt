@@ -27,6 +27,8 @@ class HomeViewModel : ViewModel() {
     private val _latitude = MutableStateFlow(0.0)
     private val _incline = MutableStateFlow(35f)
     private val _vinkel = MutableStateFlow(0f)
+    private val _areal = MutableStateFlow(1f)
+    private val _solcelleEffekt = MutableStateFlow(15f)
 
     private val _sunRadiation = MutableStateFlow<List<DailyProfile>>(emptyList())
     private val _weatherData = MutableStateFlow<List<FrostData>>(emptyList())
@@ -36,6 +38,8 @@ class HomeViewModel : ViewModel() {
     val latitude = _latitude.asStateFlow()
     val incline = _incline.asStateFlow()
     val vinkel = _vinkel.asStateFlow()
+    val areal = _areal.asStateFlow()
+    val solcelleEffekt = _solcelleEffekt.asStateFlow()
 
     val sizeUnaryOperator = _sunRadiation.asStateFlow()
     val weatherData = _weatherData.asStateFlow()
@@ -55,6 +59,14 @@ class HomeViewModel : ViewModel() {
 
     fun setVinkel(vinkel: Float) {
         _vinkel.value = vinkel
+    }
+
+    fun setAreal(areal: Float) {
+        _areal.value = areal
+    }
+
+    fun setSolcelleEffekt(solcelleEffekt: Float) {
+        _solcelleEffekt.value = solcelleEffekt
     }
 
     fun updateAllApi() {
@@ -78,14 +90,15 @@ class HomeViewModel : ViewModel() {
 
     }
 
-    fun updateKwhMonthly(peakPower: Float = 2f, pvTech: PvTech = PvTech.CRYST_SI) {
+    fun updateKwhMonthly( pvTech: PvTech = PvTech.CRYST_SI) {
+        val peakPower = _solcelleEffekt.value / 100 * _areal.value
         viewModelScope.launch {
             _kwhMonthlyData.value = radiationRepository.getMonthlyKwh(
                 latitude.value,
                 longitude.value,
                 incline.value,
                 vinkel.value,
-                2f,
+                peakPower,
                 pvTech
             )
             Log.d("HomeViewModel", "Monthly kwh data: ${_kwhMonthlyData.value}")

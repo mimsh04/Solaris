@@ -15,8 +15,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mapbox.common.MapboxOptions
 import com.mapbox.geojson.Point
+import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
+import com.mapbox.maps.plugin.animation.MapAnimationOptions
 import com.mapbox.search.autocomplete.PlaceAutocomplete
 import in2000.team42.R
 import in2000.team42.ui.screens.home.HomeViewModel
@@ -51,10 +53,17 @@ fun Map(
         viewModel.setLongitude(point.longitude())
         viewModel.setLatitude(point.latitude())
         viewModel.updateAllApi()
-        mapViewportState.setCameraOptions {
-            center(point)
-            zoom(14.0) // Zoom in when a new point is selected
-        }
+        mapViewportState.easeTo(cameraOptions = CameraOptions.Builder()
+            .center(point)
+            .zoom(14.0)
+            .pitch(0.0)
+            .bearing(0.0)
+            .build(),
+            animationOptions = MapAnimationOptions.mapAnimationOptions {
+                duration(2000)
+            }
+        )
+
         return true
     }
     val focusManager = LocalFocusManager.current

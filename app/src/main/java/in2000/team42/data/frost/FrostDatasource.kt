@@ -26,21 +26,22 @@ class FrostDatasource() {
         }
     }
 
-    suspend fun getNearestStation(latitude: Double, longitude: Double): String? = withContext(Dispatchers.IO) {
+    suspend fun getNearestStation(latitude: Double, longitude: Double): List<String>? = withContext(Dispatchers.IO) {
         val url = "$baseUrl/sources/v0.jsonld"
         Log.d(TAG, "Searching for nearest station at coordinates: ($latitude, $longitude)")
         try {
             val response: String = client.get(url) {
                 parameter("geometry", "nearest(POINT($longitude $latitude))")
-                parameter("nearestmaxcount", 1)
+                parameter("nearestmaxcount", 5)
             }.body()
             Log.v(TAG, "Received response from Frost API: $response")
 
             val json = Json { ignoreUnknownKeys = true }
             val data = json.decodeFromString<SourceResponse>(response)
-            val stationId = data.data.firstOrNull()?.id
-            Log.i(TAG, "Found nearest station ID: $stationId")
-            stationId
+            val stationIds = data.data.map { it.id }
+            Log.i(TAG, "Found nearest station IDs: $stationIds")
+
+            stationIds
         } catch (e: Exception) {
             Log.e(TAG, "Error finding station: ${e.message}", e)
             null
@@ -58,14 +59,14 @@ class FrostDatasource() {
      *
      * @return Klasse med temperatur, skydekke og snø (eller mengden snø ekvivalent med vann på bakken)
      */
-    suspend fun getWeatherData(stationId: String, referenceTime: String): List<FrostData> = withContext(Dispatchers.IO) {
+    suspend fun getWeatherData(stationId: List<String>, referenceTime: String): List<FrostData> = withContext(Dispatchers.IO) {
         val url = "$baseUrl/observations/v0.jsonld"
         Log.d(TAG, "Fetching weather data for station $stationId at time $referenceTime")
         try {
             val response: String = client.get(url) {
-                parameter("sources", stationId)
+                parameter("sources", stationId.joinToString(","))
                 parameter("referencetime", referenceTime)
-                parameter("elements", "air_temperature,sum(precipitation_amount P1D),cloud_area_fraction")
+                parameter("elements", "best_estimate_mean(air_temperature P1D),sum(precipitation_amount P1D),mean(cloud_area_fraction P1D)")
             }.body()
             Log.v(TAG, "Received weather data response: $response")
 

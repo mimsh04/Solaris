@@ -2,6 +2,7 @@ package in2000.team42.ui.screens.settings.komponenter
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -28,9 +29,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import in2000.team42.ui.screens.guide.InstallasjonScreen
 
 @Composable
-fun LurerDuPaaNoe(){
+fun LurerDuPaaNoe(navController: NavController){
     val gridState= rememberLazyGridState()
 
     Text(
@@ -69,6 +72,14 @@ fun LurerDuPaaNoe(){
                     .clip(RoundedCornerShape(10.dp))
                     .background(Color.White)
                     .border(1.dp, Color.Gray, RoundedCornerShape(10.dp))
+                    .clickable {
+                        if(index==0){
+                            navController.navigate("installasjonsguide")
+                        }
+                        else{
+                            //TODO
+                        }
+                    }
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth()

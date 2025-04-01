@@ -37,7 +37,7 @@ fun SettingsScreen (navController: NavHostController,modifier : Modifier = Modif
             Column {
                 AnbefalteProdukter()
 
-                LurerDuPaaNoe()
+                LurerDuPaaNoe(navController)
 
                 SolarPanelData()
             }

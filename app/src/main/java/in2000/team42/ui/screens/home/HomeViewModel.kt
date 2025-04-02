@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import in2000.team42.data.frost.model.FrostData
 import in2000.team42.data.frost.FrostRepository
+import in2000.team42.data.frost.model.FrostResult
 import in2000.team42.data.pgvis.PvTech
 import in2000.team42.data.pgvis.model.KwhMonthlyResponse
 
@@ -28,6 +29,8 @@ class HomeViewModel : ViewModel() {
     private val _weatherData = MutableStateFlow<List<FrostData>>(emptyList())
     private val _kwhMonthlyData = MutableStateFlow<List<KwhMonthlyResponse.MonthlyKwhData>>(emptyList())
 
+    private val _errorMessage = MutableStateFlow<String?>(null)
+
     val longitude = _longitude.asStateFlow()
     val latitude = _latitude.asStateFlow()
     val incline = _incline.asStateFlow()
@@ -36,6 +39,7 @@ class HomeViewModel : ViewModel() {
     val sizeUnaryOperator = _sunRadiation.asStateFlow()
     val weatherData = _weatherData.asStateFlow()
     val kwhMonthlyData = _kwhMonthlyData.asStateFlow()
+    val errorMessage = _errorMessage.asStateFlow()
 
     fun setLongitude(longitude: Double) {
         _longitude.value = longitude
@@ -88,6 +92,7 @@ class HomeViewModel : ViewModel() {
         }
     }
 
+    // TODO: Må fikse slik at all dataen blir samlet
     private fun updateWeatherData() {
         viewModelScope.launch {
             try {
@@ -97,11 +102,21 @@ class HomeViewModel : ViewModel() {
                     longitude = _longitude.value,
                     referenceTime = referenceTime
                 )
-                _weatherData.value = weather
-                Log.d("HomeViewModel", "Weather data: $weather")
+                when (weather) {
+                    is FrostResult.Success -> {
+                        _weatherData.value = weather.data
+                        Log.d("HomeViewModel", "Weather data: ${weather.data}")
+                    }
+                    is FrostResult.Failure -> {
+                        _weatherData.value = emptyList() // Set empty list on failure
+                        _errorMessage.value = weather.message // Optional: Store error for UI
+                        Log.e("HomeViewModel", "Failed to fetch weather data: ${weather.message}")
+                    }
+                }
             } catch (e: Exception) {
-                Log.e("HomeViewModel", "Failed to fetch weather data: ${e.message}")
                 _weatherData.value = emptyList()
+                _errorMessage.value = e.message // Optional: Store exception message
+                Log.e("HomeViewModel", "Exception fetching weather data: ${e.message}")
             }
         }
     }

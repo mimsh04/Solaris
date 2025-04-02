@@ -2,6 +2,7 @@ package in2000.team42.data.frost
 
 import android.util.Log // Added import for Logcat
 import in2000.team42.data.frost.model.FrostData
+import in2000.team42.data.frost.model.FrostResult
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -31,18 +32,21 @@ class FrostRepository(private val dataSource: FrostDatasource) {
     /**
      * @see FrostDatasource.getWeatherData
      */
-    suspend fun getWeatherByCoordinates(latitude: Double, longitude: Double, referenceTime: String): List<FrostData> {
-        Log.d(TAG, "Getting weather data for coordinates ($latitude, $longitude) at time $referenceTime")
+    suspend fun getWeatherByCoordinates(latitude: Double, longitude: Double, referenceTime: String): FrostResult {
+        val referenceTimeTest = "2024-01-01/2024-12-31"
+        Log.d(TAG, "Getting weather data for coordinates ($latitude, $longitude) at time $referenceTimeTest")
 
-        val stationId = dataSource.getNearestStation(latitude, longitude) ?: run {
+        val stationIds = dataSource.getNearestStation(latitude, longitude, referenceTimeTest) ?: run {
             Log.w(TAG, "No station found for coordinates ($latitude, $longitude)")
-            return emptyList()
+            return FrostResult.Failure("No station found for coordinates ($latitude, $longitude)")
         }
-        Log.i(TAG, "Using station ID: $stationId for weather data")
+        Log.i(TAG, "Using station IDs: $stationIds for weather data")
 
-        val weatherData = dataSource.getWeatherData(stationId, referenceTime)
-        Log.i(TAG, "Retrieved ${weatherData.size} weather data points for station $stationId")
-
-        return weatherData
+        val weatherResult = dataSource.getWeatherData(stationIds, referenceTimeTest)
+        when (weatherResult) {
+            is FrostResult.Success -> Log.i(TAG, "Retrieved ${weatherResult.data.size} weather data points for stations $stationIds")
+            is FrostResult.Failure -> Log.e(TAG, "Failed to retrieve weather data: ${weatherResult.message}")
+        }
+        return weatherResult
     }
 }

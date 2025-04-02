@@ -37,7 +37,7 @@ data class FrostData(
 
 sealed class FrostResult {
     data class Success(val data: List<FrostData>) : FrostResult()
-    data class Failure(val message: String) : FrostResult(), List<FrostData>
+    data class Failure(val message: String) : FrostResult()
 }
 
 // Hjelper klasser for deserialization

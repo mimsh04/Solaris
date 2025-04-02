@@ -1,6 +1,7 @@
 package in2000.team42.ui.screens.home
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import in2000.team42.data.frost.FrostDatasource
@@ -15,10 +16,15 @@ import in2000.team42.data.frost.FrostRepository
 import in2000.team42.data.frost.model.FrostResult
 import in2000.team42.data.pgvis.PvTech
 import in2000.team42.data.pgvis.model.KwhMonthlyResponse
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class HomeViewModel : ViewModel() {
     private val radiationRepository = PgvisRepository(PgvisDatasource())
     private val frostRepository = FrostRepository(FrostDatasource())
+
+    private val TAG = "HomeViewModel"
 
     private val _longitude = MutableStateFlow(0.0)
     private val _latitude = MutableStateFlow(0.0)
@@ -26,7 +32,7 @@ class HomeViewModel : ViewModel() {
     private val _vinkel = MutableStateFlow(0f)
 
     private val _sunRadiation = MutableStateFlow<List<DailyProfile>>(emptyList())
-    private val _weatherData = MutableStateFlow<List<FrostData>>(emptyList())
+    private val _weatherData = MutableStateFlow<List<DisplayWeather>>(emptyList())
     private val _kwhMonthlyData = MutableStateFlow<List<KwhMonthlyResponse.MonthlyKwhData>>(emptyList())
 
     private val _errorMessage = MutableStateFlow<String?>(null)
@@ -39,7 +45,6 @@ class HomeViewModel : ViewModel() {
     val sizeUnaryOperator = _sunRadiation.asStateFlow()
     val weatherData = _weatherData.asStateFlow()
     val kwhMonthlyData = _kwhMonthlyData.asStateFlow()
-    val errorMessage = _errorMessage.asStateFlow()
 
     fun setLongitude(longitude: Double) {
         _longitude.value = longitude
@@ -73,7 +78,7 @@ class HomeViewModel : ViewModel() {
                 incline.value,
                 vinkel.value
             )
-            Log.d("HomeViewModel", "Radiation data: ${_sunRadiation.value}")
+            Log.d(TAG, "Radiation data: ${_sunRadiation.value}")
         }
 
     }
@@ -88,7 +93,7 @@ class HomeViewModel : ViewModel() {
                 2f,
                 pvTech
             )
-            Log.d("HomeViewModel", "Monthly kwh data: ${_kwhMonthlyData.value}")
+            Log.d(TAG, "Monthly kwh data: ${_kwhMonthlyData.value}")
         }
     }
 
@@ -104,20 +109,44 @@ class HomeViewModel : ViewModel() {
                 )
                 when (weather) {
                     is FrostResult.Success -> {
-                        _weatherData.value = weather.data
-                        Log.d("HomeViewModel", "Weather data: ${weather.data}")
+                        val displayData = weather.data.map { it.toDisplayWeather() }
+                        displayData.forEachIndexed { index, displayWeather ->
+                            Log.d(TAG, "DisplayWeather [$index]: month=${displayWeather.month}, temp=${displayWeather.temp}, snow=${displayWeather.snow}, cloud=${displayWeather.cloud}")
+                        }
+
+                        _weatherData.value = displayData
+                        Log.d(TAG, "Weather data: $displayData")
                     }
                     is FrostResult.Failure -> {
-                        _weatherData.value = emptyList() // Set empty list on failure
-                        _errorMessage.value = weather.message // Optional: Store error for UI
-                        Log.e("HomeViewModel", "Failed to fetch weather data: ${weather.message}")
+                        _weatherData.value = emptyList()
+                        Log.e(TAG, "Failed to fetch weather data: ${weather.message}")
                     }
                 }
             } catch (e: Exception) {
                 _weatherData.value = emptyList()
-                _errorMessage.value = e.message // Optional: Store exception message
-                Log.e("HomeViewModel", "Exception fetching weather data: ${e.message}")
+                Log.e(TAG, "Exception fetching weather data: ${e.message}")
             }
         }
+    }
+
+    // Display-friendly data klasse
+    data class DisplayWeather(
+        val month: String,
+        val temp: String,
+        val snow: String,
+        val cloud: String
+    )
+
+    // transformerer FrostData til DisplayData
+    private fun FrostData.toDisplayWeather(): DisplayWeather {
+        val dateFormat = SimpleDateFormat("MMM yyyy", Locale.getDefault())
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+        val date = inputFormat.parse(referenceTime) ?: Date()
+        return DisplayWeather(
+            month = dateFormat.format(date),
+            temp = String.format("%.1f°C", temperature),
+            snow = String.format("%.1f", snow),
+            cloud = String.format("%.1f%%", cloudAreaFraction)
+        )
     }
 }

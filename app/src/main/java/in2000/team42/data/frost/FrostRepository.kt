@@ -1,6 +1,6 @@
 package in2000.team42.data.frost
 
-import android.util.Log // Added import for Logcat
+import android.util.Log
 import in2000.team42.data.frost.model.FrostData
 import in2000.team42.data.frost.model.FrostResult
 import java.text.SimpleDateFormat
@@ -30,10 +30,17 @@ class FrostRepository(private val dataSource: FrostDatasource) {
     }
 
     /**
+     * Henter værdata basert på koordinater og sikrer at alle FrostData-objekter har verdier som ikke er null
+     * ved å erstatte nullverdier med standardverdier (f.eks. 0.0).
+     *
+     * @param latitude Latitude of the location
+     * @param longitude Longitude of the location
+     * @param referenceTime Tidintervall for data (e.g., "2024-01-01/2024-12-31")
+     * @return FrostResult med en liste av FrostData-objekter, der nullverdier erstattes med standardverdier.
      * @see FrostDatasource.getWeatherData
      */
     suspend fun getWeatherByCoordinates(latitude: Double, longitude: Double, referenceTime: String): FrostResult {
-        val referenceTimeTest = "2024-01-01/2024-12-31"
+        val referenceTimeTest = "2024-01-01/2024-12-31" // Note: Consider using the passed referenceTime instead
         Log.d(TAG, "Getting weather data for coordinates ($latitude, $longitude) at time $referenceTimeTest")
 
         val stationIds = dataSource.getNearestStation(latitude, longitude, referenceTimeTest) ?: run {
@@ -43,10 +50,26 @@ class FrostRepository(private val dataSource: FrostDatasource) {
         Log.i(TAG, "Using station IDs: $stationIds for weather data")
 
         val weatherResult = dataSource.getWeatherData(stationIds, referenceTimeTest)
-        when (weatherResult) {
-            is FrostResult.Success -> Log.i(TAG, "Retrieved ${weatherResult.data.size} weather data points for stations $stationIds")
-            is FrostResult.Failure -> Log.e(TAG, "Failed to retrieve weather data: ${weatherResult.message}")
+        return when (weatherResult) {
+            is FrostResult.Success -> {
+                // Erstatter null-verdier med standardverdier
+                val usableData = weatherResult.data.map { data ->
+                    FrostData(
+                        stationId = data.stationId,
+                        referenceTime = data.referenceTime,
+                        temperature = data.temperature ?: 0.0,
+                        snow = data.snow ?: 0.0,
+                        cloudAreaFraction = data.cloudAreaFraction ?: 0.0,
+                        qualityCode = data.qualityCode
+                    )
+                }
+                Log.i(TAG, "Retrieved ${usableData.size} weather data points for stations $stationIds")
+                FrostResult.Success(usableData)
+            }
+            is FrostResult.Failure -> {
+                Log.e(TAG, "Failed to retrieve weather data: ${weatherResult.message}")
+                weatherResult
+            }
         }
-        return weatherResult
     }
 }

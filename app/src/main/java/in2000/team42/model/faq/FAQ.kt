@@ -1,4 +1,4 @@
-package in2000.team42.data.faq
+package in2000.team42.model.faq
 
 data class FAQ (val question: String, val answer: String){
     val faqItems = listOf(

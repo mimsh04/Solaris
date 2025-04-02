@@ -40,19 +40,19 @@ data class FrostData(
 
 // Hjelper klasser for deserialization
 @Serializable
-data class FrostResponse(
+private data class FrostResponse(
     val data: List<FrostObservation>
 )
 
 @Serializable
-data class FrostObservation(
+private data class FrostObservation(
     val sourceId: String,
     val referenceTime: String,
     val observations: List<Observation>
 )
 
 @Serializable
-data class Observation(
+private data class Observation(
     val elementId: String? = null,
     val value: Float? = null,
     val qualityCode: Int? = null

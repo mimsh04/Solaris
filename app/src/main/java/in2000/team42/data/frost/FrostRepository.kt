@@ -40,7 +40,7 @@ class FrostRepository(private val dataSource: FrostDatasource) {
      * @see FrostDatasource.getWeatherData
      */
     suspend fun getWeatherByCoordinates(latitude: Double, longitude: Double, referenceTime: String): FrostResult {
-        val referenceTimeTest = "2024-01-01/2024-12-31" // Note: Consider using the passed referenceTime instead
+        val referenceTimeTest = "2024-01-01/2024-12-31"
         Log.d(TAG, "Getting weather data for coordinates ($latitude, $longitude) at time $referenceTimeTest")
 
         val stationIds = dataSource.getNearestStation(latitude, longitude, referenceTimeTest) ?: run {

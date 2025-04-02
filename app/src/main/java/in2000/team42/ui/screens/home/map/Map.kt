@@ -133,21 +133,41 @@ fun Map(
         }
     }
 
-    fun onMapClicked(point: Point): Boolean {
+    fun loadHouse(point: Point, delay: Long = 0, onComplete: () -> Unit = {}) {
+        couroutineScope.launch {
+            mapPolygon = null
+            kotlinx.coroutines.delay(delay)
+            mapPolygon = mapState.queryBuildingCoordinatesAt(point)
+            Log.d("Map", mapPolygon.toString())
 
+            if (mapPolygon.isNullOrEmpty()) {
+                return@launch
+            }
+            onComplete()
+            viewModel.setLongitude(point.longitude())
+            viewModel.setLatitude(point.latitude())
+            viewModel.setAreal(calculatePolygonArea(mapPolygon!!).toFloat())
+            viewModel.updateAllApi()
+
+        }
+    }
+    fun mapEaseTo (point: Point, duration: Long, latOffset: Double) {
         mapViewportState.easeTo(cameraOptions = CameraOptions.Builder()
             .center(point.let {
-                Point.fromLngLat(it.longitude(), it.latitude() - 0.0004)
+                Point.fromLngLat(it.longitude(), it.latitude() - latOffset)
             })
             .zoom(18.0)
             .pitch(0.0)
             .bearing(0.0)
             .build(),
             animationOptions = MapAnimationOptions.mapAnimationOptions {
-                duration(2000)
+                duration(duration)
             }
-        )
 
+        )
+    }
+
+    fun clearScreen () {
         couroutineScope.launch {
             mapClicked = true
             focusManager.clearFocus()
@@ -155,27 +175,22 @@ fun Map(
             kotlinx.coroutines.delay(100)
             mapClicked = false
         }
+    }
 
-        couroutineScope.launch {
-            kotlinx.coroutines.delay(2300)
-            mapPolygon = mapState.queryBuildingCoordinatesAt(point)
-            Log.d("Map", mapPolygon.toString())
-
-            if (mapPolygon.isNullOrEmpty()) {
-                return@launch
-            }
-            viewModel.setLongitude(point.longitude())
-            viewModel.setLatitude(point.latitude())
-            viewModel.setAreal(calculatePolygonArea(mapPolygon!!).toFloat())
-            viewModel.updateAllApi()
-
-        }
+    fun onMapClicked(point: Point): Boolean {
+        clearScreen()
+        loadHouse(point, onComplete = {
+            mapEaseTo(point, 1000, 0.0004)
+        })
         return true
     }
 
     fun settNyttPunkt(point: Point) : Boolean{
 
-        onMapClicked(point)
+        clearScreen()
+        mapEaseTo(point, 2000, 0.0004)
+        loadHouse(point, delay = 2400)
+
 
         return true
     }

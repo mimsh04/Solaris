@@ -58,6 +58,51 @@ class FrostDatasource() {
     }
 
     /**
+     * Henter info om hva som blir målt på de forskjellige stasjonene, dvs hva som kan
+     * kalles på i getWeatherData
+     *
+     * @param stationIds Tar stationene fra getNearestStation
+     * @param elements Tar gitte elementer som skal sjekkes for om stasjonene kan måle etter
+     *                  kan manipulere elements i getWeatherData
+     * @param refrenceTime Sjekker for de siste 24 timene
+     *
+     * */
+
+    suspend fun getAvailableTimeSeries(
+        stationIds: List<String>,
+        elements: List<String>,
+        referenceTime: String
+    ): Map<String, List<String>> = withContext(Dispatchers.IO) {
+        val url = "$baseUrl/observations/availableTimeSeries/v0.jsonld"
+        Log.d(TAG, "Fetching available time series for stations $stationIds at time $referenceTime")
+        try {
+
+            // TODO: Noe er galt med URL kallet, kan været at URL-en må konverteres til et annet format?
+            val response: HttpResponse = client.get(url) {
+                parameter("sources", stationIds.joinToString(","))
+                parameter("elements", elements.joinToString(","))
+                parameter("referencetime", referenceTime)
+            }
+            if (response.status.isSuccess()) {
+                val body: String = response.body()
+                Log.d(TAG, body.decodeURLPart())
+                val json = Json { ignoreUnknownKeys = true }
+                val data = json.decodeFromString<AvailableTimeSeriesResponse>(body)
+                val stationElements = data.data.groupBy({ it.sourceId }, { it.elementId })
+                Log.i(TAG, "Available time series: $stationElements")
+                stationElements
+            } else {
+                val errorBody = response.body<FrostErrorResponse>()
+                Log.e(TAG, "Error fetching available time series: ${errorBody.error.reason}")
+                emptyMap()
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error fetching available time series: ${e.message}", e)
+            emptyMap()
+        }
+    }
+
+    /**
      * Henter daglig temperatur, skydekke og regn for de siste 24 timene når funksjonen blir kalt
      * hvis det har blitt gjort målinger for hver time. Kan hende en stasjon ikke måler hver time
      * eller ikke har utstyret for å målet en type data. Altså kan det hende du ikke får noe værdata
@@ -115,51 +160,6 @@ class FrostDatasource() {
         val weatherData = aggregateWeatherData(responses)
         Log.i(TAG, "Aggregated ${weatherData.size} weather data points")
         FrostResult.Success(weatherData)
-    }
-
-    /**
-     * Henter info om hva som blir målt på de forskjellige stasjonene, dvs hva som kan
-     * kalles på i getWeatherData
-     *
-     * @param stationIds Tar stationene fra getNearestStation
-     * @param elements Tar gitte elementer som skal sjekkes for om stasjonene kan måle etter
-     *                  kan manipulere elements i getWeatherData
-     * @param refrenceTime Sjekker for de siste 24 timene
-     *
-     * */
-
-    suspend fun getAvailableTimeSeries(
-        stationIds: List<String>,
-        elements: List<String>,
-        referenceTime: String
-    ): Map<String, List<String>> = withContext(Dispatchers.IO) {
-        val url = "$baseUrl/observations/availableTimeSeries/v0.jsonld"
-        Log.d(TAG, "Fetching available time series for stations $stationIds at time $referenceTime")
-        try {
-
-            // TODO: Noe er galt med URL kallet, kan været at URL-en må konverteres til et annet format?
-            val response: HttpResponse = client.get(url) {
-                parameter("sources", stationIds.joinToString(","))
-                parameter("elements", elements.joinToString(","))
-                parameter("referencetime", referenceTime)
-            }
-            if (response.status.isSuccess()) {
-                val body: String = response.body()
-                Log.d(TAG, body.decodeURLPart())
-                val json = Json { ignoreUnknownKeys = true }
-                val data = json.decodeFromString<AvailableTimeSeriesResponse>(body)
-                val stationElements = data.data.groupBy({ it.sourceId }, { it.elementId })
-                Log.i(TAG, "Available time series: $stationElements")
-                stationElements
-            } else {
-                val errorBody = response.body<FrostErrorResponse>()
-                Log.e(TAG, "Error fetching available time series: ${errorBody.error.reason}")
-                emptyMap()
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error fetching available time series:") // ${e.message}, e
-            emptyMap()
-        }
     }
 
     private fun aggregateWeatherData(responses: List<FrostResponse>): List<FrostData> {

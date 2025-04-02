@@ -35,8 +35,10 @@ data class FrostData(
     }
 }
 
-
-
+sealed class FrostResult {
+    data class Success(val data: List<FrostData>) : FrostResult()
+    data class Failure(val message: String) : FrostResult(), List<FrostData>
+}
 
 // Hjelper klasser for deserialization
 @Serializable
@@ -57,3 +59,15 @@ data class Observation(
     val value: Float? = null,
     val qualityCode: Int? = null
 )
+
+@Serializable
+data class FrostErrorResponse(
+    val error: ErrorDetails
+) {
+    @Serializable
+    data class ErrorDetails(
+        val code: Int,
+        val message: String,
+        val reason: String
+    )
+}

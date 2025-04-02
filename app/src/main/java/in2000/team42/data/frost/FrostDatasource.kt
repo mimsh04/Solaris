@@ -11,7 +11,11 @@ import io.ktor.client.request.*
 import io.ktor.http.decodeURLPart
 import io.ktor.serialization.kotlinx.json.*
 import in2000.team42.data.frost.model.FrostData
+import in2000.team42.data.frost.model.FrostErrorResponse
 import in2000.team42.data.frost.model.FrostResponse // Import FrostResponse
+import in2000.team42.data.frost.model.FrostResult
+import io.ktor.client.statement.HttpResponse
+import io.ktor.http.isSuccess
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
@@ -19,7 +23,7 @@ import kotlinx.serialization.json.Json
 
 class FrostDatasource() {
     private val TAG = "FrostDatasource" // LogCat tag for denne klassen
-    private val CLIENTID = "5fa50311-61ee-4aa0-8f29-2262c21212e5"
+        private val CLIENTID = "5fa50311-61ee-4aa0-8f29-2262c21212e5"
 
     private val baseUrl = "https://frost.met.no"
     private val client = HttpClient(CIO) {
@@ -67,17 +71,17 @@ class FrostDatasource() {
     suspend fun getWeatherData(
         stationIds: List<String>,
         referenceTime: String
-    ): List<FrostData> = withContext(Dispatchers.IO) {
+    ): FrostResult = withContext(Dispatchers.IO) {
         val elements = listOf(
             "mean(air_temperature P1D)",
             "mean(surface_snow_coverage P1D)",
-            "cloud_area_fraction"
+            "mean(cloud_area_fraction P1D)"
         )
 
         val availability = getAvailableTimeSeries(stationIds, elements, referenceTime)
         if (availability.isEmpty()) {
             Log.w(TAG, "No available time series found")
-            return@withContext emptyList()
+            return@withContext FrostResult.Failure("No available time series found")
         }
 
         val responses = mutableListOf<FrostResponse>()
@@ -85,15 +89,23 @@ class FrostDatasource() {
             val supportingStations = availability.filter { it.value.contains(element) }.keys
             if (supportingStations.isNotEmpty()) {
                 try {
-                    val response = client.get("$baseUrl/observations/v0.jsonld") {
+                    val response: HttpResponse = client.get("$baseUrl/observations/v0.jsonld") {
                         parameter("sources", supportingStations.joinToString(","))
                         parameter("elements", element)
                         parameter("referencetime", referenceTime)
-                    }.body<FrostResponse>()
-                    responses.add(response)
-                    Log.d(TAG, "Fetched data for $element from stations $supportingStations")
+                    }
+                    if (response.status.isSuccess()) {
+                        val body = response.body<FrostResponse>()
+                        responses.add(body)
+                        Log.d(TAG, "Fetched data for $element from stations $supportingStations")
+                    } else {
+                        val errorBody = response.body<FrostErrorResponse>()
+                        Log.e(TAG, "Error fetching $element: ${errorBody.error.reason}")
+                        return@withContext FrostResult.Failure(errorBody.error.reason) // Return error message
+                    }
                 } catch (e: Exception) {
                     Log.e(TAG, "Error fetching $element: ${e.message}", e)
+                    return@withContext FrostResult.Failure(e.message ?: "Unknown error fetching $element")
                 }
             } else {
                 Log.w(TAG, "No stations support $element")
@@ -102,7 +114,7 @@ class FrostDatasource() {
 
         val weatherData = aggregateWeatherData(responses)
         Log.i(TAG, "Aggregated ${weatherData.size} weather data points")
-        weatherData
+        FrostResult.Success(weatherData)
     }
 
     /**
@@ -126,19 +138,26 @@ class FrostDatasource() {
         try {
 
             // TODO: Noe er galt med URL kallet, kan været at URL-en må konverteres til et annet format?
-            val response: String = client.get(url) {
+            val response: HttpResponse = client.get(url) {
                 parameter("sources", stationIds.joinToString(","))
                 parameter("elements", elements.joinToString(","))
-                parameter("referencetime", "2024-01-01/2024-12-31") // Bruk refrenceTime til vanlig
-            }.body()
-            Log.d(TAG, response.decodeURLPart())
-            val json = Json { ignoreUnknownKeys = true }
-            val data = json.decodeFromString<AvailableTimeSeriesResponse>(response)
-            val stationElements = data.data.groupBy({ it.sourceId }, { it.elementId })
-            Log.i(TAG, "Available time series: $stationElements")
-            stationElements
+                parameter("referencetime", referenceTime)
+            }
+            if (response.status.isSuccess()) {
+                val body: String = response.body()
+                Log.d(TAG, body.decodeURLPart())
+                val json = Json { ignoreUnknownKeys = true }
+                val data = json.decodeFromString<AvailableTimeSeriesResponse>(body)
+                val stationElements = data.data.groupBy({ it.sourceId }, { it.elementId })
+                Log.i(TAG, "Available time series: $stationElements")
+                stationElements
+            } else {
+                val errorBody = response.body<FrostErrorResponse>()
+                Log.e(TAG, "Error fetching available time series: ${errorBody.error.reason}")
+                emptyMap()
+            }
         } catch (e: Exception) {
-            Log.e(TAG, "Error fetching available time series: ${e.message}", e)
+            Log.e(TAG, "Error fetching available time series:") // ${e.message}, e
             emptyMap()
         }
     }

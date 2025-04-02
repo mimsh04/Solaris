@@ -27,9 +27,9 @@ class FrostDatasource() {
     private val CLIENTID = "5fa50311-61ee-4aa0-8f29-2262c21212e5"
     //val referenceTime = "2024-01-01/2024-12-31"
 
-    val temp = "best_estimate_mean(air_temperature P1M)"
-    val snow = "mean(snow_coverage_type P1M)"
-    val cloudAreaFraction = "mean(cloud_area_fraction P1Y)"
+    val temp = "best_estimate_mean(air_temperature P1M)" // Opplevde problemer med å velge noe annet enn P1M
+    val snow = "mean(snow_coverage_type P1M)" // Samme problem her som kommentaren over
+    val cloudAreaFraction = "mean(cloud_area_fraction P1Y)" // Trengs bare for år til år, ikke nødvendig å endre
     // val elements = listOf(temp, snow, cloudAreaFraction)
 
     private val baseUrl = "https://frost.met.no"

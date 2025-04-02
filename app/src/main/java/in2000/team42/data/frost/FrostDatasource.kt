@@ -22,6 +22,8 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
+// TODO: Filtrere ut nullverdier og gi komplett data til HomeViewModel
+
 class FrostDatasource() {
     private val TAG = "FrostDatasource" // LogCat tag for denne klassen
     private val CLIENTID = "5fa50311-61ee-4aa0-8f29-2262c21212e5"
@@ -88,7 +90,7 @@ class FrostDatasource() {
                 Log.i(TAG, "Found nearest station IDs for $element: $stationIds")
             } catch (e: Exception) {
                 Log.e(TAG, "Error finding stations for $element: ${e.message}", e)
-                // Continue with other elements even if one fails
+                // Funksjonen vil fortsette med andre elementer hvis et element skulle ha feilet.
             }
         }
 

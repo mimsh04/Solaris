@@ -10,4 +10,9 @@ val faqItems = listOf(
             "Selv om man kanskje tror solceller fungerer best i varme klima," +
                     " er de mest effektive ved ca. -5°C og presterer dårlig ved temperaturer over 25°C." +
                     " I Sør-Norge kan solceller faktisk produsere mer energi enn i Afrika, så lenge det ikke er snødekke.")
+        ,FAQ("Kan jeg få støtte til solcelleinstallasjon?","Enova tilbyr støtte på opptil 32.500 kroner for strømproduksjon som kan tilbakeføres til strømnettet." +
+            "Det er også mulig å få støtte for fritidsboliger."),
+        FAQ("Kan jeg stole på beregningene i appen?","Appen baserer seg på tilgjengelige data og dokumenterte beregningsmodeller, " +
+                "men verdiene kan avvike fra faktiske forhold." +
+                "Det anbefales alltid å sammenligne resultatene med flere kilder.")
 )

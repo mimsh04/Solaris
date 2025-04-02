@@ -25,6 +25,7 @@ import com.mapbox.maps.extension.compose.MapState
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
 import com.mapbox.maps.extension.compose.annotation.generated.PolygonAnnotation
+import com.mapbox.maps.extension.compose.annotation.generated.PolygonAnnotationState
 import com.mapbox.maps.extension.compose.rememberMapState
 import com.mapbox.maps.extension.compose.style.MapStyle
 import com.mapbox.maps.interactions.TypedFeaturesetDescriptor
@@ -34,6 +35,7 @@ import in2000.team42.R
 import in2000.team42.ui.screens.home.HomeViewModel
 import in2000.team42.ui.screens.home.map.search.SearchBar
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -120,6 +122,8 @@ fun Map(
 
     var mapPolygon: List<List<Point>>? by remember { mutableStateOf(null) }
 
+    val polygonAnnotationState = remember { PolygonAnnotationState() }
+
     val mapViewportState = rememberMapViewportState {
         setCameraOptions {
             zoom(10.0)
@@ -145,6 +149,14 @@ fun Map(
         )
 
         couroutineScope.launch {
+            mapClicked = true
+            focusManager.clearFocus()
+
+            kotlinx.coroutines.delay(100)
+            mapClicked = false
+        }
+
+        couroutineScope.launch {
             kotlinx.coroutines.delay(2300)
             mapPolygon = mapState.queryBuildingCoordinatesAt(point)
             Log.d("Map", mapPolygon.toString())
@@ -157,10 +169,6 @@ fun Map(
             viewModel.setAreal(calculatePolygonArea(mapPolygon!!).toFloat())
             viewModel.updateAllApi()
 
-            mapClicked = true
-            focusManager.clearFocus()
-            kotlinx.coroutines.delay(100)
-            mapClicked = false
         }
         return true
     }
@@ -185,8 +193,10 @@ fun Map(
             },
         ) {
             if (mapPolygon.isNullOrEmpty().not()) {
+
                 PolygonAnnotation(
                     points = mapPolygon!!,
+
                 )
             }
         }

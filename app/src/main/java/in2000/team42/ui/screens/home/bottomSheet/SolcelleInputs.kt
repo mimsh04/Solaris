@@ -27,7 +27,7 @@ fun SolcelleInputs(viewModel: HomeViewModel) {
             "Areal i m²",
             areal.value,
             { viewModel.setAreal(it) },
-            1..500,
+            1..10000,
         )
     }
 }

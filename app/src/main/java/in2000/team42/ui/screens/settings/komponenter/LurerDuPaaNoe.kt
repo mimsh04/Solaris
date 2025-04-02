@@ -22,6 +22,10 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,11 +34,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import in2000.team42.ui.screens.faq.FaqDialog
 import in2000.team42.ui.screens.guide.InstallasjonScreen
 
 @Composable
 fun LurerDuPaaNoe(navController: NavController){
     val gridState= rememberLazyGridState()
+    var showFAQ by remember{ mutableStateOf(false) }
 
     Text(
         text = "Lurer du på noe?",
@@ -77,7 +83,7 @@ fun LurerDuPaaNoe(navController: NavController){
                             navController.navigate("installasjonsguide")
                         }
                         else{
-                            //TODO
+                            showFAQ=true
                         }
                     }
             ) {
@@ -103,5 +109,9 @@ fun LurerDuPaaNoe(navController: NavController){
             }
 
         }
+    }
+
+    if(showFAQ){
+        FaqDialog(onDismiss = {showFAQ=false})
     }
 }

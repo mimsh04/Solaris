@@ -23,7 +23,7 @@ fun NavBar(navController: NavHostController) {
     val currentRoute = navBackStackEntry?.destination?.route
 
     val navItems = listOf(
-        NavItem(Screen.Saved, "Lagret", Icons.Filled.Favorite, Icons.Outlined.Favorite),
+        NavItem(Screen.Saved, "Lagret", Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder),
         NavItem(Screen.Home, "Hjem", Icons.Filled.Home, Icons.Outlined.Home),
         NavItem(Screen.Settings, "Profil", Icons.Filled.AccountCircle, Icons.Outlined.AccountCircle)
     )

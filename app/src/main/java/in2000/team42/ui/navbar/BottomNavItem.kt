@@ -3,12 +3,15 @@ package in2000.team42.ui.navbar
 import androidx.compose.animation.core.*
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -51,6 +54,13 @@ import androidx.compose.ui.unit.dp
                 )
                 .clip(RoundedCornerShape(24.dp))
                 .background(MaterialTheme.colorScheme.surface),
+//                .then(
+//                    if (isSelected){
+//                        Modifier.border(2.dp,Color.LightGray, RoundedCornerShape(24.dp))
+//                    }else{
+//                        Modifier
+//                    }
+//                ),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
         ) {

@@ -1,96 +1,82 @@
 package in2000.team42.ui
 
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.*
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import in2000.team42.ui.navbar.*
 import in2000.team42.ui.screens.Screen
 
 @Composable
-fun NavBar (navController: NavHostController) {
+fun NavBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    NavigationBar (
-        modifier = Modifier.height(80.dp)
-    ){
+    val navItems = listOf(
+        NavItem(Screen.Saved, "Lagret", Icons.Filled.Favorite, Icons.Outlined.Favorite),
+        NavItem(Screen.Home, "Hjemme", Icons.Filled.Home, Icons.Outlined.Home),
+        NavItem(Screen.Settings, "Profil", Icons.Filled.AccountCircle, Icons.Outlined.AccountCircle)
+    )
 
-        NavigationBarItem(
-            icon = { Icon(
-                Icons.Default.Favorite,
-                contentDescription = "Saved",
-                modifier = Modifier.size(40.dp)
-            )},
-            selected= currentRoute == Screen.Saved.route,
-            onClick = {
-                if (currentRoute != Screen.Saved.route) {
-                    navController.navigate(Screen.Saved.route) {
-                        popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
+    val currentScreen = navItems.find { it.screen.route == currentRoute } ?: navItems[1]
+
+    Box(
+        modifier = Modifier
+            .shadow(5.dp)
+            .background(color = MaterialTheme.colorScheme.surface)
+            .height(80.dp)
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            for (navItem in navItems) {
+                val isSelected = navItem == currentScreen
+                val animatedWeight by animateFloatAsState(
+                    targetValue = if (isSelected) 1.8f else 1f,
+                    animationSpec = spring(
+                        stiffness = Spring.StiffnessLow,
+                        dampingRatio = Spring.DampingRatioMediumBouncy
+                    )
+                )
+
+                Box(
+                    modifier = Modifier.weight(animatedWeight),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    val interactionSource = remember { MutableInteractionSource() }
+                    BottomNavItem(
+                        modifier = Modifier.clickable(
+                            interactionSource = interactionSource,
+                            indication = null
+                        ) {
+                            if (!isSelected) {
+                                navController.navigate(navItem.screen.route) {
+                                    popUpTo(navController.graph.startDestinationId) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
+                        },
+                        navItem = navItem,
+                        isSelected = isSelected
+                    )
                 }
             }
-        )
-
-        NavigationBarItem(
-            icon = { Icon(
-                Icons.Default.Home,
-                contentDescription = "Home",
-                modifier = Modifier.size(40.dp)
-            )},
-            selected = currentRoute == Screen.Home.route,
-            onClick = {
-                if (currentRoute != Screen.Home.route) {
-                    navController.navigate(Screen.Home.route) {
-                        popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
-            }
-        )
-
-        NavigationBarItem(
-            icon = { Icon(
-                Icons.Default.AccountCircle,
-                contentDescription = "Settings",
-                modifier = Modifier.size(40.dp)
-            )},
-            selected = currentRoute == Screen.Settings.route,
-            onClick = {
-                if (currentRoute != Screen.Settings.route) {
-                    navController.navigate(Screen.Settings.route) {
-                        popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
-            }
-        )
-
-
-
-
-
-
+        }
     }
 }

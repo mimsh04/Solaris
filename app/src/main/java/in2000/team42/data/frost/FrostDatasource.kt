@@ -22,8 +22,6 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
-// TODO: Filtrere ut nullverdier og gi komplett data til HomeViewModel
-
 class FrostDatasource() {
     private val TAG = "FrostDatasource" // LogCat tag for denne klassen
     private val CLIENTID = "5fa50311-61ee-4aa0-8f29-2262c21212e5"
@@ -58,7 +56,7 @@ class FrostDatasource() {
     /**
      * Henter nærmeste stasjoner basert på koordinater som input. Funksjonen vil finne de nærmeste stasjonene som har målinger for elements
      * og finner de 3 nærmeste stasjonene for hvert elements. Dvs at funksjonen gjor 3 API kall
-     * */
+     **/
 
     suspend fun getNearestStation(latitude: Double, longitude: Double, referenceTime: String): Map<String, List<String>>? = withContext(Dispatchers.IO) {
         val url = "$baseUrl/sources/v0.jsonld"

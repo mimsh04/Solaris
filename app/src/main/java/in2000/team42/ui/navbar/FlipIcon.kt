@@ -15,7 +15,7 @@ fun FlipIcon(
     isActive: Boolean,
     activeIcon: ImageVector,
     inactiveIcon: ImageVector,
-    contentDescription: String,
+    contentDescription: String
 ) {
     val animationRotation by animateFloatAsState(
         targetValue = if (isActive) 180f else 0f,
@@ -30,7 +30,7 @@ fun FlipIcon(
     ) {
         Icon(
             imageVector = if (animationRotation > 90f) activeIcon else inactiveIcon,
-            contentDescription = contentDescription,
+            contentDescription = contentDescription
         )
     }
 }

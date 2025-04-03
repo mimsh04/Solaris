@@ -24,7 +24,7 @@ fun NavBar(navController: NavHostController) {
 
     val navItems = listOf(
         NavItem(Screen.Saved, "Lagret", Icons.Filled.Favorite, Icons.Outlined.Favorite),
-        NavItem(Screen.Home, "Hjemme", Icons.Filled.Home, Icons.Outlined.Home),
+        NavItem(Screen.Home, "Hjem", Icons.Filled.Home, Icons.Outlined.Home),
         NavItem(Screen.Settings, "Profil", Icons.Filled.AccountCircle, Icons.Outlined.AccountCircle)
     )
 

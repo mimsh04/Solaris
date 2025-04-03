@@ -24,6 +24,7 @@ import in2000.team42.ui.screens.Screen
 import in2000.team42.ui.screens.home.HomeScreen
 import in2000.team42.ui.screens.settings.SettingsScreen
 import android.Manifest
+import in2000.team42.ui.screens.guide.InstallasjonScreen
 import in2000.team42.ui.screens.saved.SavedScreen
 
 
@@ -79,6 +80,10 @@ class MainActivity : ComponentActivity() {
                             SavedScreen(navController, Modifier
                                 .padding(innerPadding)
                             )
+                        }
+
+                        composable(Screen.Guide.route) {
+                            InstallasjonScreen(navController)
                         }
                     }
 

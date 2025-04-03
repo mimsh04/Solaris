@@ -97,7 +97,6 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    // TODO: Må fikse slik at all dataen blir samlet
     private fun updateWeatherData() {
         viewModelScope.launch {
             try {
@@ -110,12 +109,13 @@ class HomeViewModel : ViewModel() {
                 when (weather) {
                     is FrostResult.Success -> {
                         val displayData = weather.data.map { it.toDisplayWeather() }
-                        displayData.forEachIndexed { index, displayWeather ->
-                            Log.d(TAG, "DisplayWeather [$index]: month=${displayWeather.month}, temp=${displayWeather.temp}, snow=${displayWeather.snow}, cloud=${displayWeather.cloud}")
-                        }
 
+                        // Uncomment dette hvis du ønsker mer oversikt over daten du henter
+                        /*displayData.forEachIndexed { index, displayWeather ->
+                            Log.d(TAG, "DisplayWeather [$index]: month=${displayWeather.month}, temp=${displayWeather.temp}, snow=${displayWeather.snow}, cloud=${displayWeather.cloud}")
+                        }*/
                         _weatherData.value = displayData
-                        Log.d(TAG, "Weather data: $displayData")
+                        Log.d(TAG, "Weather data updated: $displayData")
                     }
                     is FrostResult.Failure -> {
                         _weatherData.value = emptyList()
@@ -124,7 +124,7 @@ class HomeViewModel : ViewModel() {
                 }
             } catch (e: Exception) {
                 _weatherData.value = emptyList()
-                Log.e(TAG, "Exception fetching weather data: ${e.message}")
+                Log.e(TAG, "Exception fetching weather data: ${e.message}", e)
             }
         }
     }

@@ -27,11 +27,10 @@ import kotlinx.serialization.json.Json
 class FrostDatasource() {
     private val TAG = "FrostDatasource" // LogCat tag for denne klassen
     private val CLIENTID = "5fa50311-61ee-4aa0-8f29-2262c21212e5"
-    //val referenceTime = "2024-01-01/2024-12-31"
 
     val temp = "best_estimate_mean(air_temperature P1M)" // Opplevde problemer med å velge noe annet enn P1M
     val snow = "mean(snow_coverage_type P1M)" // Samme problem her som kommentaren over
-    val cloudAreaFraction = "mean(cloud_area_fraction P1M)" // Trengs bare for år til år, ikke nødvendig å endre
+    val cloudAreaFraction = "mean(cloud_area_fraction P1M)"
     // val elements = listOf(temp, snow, cloudAreaFraction)
 
     private val baseUrl = "https://frost.met.no"
@@ -42,11 +41,6 @@ class FrostDatasource() {
             }
         }
         install(ContentNegotiation) {
-            json(Json {
-                ignoreUnknownKeys = true
-                isLenient = true
-                coerceInputValues = true // Handle type mismatches gracefully
-            }, contentType = ContentType.parse("application/ld+json"))
             json(Json {
                 ignoreUnknownKeys = true
                 isLenient = true
@@ -80,8 +74,6 @@ class FrostDatasource() {
                     parameter("nearestmaxcount", 3) // Henter de x antall naermeste stasjonene
                     parameter("elements", element)
                 }.body()
-
-                Log.d(TAG, response.decodeURLPart())
 
                 val json = Json { ignoreUnknownKeys = true }
                 val data = json.decodeFromString<SourceResponse>(response)
@@ -167,38 +159,44 @@ class FrostDatasource() {
     }
 
     private fun aggregateWeatherData(responses: List<FrostResponse>): List<FrostData> {
-        val dataByTime = mutableMapOf<String, FrostData.Builder>()
+        val dataByTime = mutableMapOf<String, FrostData>()
 
         for (response in responses) {
             response.data.forEach { observation ->
                 val refTime = observation.referenceTime
-                val builder = dataByTime.getOrPut(refTime) {
-                    FrostData.Builder().setReferenceTime(refTime)
+                val currentData = dataByTime.getOrPut(refTime) {
+                    FrostData(
+                        stationId = null,
+                        referenceTime = refTime,
+                        temperature = null,
+                        snow = null,
+                        cloudAreaFraction = null
+                    )
                 }
                 observation.observations.forEach { obs ->
-                    val value = obs.value?.toDouble() // Konverterer Float? to Double?
+                    val value = obs.value?.toDouble()
+                    // Always update based on the latest data in the map
+                    val updatedData = dataByTime[refTime] ?: currentData
                     when (obs.elementId) {
-                        temp -> value?.let { builder.setTemperature(it) }
-                        snow -> value?.let { builder.setSnow(it) }
-                        cloudAreaFraction -> value?.let { builder.setCloudAreaFraction(it) }
+                        temp -> value?.let { dataByTime[refTime] = updatedData.copy(temperature = it) }
+                        snow -> value?.let { dataByTime[refTime] = updatedData.copy(snow = it) }
+                        cloudAreaFraction -> value?.let { dataByTime[refTime] = updatedData.copy(cloudAreaFraction = it) }
                     }
                 }
-                if (builder.stationId == null) {
-                    builder.setStationId(observation.sourceId.split(":")[0])
+                // Set stationId if not already set
+                if (dataByTime[refTime]?.stationId == null) {
+                    val stationId = observation.sourceId.split(":")[0]
+                    dataByTime[refTime] = (dataByTime[refTime] ?: currentData).copy(stationId = stationId)
                 }
             }
         }
-
-        return dataByTime.values.map { it.build() }
+        return dataByTime.values.toList()
     }
 
     @Serializable
     private data class SourceResponse(val data: List<Source>)
     @Serializable
     private data class Source(val id: String)
-
-    @Serializable
-    private data class AvailableTimeSeriesResponse(val data: List<TimeSeriesEntry>)
     @Serializable
     private data class TimeSeriesEntry(val sourceId: String, val elementId: String)
 }

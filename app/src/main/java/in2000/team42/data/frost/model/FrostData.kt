@@ -5,35 +5,13 @@ import kotlinx.serialization.json.Json
 
 @Serializable
 data class FrostData(
-    val stationId: String?, // Optional or could be removed
+    val stationId: String?,
     val referenceTime: String,
     val temperature: Double?,
     val snow: Double?,
     val cloudAreaFraction: Double?,
     val qualityCode: Int? = null
-) {
-    class Builder {
-        var stationId: String? = null
-        private var referenceTime: String? = null
-        private var temperature: Double? = null
-        private var snow: Double? = null
-        private var cloudAreaFraction: Double? = null
-
-        fun setStationId(id: String) = apply { this.stationId = id }
-        fun setReferenceTime(time: String) = apply { this.referenceTime = time }
-        fun setTemperature(temp: Double) = apply { this.temperature = temp }
-        fun setSnow(precip: Double) = apply { this.snow = precip }
-        fun setCloudAreaFraction(cloud: Double) = apply { this.cloudAreaFraction = cloud }
-
-        fun build() = FrostData(
-            stationId,
-            referenceTime ?: throw IllegalStateException("Reference time required"),
-            temperature,
-            snow,
-            cloudAreaFraction
-        )
-    }
-}
+)
 
 sealed class FrostResult {
     data class Success(val data: List<FrostData>) : FrostResult()

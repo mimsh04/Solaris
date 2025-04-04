@@ -1,6 +1,7 @@
 package in2000.team42.ui.screens.home.map
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -22,7 +23,9 @@ import com.mapbox.maps.plugin.animation.MapAnimationOptions
 import com.mapbox.search.autocomplete.PlaceAutocomplete
 import in2000.team42.R
 import in2000.team42.ui.screens.home.HomeViewModel
+import in2000.team42.ui.screens.home.WeatherIcon.WeatherIconButton
 import in2000.team42.ui.screens.home.map.search.SearchBar
+//import in2000.team42.ui.screens.home.WeatherIcon.WeatherIconButton
 import kotlinx.coroutines.launch
 
 
@@ -89,12 +92,16 @@ fun Map(
             onMapClickListener = { onMapClicked(it) }
         )
 
-        SearchBar(
-            placeAutocomplete = placeAutoComplete,
-            onLocationSelected = { settNyttPunkt(it) },
-            modifier = Modifier.padding(top = 26.dp),
-            isMapClicked = mapClicked
-        )
+        Column {
+            SearchBar(
+                placeAutocomplete = placeAutoComplete,
+                onLocationSelected = { settNyttPunkt(it) },
+                modifier = Modifier.padding(top = 26.dp),
+                isMapClicked = mapClicked
+            )
+
+            WeatherIconButton()
+        }
     }
 
 

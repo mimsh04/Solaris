@@ -9,7 +9,7 @@ data class FrostData(
     val referenceTime: String,
     val temperature: Float? = null, // I Celsius
     val snow: Float? = null, // I mm
-    val cloudAreaFraction: Double? = null, // I prosent
+    val cloudAreaFraction: Double? = null, // I deler fra 1-8 der 8 er fulldekket
     val qualityCode: Int? = null,
 ) {
     companion object {

@@ -8,7 +8,6 @@ import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
-import io.ktor.http.decodeURLPart
 import io.ktor.serialization.kotlinx.json.*
 import in2000.team42.data.frost.model.FrostData
 import in2000.team42.data.frost.model.FrostErrorResponse
@@ -175,7 +174,6 @@ class FrostDatasource() {
                 }
                 observation.observations.forEach { obs ->
                     val value = obs.value?.toDouble()
-                    // Always update based on the latest data in the map
                     val updatedData = dataByTime[refTime] ?: currentData
                     when (obs.elementId) {
                         temp -> value?.let { dataByTime[refTime] = updatedData.copy(temperature = it) }
@@ -183,7 +181,7 @@ class FrostDatasource() {
                         cloudAreaFraction -> value?.let { dataByTime[refTime] = updatedData.copy(cloudAreaFraction = it) }
                     }
                 }
-                // Set stationId if not already set
+                // Setter StationId hvis den ikke allerede er satt
                 if (dataByTime[refTime]?.stationId == null) {
                     val stationId = observation.sourceId.split(":")[0]
                     dataByTime[refTime] = (dataByTime[refTime] ?: currentData).copy(stationId = stationId)
@@ -197,6 +195,4 @@ class FrostDatasource() {
     private data class SourceResponse(val data: List<Source>)
     @Serializable
     private data class Source(val id: String)
-    @Serializable
-    private data class TimeSeriesEntry(val sourceId: String, val elementId: String)
 }

@@ -104,7 +104,7 @@ class FrostDatasource() {
      * Kan hende en stasjon ikke måler hver time eller ikke har utstyret for å målet en type data.
      * Altså kan det hende du ikke får noe værdata på noen adresser.
      *
-     * @param stationMap Nærmeste stasjoner som har målinger på elementene
+     * @param stationMap Nærmeste stasjoner som har målinger på elementene eks på mapping: best_estimate_mean(air_temperature P1M) : SN18700, SN18701, SN18702
      * @param referenceTime Hvilken tid du skal ha data fra. Skrive i format AA-MM-DD/AA-MM-DD, Der start er på venstre siden av /-tegnet
      *
      * @return Flere klasser med temperatur, skydekke og snø dekke)

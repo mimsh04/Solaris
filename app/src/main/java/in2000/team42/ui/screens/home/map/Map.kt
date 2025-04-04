@@ -23,9 +23,8 @@ import com.mapbox.maps.plugin.animation.MapAnimationOptions
 import com.mapbox.search.autocomplete.PlaceAutocomplete
 import in2000.team42.R
 import in2000.team42.ui.screens.home.HomeViewModel
-import in2000.team42.ui.screens.home.WeatherIcon.WeatherIconButton
+import in2000.team42.ui.screens.home.map.WeatherIcon.WeatherIconButton
 import in2000.team42.ui.screens.home.map.search.SearchBar
-//import in2000.team42.ui.screens.home.WeatherIcon.WeatherIconButton
 import kotlinx.coroutines.launch
 
 

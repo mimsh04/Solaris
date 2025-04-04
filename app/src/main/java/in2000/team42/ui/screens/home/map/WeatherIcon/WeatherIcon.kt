@@ -1,9 +1,8 @@
-package in2000.team42.ui.screens.home.WeatherIcon
+package in2000.team42.ui.screens.home.map.WeatherIcon
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.material.icons.Icons
 //import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment

@@ -1,13 +1,16 @@
 package in2000.team42.ui.screens.home.bottomSheet
 
 
+import androidx.compose.foundation.content.MediaType.Companion.Text
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetValue
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
@@ -69,6 +72,11 @@ fun BottomSheet(
 
                 item {
                     StrommenContent()
+                }
+                item {
+                    Button(onClick = {
+                        viewModel.saveProject()
+                    },modifier= Modifier.padding(16.dp)) {Text("Save") }
                 }
             }
         },

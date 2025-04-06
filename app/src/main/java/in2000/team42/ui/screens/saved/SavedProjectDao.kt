@@ -1,0 +1,15 @@
+package in2000.team42.ui.screens.saved
+
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
+
+@Dao
+interface SavedProjectDao {
+    @Insert
+    suspend fun insert(project: SavedProjectEntity)
+
+    @Query("SELECT * FROM saved_projects")
+    fun getAllProjects(): Flow<List<SavedProjectEntity>>
+}

@@ -14,6 +14,9 @@ import in2000.team42.data.frost.model.FrostData
 import in2000.team42.data.frost.FrostRepository
 import in2000.team42.data.pgvis.PvTech
 import in2000.team42.data.pgvis.model.KwhMonthlyResponse
+import in2000.team42.ui.screens.saved.SavedProjectDatabase
+import in2000.team42.ui.screens.saved.SavedProjectEntity
+import kotlinx.coroutines.flow.Flow
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -40,6 +43,34 @@ class HomeViewModel : ViewModel() {
     val sizeUnaryOperator = _sunRadiation.asStateFlow()
     val weatherData = _weatherData.asStateFlow()
     val kwhMonthlyData = _kwhMonthlyData.asStateFlow()
+
+    private val savedProjectDao = SavedProjectDatabase.getDatabase().savedProjectDao()
+    private val _address = MutableStateFlow("")
+    val address = _address.asStateFlow()
+
+    fun setAddress(address: String) {
+        _address.value = address
+    }
+
+    fun saveProject() {
+        viewModelScope.launch {
+            savedProjectDao.insert(
+                SavedProjectEntity(
+                    address = _address.value,
+                    latitude = _latitude.value,
+                    longitude = _longitude.value,
+                    incline = _incline.value,
+                    vinkel = _vinkel.value
+                )
+            )
+        }
+    }
+
+    fun getSavedProjects(): Flow<List<SavedProjectEntity>> {
+        return savedProjectDao.getAllProjects()
+    }
+
+
 
     fun setLongitude(longitude: Double) {
         _longitude.value = longitude

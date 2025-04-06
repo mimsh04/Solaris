@@ -25,6 +25,7 @@ import in2000.team42.ui.screens.home.HomeScreen
 import in2000.team42.ui.screens.settings.SettingsScreen
 import android.Manifest
 import in2000.team42.ui.screens.guide.InstallasjonScreen
+import in2000.team42.ui.screens.saved.SavedProjectDatabase
 import in2000.team42.ui.screens.saved.SavedScreen
 
 
@@ -50,6 +51,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         requestLocationPermissions()
         enableEdgeToEdge()
+        SavedProjectDatabase.initialize(applicationContext) // Initialize the Room Database
         setContent {
             val navController = rememberNavController()
             IN2000_team42Theme {
@@ -78,7 +80,8 @@ class MainActivity : ComponentActivity() {
 
                         composable(Screen.Saved.route) {
                             SavedScreen(navController, Modifier
-                                .padding(innerPadding)
+                                .padding(innerPadding),
+                                viewModel = viewModel()
                             )
                         }
 

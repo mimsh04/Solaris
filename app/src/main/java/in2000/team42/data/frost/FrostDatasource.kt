@@ -1,6 +1,6 @@
 package in2000.team42.data.frost
 
-import android.util.Log // Added import for Logcat
+import android.util.Log
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*

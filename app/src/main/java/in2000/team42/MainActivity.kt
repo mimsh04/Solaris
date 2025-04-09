@@ -25,7 +25,7 @@ import in2000.team42.ui.screens.home.HomeScreen
 import in2000.team42.ui.screens.settings.SettingsScreen
 import android.Manifest
 import in2000.team42.ui.screens.guide.InstallasjonScreen
-import in2000.team42.ui.screens.saved.SavedProjectDatabase
+import in2000.team42.data.saved.*
 import in2000.team42.ui.screens.saved.SavedScreen
 
 

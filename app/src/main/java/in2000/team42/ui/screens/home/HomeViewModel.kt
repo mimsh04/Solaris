@@ -70,6 +70,12 @@ class HomeViewModel : ViewModel() {
         return savedProjectDao.getAllProjects()
     }
 
+    fun deleteProject(project: SavedProjectEntity) {
+        viewModelScope.launch {
+            savedProjectDao.delete(project)
+        }
+    }
+
 
 
     fun setLongitude(longitude: Double) {

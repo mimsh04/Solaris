@@ -20,9 +20,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import in2000.team42.ui.screens.home.HomeViewModel
+import in2000.team42.data.saved.*
 
 @Composable
-fun SavedScreen(navController: NavController, modifier: Modifier = Modifier, viewModel: HomeViewModel = viewModel()) {
+fun SavedScreen(navController: NavController,
+                modifier: Modifier = Modifier,
+                viewModel: HomeViewModel = viewModel()) {
     val savedProjects by viewModel.getSavedProjects().collectAsState(initial = emptyList())
 
     Column(modifier = Modifier.fillMaxSize()) {

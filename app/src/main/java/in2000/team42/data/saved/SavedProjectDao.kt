@@ -1,4 +1,4 @@
-package in2000.team42.ui.screens.saved
+package in2000.team42.data.saved
 
 import androidx.room.Dao
 import androidx.room.Delete

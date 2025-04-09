@@ -17,18 +17,16 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import in2000.team42.ui.navbar.*
 import in2000.team42.ui.screens.Screen
 
+private fun getNavItems(): List<NavItem> = listOf(
+    NavItem(Screen.Saved, "Lagret", Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder),
+    NavItem(Screen.Home, "Hjem", Icons.Filled.Home, Icons.Outlined.Home),
+    NavItem(Screen.Settings, "Profil", Icons.Filled.AccountCircle, Icons.Outlined.AccountCircle)
+)
+
+
 @Composable
 fun NavBar(navController: NavHostController) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
-
-    val navItems = listOf(
-        NavItem(Screen.Saved, "Lagret", Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder),
-        NavItem(Screen.Home, "Hjem", Icons.Filled.Home, Icons.Outlined.Home),
-        NavItem(Screen.Settings, "Profil", Icons.Filled.AccountCircle, Icons.Outlined.AccountCircle)
-    )
-
-    val currentScreen = navItems.find { it.screen.route == currentRoute } ?: navItems[1]
+    val currentScreen = getCurrentScreen(navController, getNavItems())
 
     Box(
         modifier = Modifier
@@ -42,7 +40,7 @@ fun NavBar(navController: NavHostController) {
             modifier = Modifier.fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            for (navItem in navItems) {
+            getNavItems().forEach { navItem ->
                 val isSelected = navItem == currentScreen
                 val animatedWeight by animateFloatAsState(
                     targetValue = if (isSelected) 1.8f else 1f,
@@ -62,15 +60,7 @@ fun NavBar(navController: NavHostController) {
                             interactionSource = interactionSource,
                             indication = null
                         ) {
-                            if (!isSelected) {
-                                navController.navigate(navItem.screen.route) {
-                                    popUpTo(navController.graph.startDestinationId) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            }
+                            handleNavItemClick(navController,navItem,currentScreen)
                         },
                         navItem = navItem,
                         isSelected = isSelected
@@ -79,4 +69,37 @@ fun NavBar(navController: NavHostController) {
             }
         }
     }
+}
+
+
+//helper functions for cleaner navigation logic
+@Composable
+private fun getCurrentScreen(navController: NavHostController,navItems: List<NavItem>): NavItem {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+    val isProfileRelated = navController.previousBackStackEntry?.destination?.route == Screen.Settings.route
+
+    return when {
+        currentRoute == Screen.Settings.route || isProfileRelated -> navItems[2] // Profile
+        else -> navItems.find { it.screen.route == currentRoute } ?: navItems[1] // Home
+    }
+}
+
+
+private fun handleNavItemClick(
+    navController: NavHostController,
+    navItem: NavItem,
+    currentScreen:NavItem
+){
+    val isProfileRelated = navController.previousBackStackEntry?.destination?.route == Screen.Settings.route
+
+    when {
+        navItem.screen.route == Screen.Settings.route && isProfileRelated -> navController.popBackStack(Screen.Settings.route, false)
+        navItem != currentScreen -> navController.navigate(navItem.screen.route) {
+            popUpTo(navController.graph.startDestinationId) { saveState = true }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
+
 }

@@ -21,8 +21,6 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
-// TODO: Filtrere ut nullverdier og gi komplett data til HomeViewModel
-
 class FrostDatasource() {
     private val TAG = "FrostDatasource" // LogCat tag for denne klassen
     private val CLIENTID = "5fa50311-61ee-4aa0-8f29-2262c21212e5"

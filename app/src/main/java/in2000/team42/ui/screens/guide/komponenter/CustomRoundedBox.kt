@@ -2,7 +2,9 @@ package in2000.team42.ui.screens.guide.komponenter
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -31,6 +33,7 @@ fun CustomRoundedBox(
     Box(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable {  }
             .padding(horizontal = 10.dp)
             .padding(top = 16.dp)
             .height(height)
@@ -39,18 +42,30 @@ fun CustomRoundedBox(
             .background(backgroundColor)
 
     ){
-        if(content != null){
-            content()
+        Column{
+            if(text!=null){
+                Text(
+                    text=text,
+                    fontSize=fontSize,
+                    fontWeight=fontWeight,
+                    color=textColor,
+                    modifier=Modifier.padding(start=10.dp)
+                )
+            }
+            content?.invoke()
         }
-        else if(text!=null){
-            Text(
-                text=text,
-                modifier=Modifier.padding(5.dp),
-                fontSize = fontSize,
-                fontWeight = fontWeight,
-                color = textColor
-            )
-        }
+//        if(content != null){
+//            content()
+//        }
+//        else if(text!=null){
+//            Text(
+//                text=text,
+//                modifier=Modifier.padding(5.dp),
+//                fontSize = fontSize,
+//                fontWeight = fontWeight,
+//                color = textColor
+//            )
+//        }
 
     }
 }

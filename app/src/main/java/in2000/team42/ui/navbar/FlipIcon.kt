@@ -1,0 +1,36 @@
+package in2000.team42.ui.navbar
+
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.*
+import androidx.compose.ui.*
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
+
+
+@Composable
+fun FlipIcon(
+    modifier: Modifier = Modifier,
+    isActive: Boolean,
+    activeIcon: ImageVector,
+    inactiveIcon: ImageVector,
+    contentDescription: String
+) {
+    val animationRotation by animateFloatAsState(
+        targetValue = if (isActive) 180f else 0f,
+        animationSpec = spring(
+            stiffness = Spring.StiffnessLow,
+            dampingRatio = Spring.DampingRatioMediumBouncy
+        )
+    )
+    Box(
+        modifier = modifier.graphicsLayer { rotationY = animationRotation },
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(
+            imageVector = if (animationRotation > 90f) activeIcon else inactiveIcon,
+            contentDescription = contentDescription
+        )
+    }
+}

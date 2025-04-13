@@ -101,8 +101,12 @@ dependencies {
     implementation("com.mapbox.search:offline:2.8.0-rc.1")
     implementation("com.mapbox.search:mapbox-search-android:2.8.0-rc.1")
     implementation("com.mapbox.search:mapbox-search-android-ui:2.8.0-rc.1")
+    //Database
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
+    //BottomSheet
+    implementation("com.composables:core:1.20.1")
+
 
 }

@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -106,6 +108,12 @@ fun BottomSheet(
 
                 item {
                     StrommenContent()
+                }
+                item {
+                    Button(onClick = {
+                        viewModel.saveProject() },
+                        modifier= Modifier.padding(16.dp))
+                    {Text("Lagre") }
                 }
             }
         }

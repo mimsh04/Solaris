@@ -41,43 +41,6 @@ fun Montering(){
 
         }
     }
-
-//    CustomRoundedBox(
-//        text=" 1. Vurder muligheten for solcelleanlegg",
-//        fontWeight = FontWeight.Bold
-//    ){
-//        Text(
-//            text="Før du monterer solcellepaneler, sjekk om det er tillatt i kommunen. " +
-//                    "Noen steder krever søknad eller har restriksjoner." +
-//                    " Sørg også for at taket er i god stand og har gode solforhold. " +
-//                    "En solcelleforhandler kan hjelpe deg med vurderingen.",
-//            modifier=Modifier.padding(start=25.dp)
-//        )
-//    }
-//
-//    Spacer(modifier= Modifier.height(30.dp))
-//
-//    CustomRoundedBox(
-//        text="2. Velg forhandler og installatør",
-//        height = 50.dp,
-//        fontWeight = FontWeight.Bold
-//    )
-//
-//    Spacer(modifier= Modifier.height(30.dp))
-//
-//    CustomRoundedBox(
-//        text="3. Montering av paneler",
-//        height = 50.dp,
-//        fontWeight = FontWeight.Bold
-//    )
-//
-//    Spacer(modifier= Modifier.height(30.dp))
-//
-//    CustomRoundedBox(
-//        text="4. Sikring og tilkobling",
-//        height = 50.dp,
-//        fontWeight = FontWeight.Bold
-//    )
 }
 
 @Composable
@@ -108,13 +71,13 @@ fun ExpandableMonteringItem(monteringData: MonteringData){
                     style = MaterialTheme.typography.bodyLarge,
                     color = Color.Black,
                 )
+            }
 
-                if (isExpanded){
-                    Text(
-                        text = monteringData.answer,
-                        modifier = Modifier.padding(top=10.dp),
-                        )
-                }
+            if (isExpanded){
+                Text(
+                    text = monteringData.answer,
+                    modifier = Modifier.padding(top=10.dp),
+                )
             }
 
 

@@ -2,6 +2,7 @@ package in2000.team42.ui.screens.saved.project
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,13 +20,15 @@ import in2000.team42.data.saved.SavedProjectEntity
 
 
 @Composable
-fun ProjectCard(project: SavedProjectEntity) {
+fun ProjectCard(project: SavedProjectEntity,
+                onClick:()-> Unit={}) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(200.dp)
             .background(Color.LightGray)
             .border(1.dp, Color.Gray, RoundedCornerShape(10.dp))
+            .clickable(onClick =onClick)
     ) {
         Column(
             modifier = Modifier.padding(16.dp),

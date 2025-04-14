@@ -24,7 +24,8 @@ import kotlin.math.roundToInt
 @Composable
 fun SwipeToDeleteItem(
     project: SavedProjectEntity,
-    onDeleteConfirmed: (SavedProjectEntity) -> Unit
+    onDeleteConfirmed: (SavedProjectEntity) -> Unit,
+    onClick:()-> Unit= {}
 ) {
     var swipeOffset by remember { mutableStateOf(0f) }
     var showDeleteConfirmationDialog by remember { mutableStateOf(false) }
@@ -54,7 +55,7 @@ fun SwipeToDeleteItem(
             )
         }
 
-
+        //swiping
         Box(
             modifier = Modifier
                 .offset { IntOffset(swipeOffset.roundToInt(), 0) }
@@ -74,7 +75,7 @@ fun SwipeToDeleteItem(
                     )
                 }
         ) {
-            ProjectCard(project = project)
+            ProjectCard(project = project, onClick)
         }
     }
 

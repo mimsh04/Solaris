@@ -2,9 +2,11 @@ package in2000.team42.ui.screens.settings.komponenter
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -23,5 +25,30 @@ fun YearlySummary(project: SavedProjectEntity) {
         .background(Color.Yellow)) {
         Text("Project Stats", fontWeight = FontWeight.Bold, color= Color.Black)
         Text("Energy: $randomEnergy kWh", color= Color.Black)
+    }
+}
+@Composable
+fun ProjectContent(project: SavedProjectEntity?) {
+    when (project) {
+        null -> NoProjectMessage()
+        else -> {
+            YearlySummary(project)
+            Spacer(Modifier.height(16.dp))
+        }
+    }
+}
+@Composable
+private fun NoProjectMessage() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Oops! No project selected",
+            color = Color.Black,
+            style = MaterialTheme.typography.bodyLarge
+        )
     }
 }

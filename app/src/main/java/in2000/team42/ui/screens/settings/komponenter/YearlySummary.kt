@@ -29,11 +29,16 @@ fun YearlySummary(project: SavedProjectEntity) {
 }
 @Composable
 fun ProjectContent(project: SavedProjectEntity?) {
-    when (project) {
-        null -> NoProjectMessage()
-        else -> {
-            YearlySummary(project)
-            Spacer(Modifier.height(16.dp))
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        when (project) {
+            null -> NoProjectMessage()
+            else -> {
+                YearlySummary(project)
+                Spacer(Modifier.height(16.dp))
+            }
         }
     }
 }

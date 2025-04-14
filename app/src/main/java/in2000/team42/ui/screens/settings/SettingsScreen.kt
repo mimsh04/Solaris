@@ -43,14 +43,16 @@ fun SettingsScreen (navController: NavHostController,
                     .padding(20.dp)
             ) {
 
-                JohnDoe()
-                ProjectContent(project)
                 Column {
-                    AnbefalteProdukter()
+                    JohnDoe()
+                    Column {
+                        ProjectContent(project)
+                        AnbefalteProdukter()
 
-                    LurerDuPaaNoe(navController,showFAQ,{showFAQ=it})
+                        LurerDuPaaNoe(navController, showFAQ, { showFAQ = it })
 
-                    SolarPanelData()
+                        SolarPanelData()
+                    }
                 }
 
             }

@@ -77,10 +77,15 @@ fun NavBar(navController: NavHostController) {
 private fun getCurrentScreen(navController: NavHostController,navItems: List<NavItem>): NavItem {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val isProfileRelated = navController.previousBackStackEntry?.destination?.route?.startsWith("settings/") == true
 
     return when {
-        currentRoute?.startsWith("settings/") == true || currentRoute == Screen.Settings.baseRoute -> navItems[2] // Profile
-        else -> navItems.find { it.screen.route == currentRoute } ?: navItems[1] // Home
+        currentRoute == Screen.Home.route -> navItems[1] // Home
+        currentRoute == Screen.Saved.route -> navItems[0] // Saved
+        currentRoute == Screen.Settings.route ||
+                currentRoute?.startsWith("${Screen.Settings.route}/") == true ||
+                isProfileRelated -> navItems[2] // Profile
+        else -> navItems[1] // Default to Home
     }
 }
 

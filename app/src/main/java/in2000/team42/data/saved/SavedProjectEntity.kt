@@ -11,4 +11,6 @@ data class SavedProjectEntity(
     val longitude: Double,
     val incline: Float,
     val vinkel: Float
-)
+){
+    val stringId: String get() = id.toString()
+}

@@ -10,6 +10,7 @@ import androidx.compose.ui.text.font.*
 import androidx.compose.ui.unit.*
 import androidx.navigation.NavController
 import androidx.lifecycle.viewmodel.compose.viewModel
+import in2000.team42.ui.screens.Screen
 import in2000.team42.ui.screens.home.HomeViewModel
 import in2000.team42.ui.screens.saved.project.SwipeToDeleteItem
 
@@ -53,8 +54,8 @@ fun SavedScreen(
                 items(savedProjects) { project ->
                     SwipeToDeleteItem(
                         project = project,
-                        onDeleteConfirmed = { projectToDelete ->
-                            viewModel.deleteProject(projectToDelete) }
+                        onDeleteConfirmed = { viewModel.deleteProject(it) },
+                        onClick = {  navController.navigate(Screen.Settings.createRoute(project.stringId))}
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }

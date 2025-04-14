@@ -27,6 +27,7 @@ import android.Manifest
 import in2000.team42.ui.screens.guide.InstallasjonScreen
 import in2000.team42.data.saved.*
 import in2000.team42.ui.screens.saved.SavedScreen
+import in2000.team42.ui.screens.saved.project.ProjectViewModel
 
 
 class MainActivity : ComponentActivity() {
@@ -72,9 +73,16 @@ class MainActivity : ComponentActivity() {
                                 .padding(innerPadding)
                             )
                         }
-                        composable(Screen.Settings.route) {
-                            SettingsScreen(navController, Modifier
-                                .padding(innerPadding)
+                        composable(Screen.Settings.route) { backStackEntry ->
+                            val projectId = backStackEntry.arguments?.getString("projectId")
+                            val viewModel: ProjectViewModel = viewModel()
+                            val project = projectId?.let { viewModel.getProjectById(it) }
+                            SettingsScreen(navController, project)
+                        }
+                        composable(Screen.Settings.baseRoute) {
+                            SettingsScreen(
+                                navController = navController,
+                                project = null
                             )
                         }
 

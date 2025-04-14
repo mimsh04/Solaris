@@ -77,10 +77,9 @@ fun NavBar(navController: NavHostController) {
 private fun getCurrentScreen(navController: NavHostController,navItems: List<NavItem>): NavItem {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    val isProfileRelated = navController.previousBackStackEntry?.destination?.route == Screen.Settings.route
 
     return when {
-        currentRoute == Screen.Settings.route || isProfileRelated -> navItems[2] // Profile
+        currentRoute?.startsWith("settings/") == true || currentRoute == Screen.Settings.baseRoute -> navItems[2] // Profile
         else -> navItems.find { it.screen.route == currentRoute } ?: navItems[1] // Home
     }
 }
@@ -94,12 +93,30 @@ private fun handleNavItemClick(
     val isProfileRelated = navController.previousBackStackEntry?.destination?.route == Screen.Settings.route
 
     when {
-        navItem.screen.route == Screen.Settings.route && isProfileRelated -> navController.popBackStack(Screen.Settings.route, false)
-        navItem != currentScreen -> navController.navigate(navItem.screen.route) {
-            popUpTo(navController.graph.startDestinationId) { saveState = true }
-            launchSingleTop = true
-            restoreState = true
+        // Profile navigation
+        navItem.screen == Screen.Settings && isProfileRelated -> {
+            navController.popBackStack(Screen.Settings.route, false)
+        }
+
+        // navigation to Saved
+        navItem.screen == Screen.Saved -> {
+            navController.navigate(Screen.Saved.route) {
+                popUpTo(navController.graph.id) { // Clear entire back stack
+                    saveState = false
+                }
+                launchSingleTop = true
+            }
+        }
+
+        // Normal navigation
+        navItem != currentScreen -> {
+            navController.navigate(navItem.screen.route) {
+                popUpTo(navController.graph.startDestinationId) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
         }
     }
-
 }

@@ -28,7 +28,7 @@ fun InstallasjonScreen(navController: NavController){
     Box(
         modifier=Modifier
             .fillMaxSize()
-            .background(Color(0xFF3376CD))
+            .background(Color(0xFFB0E0E6))
     ){
         LazyColumn(
             modifier=Modifier.fillMaxSize()
@@ -41,7 +41,7 @@ fun InstallasjonScreen(navController: NavController){
                         text = "Solcellepanel Guide",
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White,
+                        color = Color.Black,
                         modifier = Modifier
                             .padding(start = 20.dp, top = 30.dp)
                     )

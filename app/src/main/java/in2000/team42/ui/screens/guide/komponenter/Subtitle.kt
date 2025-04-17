@@ -15,7 +15,7 @@ fun Subtitle(text:String){
         text=text,
         fontSize = 24.sp,
         fontWeight = FontWeight.Bold,
-        color = Color.White,
+        color = Color.Black,
         modifier= Modifier
             .padding(start=10.dp)
     )

@@ -79,12 +79,6 @@ class MainActivity : ComponentActivity() {
                             val project = projectId?.let { viewModel.getProjectById(it) }
                             SettingsScreen(navController, project)
                         }
-                        composable(Screen.Settings.baseRoute) {
-                            SettingsScreen(
-                                navController = navController,
-                                project = null
-                            )
-                        }
 
                         composable(Screen.Saved.route) {
                             SavedScreen(navController, Modifier

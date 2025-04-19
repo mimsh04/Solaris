@@ -120,7 +120,7 @@ fun BottomSheet(
                         }
                                      },
                         modifier= Modifier.padding(16.dp))
-                    {Text("Lagre") }
+                    {Text("Lagre prosjekt") }
                 }
             }
         }

@@ -43,15 +43,6 @@ fun NavBar(navController: NavHostController) {
         ) {
             navItems.forEach { navItem ->
                 val isSelected = navItem == currentScreen
-
-//                val animatedWeight by animateFloatAsState(
-//                    targetValue = if (isSelected) 1.8f else 1f,
-//                    animationSpec = spring(
-//                        stiffness = Spring.StiffnessLow,
-//                        dampingRatio = Spring.DampingRatioMediumBouncy
-//                    )
-//                )
-
                 Box(
                     modifier = Modifier
                         .weight(1f, fill = false)

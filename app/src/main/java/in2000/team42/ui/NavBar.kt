@@ -42,8 +42,9 @@ fun NavBar(navController: NavHostController) {
         ) {
             getNavItems().forEach { navItem ->
                 val isSelected = navItem == currentScreen
+                // Animate the button size when selected
                 val animatedWeight by animateFloatAsState(
-                    targetValue = if (isSelected) 1.8f else 1f,
+                    targetValue = 1f,
                     animationSpec = spring(
                         stiffness = Spring.StiffnessLow,
                         dampingRatio = Spring.DampingRatioMediumBouncy
@@ -72,7 +73,7 @@ fun NavBar(navController: NavHostController) {
 }
 
 
-//helper functions for cleaner navigation logic
+//Helper function to determine the current screen for navigation highlighting.
 @Composable
 private fun getCurrentScreen(navController: NavHostController,navItems: List<NavItem>): NavItem {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -89,7 +90,7 @@ private fun getCurrentScreen(navController: NavHostController,navItems: List<Nav
     }
 }
 
-
+//Handles navigation logic when a bottom bar item is clicked.
 private fun handleNavItemClick(
     navController: NavHostController,
     navItem: NavItem,

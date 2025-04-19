@@ -6,6 +6,12 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
+/**
+ * A confirmation dialog shown before deleting a project.
+ *
+ * @param onConfirm Called when the user confirms deletion.
+ * @param onDismiss Called when the user cancels deletion.
+ */
 @Composable
 fun DeleteDialog(
     onConfirm: () -> Unit,

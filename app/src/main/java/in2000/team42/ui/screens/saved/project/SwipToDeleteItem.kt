@@ -21,6 +21,13 @@ import in2000.team42.data.saved.SavedProjectEntity
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
+/**
+ * A swipeable project item with delete functionality.
+ *
+ * @param project The project to display.
+ * @param onDeleteConfirmed Called when deletion is confirmed.
+ * @param onClick Called when the item is clicked.
+ */
 @Composable
 fun SwipeToDeleteItem(
     project: SavedProjectEntity,

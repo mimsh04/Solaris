@@ -18,7 +18,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import in2000.team42.data.saved.SavedProjectEntity
 
-
+/**
+ * A card displaying project details (address, coordinates, etc.).
+ *
+ * @param project The project data to display.
+ * @param onClick Called when the card is clicked.
+ */
 @Composable
 fun ProjectCard(project: SavedProjectEntity,
                 onClick:()-> Unit={}) {

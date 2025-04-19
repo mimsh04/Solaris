@@ -50,8 +50,10 @@ fun SavedScreen(
                 )
             }
         } else {
+            // Display a scrollable list of saved projects
             LazyColumn {
                 items(savedProjects) { project ->
+                    // Each project can be swiped to delete
                     SwipeToDeleteItem(
                         project = project,
                         onDeleteConfirmed = { viewModel.deleteProject(it) },

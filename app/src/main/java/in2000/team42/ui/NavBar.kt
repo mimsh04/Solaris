@@ -27,6 +27,7 @@ private fun getNavItems(): List<NavItem> = listOf(
 @Composable
 fun NavBar(navController: NavHostController) {
     val currentScreen = getCurrentScreen(navController, getNavItems())
+    val navItems = getNavItems()
 
     Box(
         modifier = Modifier
@@ -40,19 +41,21 @@ fun NavBar(navController: NavHostController) {
             modifier = Modifier.fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            getNavItems().forEach { navItem ->
+            navItems.forEach { navItem ->
                 val isSelected = navItem == currentScreen
-                // Animate the button size when selected
-                val animatedWeight by animateFloatAsState(
-                    targetValue = 1f,
-                    animationSpec = spring(
-                        stiffness = Spring.StiffnessLow,
-                        dampingRatio = Spring.DampingRatioMediumBouncy
-                    )
-                )
+
+//                val animatedWeight by animateFloatAsState(
+//                    targetValue = if (isSelected) 1.8f else 1f,
+//                    animationSpec = spring(
+//                        stiffness = Spring.StiffnessLow,
+//                        dampingRatio = Spring.DampingRatioMediumBouncy
+//                    )
+//                )
 
                 Box(
-                    modifier = Modifier.weight(animatedWeight),
+                    modifier = Modifier
+                        .weight(1f, fill = false)
+                        .fillMaxHeight(),
                     contentAlignment = Alignment.Center,
                 ) {
                     val interactionSource = remember { MutableInteractionSource() }
@@ -61,7 +64,7 @@ fun NavBar(navController: NavHostController) {
                             interactionSource = interactionSource,
                             indication = null
                         ) {
-                            handleNavItemClick(navController,navItem,currentScreen)
+                            handleNavItemClick(navController, navItem, currentScreen)
                         },
                         navItem = navItem,
                         isSelected = isSelected

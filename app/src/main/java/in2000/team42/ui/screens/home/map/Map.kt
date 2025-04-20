@@ -49,7 +49,8 @@ fun Map(
         }
     }
 
-    fun settNyttPunkt(point: Point) : Boolean{
+    fun settNyttPunkt(point: Point, address: String) : Boolean{
+        viewModel.setAddress(address)
         viewModel.setLongitude(point.longitude())
         viewModel.setLatitude(point.latitude())
         viewModel.updateAllApi()
@@ -91,7 +92,7 @@ fun Map(
 
         SearchBar(
             placeAutocomplete = placeAutoComplete,
-            onLocationSelected = { settNyttPunkt(it) },
+            onLocationSelected = { point, address -> settNyttPunkt(point, address) },
             modifier = Modifier.padding(top = 26.dp),
             isMapClicked = mapClicked
         )

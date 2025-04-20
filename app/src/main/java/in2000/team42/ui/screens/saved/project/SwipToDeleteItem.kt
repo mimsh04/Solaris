@@ -6,9 +6,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,7 +34,7 @@ import kotlin.math.roundToInt
 fun SwipeToDeleteItem(
     project: SavedProjectEntity,
     onDeleteConfirmed: (SavedProjectEntity) -> Unit,
-    onClick:()-> Unit= {}
+    onClick: () -> Unit = {}
 ) {
     var swipeOffset by remember { mutableStateOf(0f) }
     var showDeleteConfirmationDialog by remember { mutableStateOf(false) }
@@ -43,28 +45,34 @@ fun SwipeToDeleteItem(
         modifier = Modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
+            .background(MaterialTheme.colorScheme.background)
     ) {
-
+        // Delete button background (revealed when swiped)
         Box(
             modifier = Modifier
                 .align(Alignment.CenterEnd)
                 .width(80.dp)
                 .fillMaxHeight()
-                .background(deleteButtonBackgroundColor)
+                .background(
+                    color = deleteButtonBackgroundColor,
+                    shape = RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp)
+                )
                 .clickable { showDeleteConfirmationDialog = true },
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = Icons.Default.Delete,
                 contentDescription = "Slett prosjekt",
-                tint = Color.White,
+                tint = MaterialTheme.colorScheme.onError,
                 modifier = Modifier.size(30.dp)
             )
         }
 
-        //swiping
+        // Card with swipe functionality
         Box(
             modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
                 .offset { IntOffset(swipeOffset.roundToInt(), 0) }
                 .animateContentSize(animationSpec = tween(durationMillis = 300))
                 .pointerInput(Unit) {
@@ -82,7 +90,11 @@ fun SwipeToDeleteItem(
                     )
                 }
         ) {
-            ProjectCard(project = project, onClick)
+            ProjectCard(
+                project = project,
+                onClick = onClick,
+                isInSwipeContext = true // Remove padding in swipe context
+            )
         }
     }
 

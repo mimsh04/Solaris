@@ -2,6 +2,7 @@ package in2000.team42.ui.screens.saved
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -13,6 +14,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import in2000.team42.ui.screens.Screen
 import in2000.team42.ui.screens.home.HomeViewModel
 import in2000.team42.ui.screens.saved.project.SwipeToDeleteItem
+import androidx.compose.foundation.Image
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
+import in2000.team42.R
+
 
 @Composable
 fun SavedScreen(
@@ -22,15 +28,19 @@ fun SavedScreen(
 ) {
     val savedProjects by viewModel.getSavedProjects().collectAsState(initial = emptyList())
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        Spacer(modifier = Modifier.padding(20.dp))
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp)
+    ) {
+        Spacer(modifier = Modifier.height(20.dp))
 
         Text(
             text = "Lagrede Prosjekter",
             fontWeight = FontWeight.Bold,
             fontSize = 30.sp,
+            color = MaterialTheme.colorScheme.primary,
             modifier = Modifier
-                .padding(top = 25.dp, bottom = 10.dp)
+                .padding(bottom = 16.dp)
                 .fillMaxWidth()
                 .wrapContentWidth(Alignment.Start)
         )
@@ -43,11 +53,20 @@ fun SavedScreen(
                     .padding(16.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = "Ingen lagrede prosjekter",
-                    fontSize = 18.sp,
-                    color = Color.Gray
-                )
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Image(
+                        painter = painterResource(id = R.drawable.nosaved),
+                        contentDescription = "No saved projects",
+                        modifier = Modifier.size(250.dp),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "Når du lagerer et prosjekt, vil det vises her.",
+                        fontSize = 16.sp, // Updated: Slightly smaller font size
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f) // Updated: Using themed onSurface with reduced opacity
+                    )
+                }
             }
         } else {
             // Display a scrollable list of saved projects

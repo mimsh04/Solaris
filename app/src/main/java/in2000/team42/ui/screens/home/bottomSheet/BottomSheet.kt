@@ -1,6 +1,5 @@
 package in2000.team42.ui.screens.home.bottomSheet
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,9 +43,8 @@ fun BottomSheet(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel
 ) {
-
-    val incline = viewModel.incline.collectAsState()
-    val vinkel = viewModel.vinkel.collectAsState()
+    val config = viewModel.configFlow.collectAsState() // Collecting Config state
+    val apiData = viewModel.apiDataFlow.collectAsState() // Collecting API data state
     val focusManager = LocalFocusManager.current
     //for melding om prosjekt ble lagret
     val scope = rememberCoroutineScope()
@@ -63,21 +61,17 @@ fun BottomSheet(
 
     LaunchedEffect(sheetState.currentDetent) {
         focusManager.clearFocus()
+        viewModel.setBottomSheetDetent(sheetState.currentDetent.identifier)
     }
 
     com.composables.core.BottomSheet(
         modifier = modifier
-
             .fillMaxWidth()
-
             .shadow(4.dp, RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
             .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
             .background(MaterialTheme.colorScheme.background),
-
         state = sheetState
-
     ) {
-
         Box(
             modifier = Modifier.fillMaxWidth().height(1200.dp),
             contentAlignment = Alignment.TopCenter
@@ -99,15 +93,23 @@ fun BottomSheet(
 
                 item {
                     Vinkelinputs(
-                        incline = incline.value,
-                        direction = vinkel.value,
+                        incline = config.value.incline,
+                        direction = config.value.vinkel,
                         onInclineChange = { viewModel.setIncline(it) },
                         onDirectionChange = { viewModel.setVinkel(it) }
                     )
                 }
 
-                item {
+                /*item {
                     StrommenContent()
+                }*/
+
+                item {
+                    SolcelleInputs(viewModel) // Assuming this component accepts HomeViewModel directly
+                }
+
+                item {
+                    Produksjon(apiData.value) // Assuming this component accepts HomeViewModel directly
                 }
                 item {
                     Button(onClick = {

@@ -3,6 +3,7 @@ package in2000.team42.ui.screens.home
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mapbox.geojson.Point
 import in2000.team42.data.frost.FrostDatasource
 import in2000.team42.data.pgvis.PgvisDatasource
 import in2000.team42.data.pgvis.PgvisRepository
@@ -16,33 +17,45 @@ import in2000.team42.data.pgvis.PvTech
 import in2000.team42.data.pgvis.model.KwhMonthlyResponse
 import in2000.team42.data.saved.*
 import kotlinx.coroutines.flow.Flow
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
-import java.util.TimeZone
+
+// Data class to hold API-related data
+data class ApiData(
+    val sunRadiation: List<DailyProfile> = emptyList(),
+    val weatherData: List<FrostData> = emptyList(),
+    val kwhMonthlyData: List<KwhMonthlyResponse.MonthlyKwhData> = emptyList()
+)
+
+// Data class to hold user-configurable parameters
+data class Config(
+    var longitude: Double = 0.0,
+    var latitude: Double = 0.0,
+    var incline: Float = 35f,
+    var vinkel: Float = 0f,
+    var areal: Float = 1f,
+    var solcelleEffekt: Float = 15f,
+    var polygon: List<List<Point>>? = null,
+    var bottomSheetDetent : String = "medium" // Default to medium
+)
+
 
 class HomeViewModel : ViewModel() {
     private val radiationRepository = PgvisRepository(PgvisDatasource())
     private val frostRepository = FrostRepository(FrostDatasource())
 
-    private val _longitude = MutableStateFlow(0.0)
-    private val _latitude = MutableStateFlow(0.0)
-    private val _incline = MutableStateFlow(35f)
-    private val _vinkel = MutableStateFlow(0f)
+    private val config = Config() // Instance of the Config class
+    private val apiData = ApiData() // Instance of the ApiData class
 
-    private val _sunRadiation = MutableStateFlow<List<DailyProfile>>(emptyList())
-    private val _weatherData = MutableStateFlow<List<FrostData>>(emptyList())
-    private val _kwhMonthlyData = MutableStateFlow<List<KwhMonthlyResponse.MonthlyKwhData>>(emptyList())
+    private val _apiData = MutableStateFlow(apiData)
+    private val _config = MutableStateFlow(config)
 
-    val longitude = _longitude.asStateFlow()
-    val latitude = _latitude.asStateFlow()
-    val incline = _incline.asStateFlow()
-    val vinkel = _vinkel.asStateFlow()
+    // Added to hold the current SheetDetent
 
-    val sizeUnaryOperator = _sunRadiation.asStateFlow()
-    val weatherData = _weatherData.asStateFlow()
-    val kwhMonthlyData = _kwhMonthlyData.asStateFlow()
+    val apiDataFlow = _apiData.asStateFlow()
+    val configFlow = _config.asStateFlow()
 
+    fun setCoordinates(longitude: Double, latitude: Double) {
+        _config.value = _config.value.copy(longitude = longitude, latitude = latitude)
+    }
     private val savedProjectDao = SavedProjectDatabase.getDatabase().savedProjectDao()
     private val _address = MutableStateFlow("")
     val address = _address.asStateFlow()
@@ -76,72 +89,88 @@ class HomeViewModel : ViewModel() {
     }
 
 
-
-    fun setLongitude(longitude: Double) {
-        _longitude.value = longitude
-    }
-
-    fun setLatitude(latitude: Double) {
-        _latitude.value = latitude
-    }
-
     fun setIncline(incline: Float) {
-        _incline.value = incline
+        _config.value = _config.value.copy(incline = incline)
     }
 
     fun setVinkel(vinkel: Float) {
-        _vinkel.value = vinkel
+        _config.value = _config.value.copy(vinkel = vinkel)
+    }
+
+    // For setting areal and solcelleEffekt
+    fun setAreal(areal: Float) {
+        _config.value = _config.value.copy(areal = areal)
+    }
+
+    fun setSolcelleEffekt(solcelleEffekt: Float) {
+        _config.value = _config.value.copy(solcelleEffekt = solcelleEffekt)
+    }
+
+    fun setPolygon(polygon: List<List<Point>>?) {
+        Log.d("HomeViewModel", "Setting polygon: $polygon")
+        _config.value = _config.value.copy(polygon = polygon)
+    }
+
+    fun setBottomSheetDetent(bottomSheetDetent: String) {
+        _config.value = _config.value.copy(bottomSheetDetent = bottomSheetDetent)
     }
 
     fun updateAllApi() {
+        launchDataUpdates()
+    }
+
+    private fun launchDataUpdates() {
         updateSolarRadiation()
         updateWeatherData()
         updateKwhMonthly()
     }
 
-    fun updateSolarRadiation(
-    ) {
+    private fun updateSolarRadiation() {
         viewModelScope.launch {
-            _sunRadiation.value = radiationRepository.getRadiationData(
-                latitude.value,
-                longitude.value,
+            val radiationData = radiationRepository.getRadiationData(
+                _config.value.latitude,
+                _config.value.longitude,
                 0,
-                incline.value,
-                vinkel.value
+                _config.value.incline,
+                _config.value.vinkel
             )
-            Log.d("HomeViewModel", "Radiation data: ${_sunRadiation.value}")
+            _apiData.value = _apiData.value.copy(sunRadiation = radiationData) // Update API data
+            Log.d("HomeViewModel", "Radiation data: $radiationData")
         }
-
     }
 
-    fun updateKwhMonthly(peakPower: Float = 2f, pvTech: PvTech = PvTech.CRYST_SI) {
+    fun updateKwhMonthly(pvTech: PvTech = PvTech.CRYST_SI) {
+        val peakPower = calculatePeakPower()
         viewModelScope.launch {
-            _kwhMonthlyData.value = radiationRepository.getMonthlyKwh(
-                latitude.value,
-                longitude.value,
-                incline.value,
-                vinkel.value,
-                2f,
+            val monthlyKwhData = radiationRepository.getMonthlyKwh(
+                _config.value.latitude,
+                _config.value.longitude,
+                _config.value.incline,
+                _config.value.vinkel,
+                peakPower,
                 pvTech
             )
-            Log.d("HomeViewModel", "Monthly kwh data: ${_kwhMonthlyData.value}")
+            _apiData.value = _apiData.value.copy(kwhMonthlyData = monthlyKwhData) // Update API data
+            Log.d("HomeViewModel", "Monthly kwh data: $monthlyKwhData")
         }
     }
+
+    private fun calculatePeakPower() = _config.value.solcelleEffekt / 100 * _config.value.areal
 
     private fun updateWeatherData() {
         viewModelScope.launch {
             try {
                 val referenceTime = frostRepository.getLast24HoursReferenceTime()
                 val weather = frostRepository.getWeatherByCoordinates(
-                    latitude = _latitude.value,
-                    longitude = _longitude.value,
+                    latitude = _config.value.latitude,
+                    longitude = _config.value.longitude,
                     referenceTime = referenceTime
                 )
-                _weatherData.value = weather
+                _apiData.value = _apiData.value.copy(weatherData = weather) // Update API data
                 Log.d("HomeViewModel", "Weather data: $weather")
             } catch (e: Exception) {
                 Log.e("HomeViewModel", "Failed to fetch weather data: ${e.message}")
-                _weatherData.value = emptyList()
+                _apiData.value = _apiData.value.copy(weatherData = emptyList()) // Clear weather data on failure
             }
         }
     }

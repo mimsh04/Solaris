@@ -7,24 +7,29 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun Vinkelinput(
+fun FloatInputField(
     tittel: String,
     verdi: Float,
     onValueChange: (Float) -> Unit,
     range: IntRange = 0..90,
 ) {
     var showedVal by remember { mutableStateOf(verdi.toInt().toString()) }
+
+    LaunchedEffect (verdi) {
+        if (verdi == maxOf(0f, range.first.toFloat())) return@LaunchedEffect
+        showedVal = verdi.toInt().toString()
+    }
 
     fun getOutlineColor(showedText: String): Color {
         return if (showedText.isEmpty()) Color.Red
@@ -39,12 +44,12 @@ fun Vinkelinput(
             value = showedVal,
             onValueChange = { newValue ->
                 showedVal = newValue
-                if (showedVal.isEmpty()) onValueChange(0f)
+                if (showedVal.isEmpty()) onValueChange(maxOf(range.first, 0).toFloat())
                 newValue.toFloatOrNull()?.let {
                     if (it.toInt() in range) {
                         onValueChange(it)
                     } else {
-                        onValueChange(0f)
+                        onValueChange(maxOf(range.first, 0).toFloat())
                     }
                 }
             },

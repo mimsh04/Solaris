@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="20dp"
+    android:viewportHeight="64"
+    android:viewportWidth="64">
+
+    <!-- Circle centered at (32,32) with radius 32 -->
+    <path
+        android:fillColor="#ff00ff"
+        android:pathData="M32,32 m-32,0 a32,32 0 1,1 64,0 a32,32 0 1,1 -64,0"/>
+</vector>

@@ -12,7 +12,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mapbox.common.MapboxOptions
@@ -25,8 +27,11 @@ import com.mapbox.maps.Style
 import com.mapbox.maps.extension.compose.MapState
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
+import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
 import com.mapbox.maps.extension.compose.annotation.generated.PolygonAnnotation
+import com.mapbox.maps.extension.compose.annotation.generated.PolygonAnnotationInteractionsState
 import com.mapbox.maps.extension.compose.annotation.generated.PolygonAnnotationState
+import com.mapbox.maps.extension.compose.annotation.rememberIconImage
 import com.mapbox.maps.extension.compose.rememberMapState
 import com.mapbox.maps.extension.compose.style.MapStyle
 import com.mapbox.maps.interactions.TypedFeaturesetDescriptor
@@ -119,8 +124,6 @@ fun Map(
     
     val mapState = rememberMapState()
 
-    val polygonAnnotationState = remember { PolygonAnnotationState() }
-
     val config = viewModel.configFlow.collectAsState()
 
     val mapViewportState = rememberMapViewportState {
@@ -134,15 +137,17 @@ fun Map(
 
     fun loadHouse(point: Point, delay: Long = 0, onComplete: () -> Unit = {}) {
         couroutineScope.launch {
-            viewModel.setPolygon(null)
+            //viewModel.setPolygon(null)
             kotlinx.coroutines.delay(delay)
             val newPolygon = mapState.queryBuildingCoordinatesAt(point)
-            viewModel.setPolygon(newPolygon)
+
 
             if (newPolygon.isNullOrEmpty()) {
                 Log.i("HouseClick", "No building found")
                 return@launch
             }
+            viewModel.setPolygon(newPolygon)
+
             onComplete()
 
             viewModel.setCoordinates(
@@ -197,10 +202,10 @@ fun Map(
         val offset = if (config.value.bottomSheetDetent == "medium") 0.00035 else 0.00008
         mapEaseTo(point, 2000, offset)
         loadHouse(point, delay = 2400)
-
-
         return true
     }
+
+    val pointIcon = rememberIconImage(key = "point-icon", painter = painterResource(id = R.drawable.polygon_corner))
 
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -219,7 +224,26 @@ fun Map(
                 PolygonAnnotation(
                     points = config.value.polygon!!,
 
-                )
+                ) {
+                    fillColor = Color.Blue
+                    fillOpacity = 0.3
+
+                }
+                config.value.polygon!![0].forEachIndexed { index, point ->
+                    PointAnnotation(
+                        point = point
+                    ) {
+                        iconImage = pointIcon
+                        iconSize = 1.0
+                        interactionsState.isDraggable = true
+                        interactionsState.onDragged { draggedPoint ->
+                            val newPolygon = config.value.polygon!![0].toMutableList()
+                            newPolygon[index] = draggedPoint.point
+                            viewModel.setPolygon(listOf(newPolygon))
+
+                        }
+                    }
+                }
             }
         }
 

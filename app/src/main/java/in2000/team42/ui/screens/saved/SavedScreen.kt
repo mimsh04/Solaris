@@ -62,7 +62,7 @@ fun SavedScreen(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Når du lagerer et prosjekt, vil det vises her.",
+                        text = "Når du lagrer et prosjekt, vil det vises her.",
                         fontSize = 16.sp, // Updated: Slightly smaller font size
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f) // Updated: Using themed onSurface with reduced opacity
                     )

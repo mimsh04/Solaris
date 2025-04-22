@@ -29,8 +29,6 @@ import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
 import com.mapbox.maps.extension.compose.annotation.generated.PolygonAnnotation
-import com.mapbox.maps.extension.compose.annotation.generated.PolygonAnnotationInteractionsState
-import com.mapbox.maps.extension.compose.annotation.generated.PolygonAnnotationState
 import com.mapbox.maps.extension.compose.annotation.rememberIconImage
 import com.mapbox.maps.extension.compose.rememberMapState
 import com.mapbox.maps.extension.compose.style.MapStyle
@@ -41,7 +39,6 @@ import in2000.team42.R
 import in2000.team42.ui.screens.home.HomeViewModel
 import in2000.team42.ui.screens.home.map.search.SearchBar
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -81,10 +78,22 @@ fun Map(
 
     val config = viewModel.configFlow.collectAsState()
 
+    var startPos = Point.fromLngLat(10.7522, 59.9139)
+    var startZoom = 10.0
+
+    fun getSheetMapOffset():Double =
+         if (config.value.bottomSheetDetent == "medium") 0.00035 else 0.00008
+
+
+    if (config.value.latitude != 0.0) {
+        startPos = Point.fromLngLat(config.value.longitude, config.value.latitude - getSheetMapOffset())
+        startZoom = 18.0
+    }
+
     val mapViewportState = rememberMapViewportState {
         setCameraOptions {
-            zoom(10.0)
-            center(Point.fromLngLat(10.7522, 59.9139))
+            zoom(startZoom)
+            center(startPos)
             pitch(0.0)
             bearing(0.0)
         }
@@ -146,7 +155,7 @@ fun Map(
 
     fun onMapClicked(point: Point): Boolean {
         clearScreen()
-        val offset = if (config.value.bottomSheetDetent == "medium") 0.00035 else 0.00008
+        val offset = getSheetMapOffset()
         loadHouse(point, onComplete = { polygon ->
             mapEaseTo(calculateCentroid(polygon), 1000, offset)
         })
@@ -157,7 +166,7 @@ fun Map(
 
         clearScreen()
         viewModel.setAddress(address)
-        val offset = if (config.value.bottomSheetDetent == "medium") 0.00035 else 0.00008
+        val offset = getSheetMapOffset()
         mapEaseTo(point, 2000, offset)
         loadHouse(point, delay = 2400)
         return true

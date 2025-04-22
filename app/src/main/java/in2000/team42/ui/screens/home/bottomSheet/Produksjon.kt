@@ -14,11 +14,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import in2000.team42.data.pgvis.model.KwhMonthlyResponse
+import in2000.team42.ui.screens.home.ApiData
 import in2000.team42.ui.screens.home.HomeViewModel
 
 @Composable
-fun Produksjon(viewModel: HomeViewModel) {
-    val kwhPerMonth = viewModel.kwhMonthlyData.collectAsState()
+fun Produksjon(apiData: ApiData) {
 
     fun getYearlyProduction(kwInp: List<KwhMonthlyResponse.MonthlyKwhData>): Float {
         var tot = 0f

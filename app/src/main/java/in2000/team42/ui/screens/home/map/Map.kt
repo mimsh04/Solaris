@@ -107,9 +107,7 @@ private fun calculatePolygonArea(mapPolygon: List<List<Point>>): Double {
 fun Map(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel
-)
-{
-
+) {
     MapboxOptions.accessToken = stringResource(R.string.mapbox_access_token)
     val placeAutoComplete = PlaceAutocomplete.create()
 
@@ -120,8 +118,6 @@ fun Map(
     val couroutineScope = rememberCoroutineScope()
     
     val mapState = rememberMapState()
-
-    var mapPolygon: List<List<Point>>? by remember { mutableStateOf(null) }
 
     val polygonAnnotationState = remember { PolygonAnnotationState() }
 
@@ -138,12 +134,13 @@ fun Map(
 
     fun loadHouse(point: Point, delay: Long = 0, onComplete: () -> Unit = {}) {
         couroutineScope.launch {
-            mapPolygon = null
+            viewModel.setPolygon(null)
             kotlinx.coroutines.delay(delay)
-            mapPolygon = mapState.queryBuildingCoordinatesAt(point)
-            Log.d("Map", mapPolygon.toString())
+            val newPolygon = mapState.queryBuildingCoordinatesAt(point)
+            viewModel.setPolygon(newPolygon)
 
-            if (mapPolygon.isNullOrEmpty()) {
+            if (newPolygon.isNullOrEmpty()) {
+                Log.i("HouseClick", "No building found")
                 return@launch
             }
             onComplete()
@@ -153,7 +150,7 @@ fun Map(
                 latitude = point.latitude()
             )
             viewModel.setAreal(
-                areal = calculatePolygonArea(mapPolygon!!).toFloat(),
+                areal = calculatePolygonArea(newPolygon).toFloat(),
             )
             viewModel.updateAllApi()
 
@@ -215,10 +212,10 @@ fun Map(
                 MapStyle(style = Style.MAPBOX_STREETS)
             },
         ) {
-            if (mapPolygon.isNullOrEmpty().not()) {
+            if (config.value.polygon.isNullOrEmpty().not()) {
 
                 PolygonAnnotation(
-                    points = mapPolygon!!,
+                    points = config.value.polygon!!,
 
                 )
             }

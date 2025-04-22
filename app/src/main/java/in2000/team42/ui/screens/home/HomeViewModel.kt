@@ -3,6 +3,7 @@ package in2000.team42.ui.screens.home
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mapbox.geojson.Point
 import in2000.team42.data.frost.FrostDatasource
 import in2000.team42.data.pgvis.PgvisDatasource
 import in2000.team42.data.pgvis.PgvisRepository
@@ -29,7 +30,8 @@ data class Config(
     var incline: Float = 35f,
     var vinkel: Float = 0f,
     var areal: Float = 1f,
-    var solcelleEffekt: Float = 15f
+    var solcelleEffekt: Float = 15f,
+    var polygon: List<List<Point>>? = null
 )
 
 class HomeViewModel : ViewModel() {
@@ -68,6 +70,10 @@ class HomeViewModel : ViewModel() {
 
     fun setSolcelleEffekt(solcelleEffekt: Float) {
         _config.value = _config.value.copy(solcelleEffekt = solcelleEffekt)
+    }
+
+    fun setPolygon(polygon: List<List<Point>>?) {
+        _config.value = _config.value.copy(polygon = polygon)
     }
 
     fun updateAllApi() {

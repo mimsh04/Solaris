@@ -104,8 +104,16 @@ fun BottomSheet(
                     )
                 }
 
+                /*item {
+                     StrommenContent()
+                }*/
+
                 item {
-                    StrommenContent()
+                    SolcelleInputs(viewModel)
+                }
+
+                item {
+                    Produksjon(viewModel)
                 }
         }
         }

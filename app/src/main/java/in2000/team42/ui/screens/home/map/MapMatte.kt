@@ -2,11 +2,11 @@ package in2000.team42.ui.screens.home.map
 
 import com.mapbox.geojson.Point
 
-fun calculateCentroid(polygon: List<Point>): Point {
+fun calculateCentroid(input: List<List<Point>>): Point {
 
     var sumLat = 0.0
     var sumLon = 0.0
-
+    val polygon = input[0]
     polygon.forEach {
         sumLat += it.latitude()
         sumLon += it.longitude()

@@ -90,7 +90,7 @@ fun Map(
         }
     }
 
-    fun loadHouse(point: Point, delay: Long = 0, onComplete: () -> Unit = {}) {
+    fun loadHouse(point: Point, delay: Long = 0, onComplete: (List<List<Point>>) -> Unit = {}) {
         couroutineScope.launch {
             //viewModel.setPolygon(null)
             kotlinx.coroutines.delay(delay)
@@ -114,7 +114,7 @@ fun Map(
                 areal = calculatePolygonArea(listOf(cleanedPolygon)).toFloat(),
             )
             viewModel.updateAllApi()
-            onComplete()
+            onComplete(listOf(cleanedPolygon))
 
         }
     }
@@ -147,8 +147,8 @@ fun Map(
     fun onMapClicked(point: Point): Boolean {
         clearScreen()
         val offset = if (config.value.bottomSheetDetent == "medium") 0.00035 else 0.00008
-        loadHouse(point, onComplete = {
-            mapEaseTo(point, 1000, offset)
+        loadHouse(point, onComplete = { polygon ->
+            mapEaseTo(calculateCentroid(polygon), 1000, offset)
         })
         return true
     }

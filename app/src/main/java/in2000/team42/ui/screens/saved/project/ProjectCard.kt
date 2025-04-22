@@ -65,7 +65,7 @@ fun ProjectCard(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Adresse: ${project.address}",
+                text = "Adresse: ${project.config.adress}",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.SemiBold,
@@ -79,22 +79,22 @@ fun ProjectCard(
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
-                    text = "Latitude: ${project.latitude}",
+                    text = "Latitude: ${project.config.latitude}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = "Longitude: ${project.longitude}",
+                    text = "Longitude: ${project.config.longitude}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = "Incline: ${project.incline}",
+                    text = "Incline: ${project.config.incline}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = "Vinkel: ${project.vinkel}",
+                    text = "Vinkel: ${project.config.vinkel}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

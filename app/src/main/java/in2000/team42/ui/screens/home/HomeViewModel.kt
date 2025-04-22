@@ -34,7 +34,8 @@ data class Config(
     var areal: Float = 1f,
     var solcelleEffekt: Float = 15f,
     var polygon: List<List<Point>>? = null,
-    var bottomSheetDetent : String = "medium" // Default to medium
+    var bottomSheetDetent : String = "medium",
+    var adress: String = "",
 )
 
 
@@ -58,21 +59,17 @@ class HomeViewModel : ViewModel() {
     }
     private val savedProjectDao = SavedProjectDatabase.getDatabase().savedProjectDao()
     private val _address = MutableStateFlow("")
-    val address = _address.asStateFlow()
+
 
     fun setAddress(address: String) {
-        _address.value = address
+        _config.value = _config.value.copy(adress = address)
     }
 
     fun saveProject() {
         viewModelScope.launch {
             savedProjectDao.insert(
                 SavedProjectEntity(
-                    address = _address.value,
-                    latitude = _latitude.value,
-                    longitude = _longitude.value,
-                    incline = _incline.value,
-                    vinkel = _vinkel.value
+                    config = _config.value
                 )
             )
         }

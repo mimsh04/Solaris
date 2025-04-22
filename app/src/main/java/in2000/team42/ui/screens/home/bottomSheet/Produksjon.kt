@@ -14,17 +14,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import in2000.team42.data.pgvis.model.KwhMonthlyResponse
+import in2000.team42.ui.screens.home.ApiData
 import in2000.team42.ui.screens.home.HomeViewModel
 
 @Composable
-fun Produksjon(viewModel: HomeViewModel) {
-    val kwhPerMonth = viewModel.kwhMonthlyData.collectAsState()
+fun Produksjon(apiData: ApiData) {
 
     fun getYearlyProduction(kwInp: List<KwhMonthlyResponse.MonthlyKwhData>): Float {
         var tot = 0f
         kwInp.forEach {
             tot += it.averageMonthly.toFloat()
-            Log.d("Produksjon", "Måned: ${it.month}, Produksjon: ${it.averageMonthly}")
         }
         return tot
     }
@@ -32,20 +31,13 @@ fun Produksjon(viewModel: HomeViewModel) {
     Row (modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
         ){
-        if (kwhPerMonth.value.isEmpty()) {
+        if (apiData.kwhMonthlyData.isEmpty()) {
             Text("Ingen data (velg posisjon med search)")
         } else {
             Column  (
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
-                Text("Årlig produksjon: ${getYearlyProduction(kwhPerMonth.value)} kWh")
-                Button(
-                    onClick = {
-                        viewModel.updateAllApi()
-                    },
-                ) {
-                    Text("Hent på nytt")
-                }
+                Text("Årlig produksjon: ${getYearlyProduction(apiData.kwhMonthlyData)} kWh")
             }
 
         }

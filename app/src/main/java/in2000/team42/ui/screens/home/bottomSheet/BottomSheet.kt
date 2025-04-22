@@ -1,6 +1,5 @@
 package in2000.team42.ui.screens.home.bottomSheet
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,18 +25,17 @@ import com.composables.core.SheetDetent
 import com.composables.core.rememberBottomSheetState
 import in2000.team42.ui.screens.home.HomeViewModel
 
-val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
+// Detent definitions
+val Peek = SheetDetent("peek") { containerHeight, _ ->
     containerHeight * 1f
 }
 
-val Medium = SheetDetent(identifier = "medium") {
-    containerHeight, sheetHeight ->
-            containerHeight * 0.6f
+val Medium = SheetDetent(identifier = "medium") { containerHeight, _ ->
+    containerHeight * 0.6f
 }
 
-val Closed = SheetDetent(identifier = "closed") {
-    containerHeight, sheetHeight ->
-            containerHeight * 0.3f
+val Closed = SheetDetent(identifier = "closed") { containerHeight, _ ->
+    containerHeight * 0.3f
 }
 
 @Composable
@@ -45,9 +43,9 @@ fun BottomSheet(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel
 ) {
-
-    val incline = viewModel.incline.collectAsState()
-    val vinkel = viewModel.vinkel.collectAsState()
+    val config = viewModel.configFlow.collectAsState() // Collecting Config state
+    val apiData = viewModel.apiDataFlow.collectAsState() // Collecting API data state
+    val currentSheetDetent = viewModel.currentSheetDetent.collectAsState() // Collecting current SheetDetent
     val focusManager = LocalFocusManager.current
 
     val detents = listOf(
@@ -55,27 +53,24 @@ fun BottomSheet(
         Medium,
         Closed,
     )
-    // alle høydene sheeten kan ligge
-    val sheetState = rememberBottomSheetState(initialDetent = Medium, detents = detents)
 
+    // All available heights for the sheet
+    val sheetState = rememberBottomSheetState(initialDetent = Medium, detents = detents)
 
     LaunchedEffect(sheetState.currentDetent) {
         focusManager.clearFocus()
+        // Update ViewModel's currentSheetDetent when the sheet's state changes
+        viewModel.updateSheetDetent(sheetState.currentDetent.identifier)
     }
 
     com.composables.core.BottomSheet(
         modifier = modifier
-
             .fillMaxWidth()
-
             .shadow(4.dp, RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
             .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
             .background(MaterialTheme.colorScheme.background),
-
         state = sheetState
-
     ) {
-
         Box(
             modifier = Modifier.fillMaxWidth().height(1200.dp),
             contentAlignment = Alignment.TopCenter
@@ -97,25 +92,25 @@ fun BottomSheet(
 
                 item {
                     Vinkelinputs(
-                        incline = incline.value,
-                        direction = vinkel.value,
+                        incline = config.value.incline,
+                        direction = config.value.vinkel,
                         onInclineChange = { viewModel.setIncline(it) },
                         onDirectionChange = { viewModel.setVinkel(it) }
                     )
                 }
 
                 /*item {
-                     StrommenContent()
+                    StrommenContent()
                 }*/
 
                 item {
-                    SolcelleInputs(viewModel)
+                    SolcelleInputs(viewModel) // Assuming this component accepts HomeViewModel directly
                 }
 
                 item {
-                    Produksjon(viewModel)
+                    Produksjon(apiData.value) // Assuming this component accepts HomeViewModel directly
                 }
-        }
+            }
         }
     }
 }

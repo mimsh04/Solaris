@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -124,6 +125,8 @@ fun Map(
 
     val polygonAnnotationState = remember { PolygonAnnotationState() }
 
+    val config = viewModel.configFlow.collectAsState()
+
     val mapViewportState = rememberMapViewportState {
         setCameraOptions {
             zoom(10.0)
@@ -144,9 +147,14 @@ fun Map(
                 return@launch
             }
             onComplete()
-            viewModel.setLongitude(point.longitude())
-            viewModel.setLatitude(point.latitude())
-            viewModel.setAreal(calculatePolygonArea(mapPolygon!!).toFloat())
+
+            viewModel.setCoordinates(
+                longitude = point.longitude(),
+                latitude = point.latitude()
+            )
+            viewModel.setAreal(
+                areal = calculatePolygonArea(mapPolygon!!).toFloat(),
+            )
             viewModel.updateAllApi()
 
         }

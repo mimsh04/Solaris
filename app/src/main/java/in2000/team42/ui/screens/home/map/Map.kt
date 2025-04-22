@@ -184,8 +184,9 @@ fun Map(
 
     fun onMapClicked(point: Point): Boolean {
         clearScreen()
+        val offset = if (config.value.bottomSheetDetent == "medium") 0.00035 else 0.00008
         loadHouse(point, onComplete = {
-            mapEaseTo(point, 1000, 0.0004)
+            mapEaseTo(point, 1000, offset)
         })
         return true
     }
@@ -193,7 +194,8 @@ fun Map(
     fun settNyttPunkt(point: Point) : Boolean{
 
         clearScreen()
-        mapEaseTo(point, 2000, 0.0004)
+        val offset = if (config.value.bottomSheetDetent == "medium") 0.00035 else 0.00008
+        mapEaseTo(point, 2000, offset)
         loadHouse(point, delay = 2400)
 
 

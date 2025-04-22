@@ -45,7 +45,6 @@ fun BottomSheet(
 ) {
     val config = viewModel.configFlow.collectAsState() // Collecting Config state
     val apiData = viewModel.apiDataFlow.collectAsState() // Collecting API data state
-    val currentSheetDetent = viewModel.currentSheetDetent.collectAsState() // Collecting current SheetDetent
     val focusManager = LocalFocusManager.current
 
     val detents = listOf(
@@ -59,8 +58,7 @@ fun BottomSheet(
 
     LaunchedEffect(sheetState.currentDetent) {
         focusManager.clearFocus()
-        // Update ViewModel's currentSheetDetent when the sheet's state changes
-        viewModel.updateSheetDetent(sheetState.currentDetent.identifier)
+        viewModel.setBottomSheetDetent(sheetState.currentDetent.identifier)
     }
 
     com.composables.core.BottomSheet(

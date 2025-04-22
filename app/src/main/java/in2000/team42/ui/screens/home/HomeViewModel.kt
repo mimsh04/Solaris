@@ -31,7 +31,8 @@ data class Config(
     var vinkel: Float = 0f,
     var areal: Float = 1f,
     var solcelleEffekt: Float = 15f,
-    var polygon: List<List<Point>>? = null
+    var polygon: List<List<Point>>? = null,
+    var bottomSheetDetent : String = "medium" // Default to medium
 )
 
 class HomeViewModel : ViewModel() {
@@ -45,8 +46,6 @@ class HomeViewModel : ViewModel() {
     private val _config = MutableStateFlow(config)
 
     // Added to hold the current SheetDetent
-    private val _currentSheetDetent = MutableStateFlow("medium") // Default to medium
-    val currentSheetDetent = _currentSheetDetent.asStateFlow()
 
     val apiDataFlow = _apiData.asStateFlow()
     val configFlow = _config.asStateFlow()
@@ -74,6 +73,10 @@ class HomeViewModel : ViewModel() {
 
     fun setPolygon(polygon: List<List<Point>>?) {
         _config.value = _config.value.copy(polygon = polygon)
+    }
+
+    fun setBottomSheetDetent(bottomSheetDetent: String) {
+        _config.value = _config.value.copy(bottomSheetDetent = bottomSheetDetent)
     }
 
     fun updateAllApi() {
@@ -134,11 +137,5 @@ class HomeViewModel : ViewModel() {
                 _apiData.value = _apiData.value.copy(weatherData = emptyList()) // Clear weather data on failure
             }
         }
-    }
-
-    // Function to update the current SheetDetent
-    fun updateSheetDetent(detent: String) {
-        _currentSheetDetent.value = detent
-        Log.i("HomeViewModel", "Current Sheet detent value: " + _currentSheetDetent.value)
     }
 }

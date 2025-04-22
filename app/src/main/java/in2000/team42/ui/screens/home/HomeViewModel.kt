@@ -50,18 +50,24 @@ class HomeViewModel : ViewModel() {
     val configFlow = _config.asStateFlow()
 
     fun setCoordinates(longitude: Double, latitude: Double) {
-        _config.value.longitude = longitude
-        _config.value.latitude = latitude
+        _config.value = _config.value.copy(longitude = longitude, latitude = latitude)
     }
 
-    fun setInclinations(incline: Float, vinkel: Float) {
-        _config.value.incline = incline
-        _config.value.vinkel = vinkel
+    fun setIncline(incline: Float) {
+        _config.value = _config.value.copy(incline = incline)
     }
 
-    fun setAreaAndPower(areal: Float, solcelleEffekt: Float) {
-        _config.value.areal = areal
-        _config.value.solcelleEffekt = solcelleEffekt
+    fun setVinkel(vinkel: Float) {
+        _config.value = _config.value.copy(vinkel = vinkel)
+    }
+
+    // For setting areal and solcelleEffekt
+    fun setAreal(areal: Float) {
+        _config.value = _config.value.copy(areal = areal)
+    }
+
+    fun setSolcelleEffekt(solcelleEffekt: Float) {
+        _config.value = _config.value.copy(solcelleEffekt = solcelleEffekt)
     }
 
     fun updateAllApi() {

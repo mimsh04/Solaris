@@ -44,6 +44,7 @@ fun BottomSheet(
     viewModel: HomeViewModel
 ) {
     val config = viewModel.configFlow.collectAsState() // Collecting Config state
+    val apiData = viewModel.apiDataFlow.collectAsState() // Collecting API data state
     val currentSheetDetent = viewModel.currentSheetDetent.collectAsState() // Collecting current SheetDetent
     val focusManager = LocalFocusManager.current
 
@@ -93,8 +94,8 @@ fun BottomSheet(
                     Vinkelinputs(
                         incline = config.value.incline,
                         direction = config.value.vinkel,
-                        onInclineChange = { viewModel.setInclinations(it, config.value.vinkel) },
-                        onDirectionChange = { viewModel.setInclinations(config.value.incline, it) }
+                        onInclineChange = { viewModel.setIncline(it) },
+                        onDirectionChange = { viewModel.setVinkel(it) }
                     )
                 }
 
@@ -107,7 +108,7 @@ fun BottomSheet(
                 }
 
                 item {
-                    Produksjon(viewModel) // Assuming this component accepts HomeViewModel directly
+                    Produksjon(apiData.value) // Assuming this component accepts HomeViewModel directly
                 }
             }
         }

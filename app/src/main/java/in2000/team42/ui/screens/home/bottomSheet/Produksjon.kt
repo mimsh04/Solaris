@@ -24,7 +24,6 @@ fun Produksjon(apiData: ApiData) {
         var tot = 0f
         kwInp.forEach {
             tot += it.averageMonthly.toFloat()
-            Log.d("Produksjon", "Måned: ${it.month}, Produksjon: ${it.averageMonthly}")
         }
         return tot
     }
@@ -32,20 +31,13 @@ fun Produksjon(apiData: ApiData) {
     Row (modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
         ){
-        if (kwhPerMonth.value.isEmpty()) {
+        if (apiData.kwhMonthlyData.isEmpty()) {
             Text("Ingen data (velg posisjon med search)")
         } else {
             Column  (
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
-                Text("Årlig produksjon: ${getYearlyProduction(kwhPerMonth.value)} kWh")
-                Button(
-                    onClick = {
-                        viewModel.updateAllApi()
-                    },
-                ) {
-                    Text("Hent på nytt")
-                }
+                Text("Årlig produksjon: ${getYearlyProduction(apiData.kwhMonthlyData)} kWh")
             }
 
         }

@@ -11,13 +11,18 @@ import kotlinx.coroutines.launch
 class ProjectViewModel : ViewModel() {
     private val _savedProjects = MutableStateFlow<List<SavedProjectEntity>>(emptyList())
     val savedProjects = _savedProjects.asStateFlow()
-
+    private val savedProjectDao = SavedProjectDatabase.getDatabase().savedProjectDao()
     init {
         viewModelScope.launch {
             SavedProjectDatabase.getDatabase().savedProjectDao().getAllProjects()
                 .collect { projects ->
                     _savedProjects.value = projects
                 }
+        }
+    }
+    fun deleteProject(project: SavedProjectEntity) {
+        viewModelScope.launch {
+            savedProjectDao.delete(project)
         }
     }
 

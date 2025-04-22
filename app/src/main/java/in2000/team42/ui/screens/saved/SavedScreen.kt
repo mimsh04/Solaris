@@ -18,15 +18,16 @@ import androidx.compose.foundation.Image
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import in2000.team42.R
+import in2000.team42.ui.screens.saved.project.ProjectViewModel
 
 
 @Composable
 fun SavedScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = viewModel()
+    viewModel: ProjectViewModel
 ) {
-    val savedProjects by viewModel.getSavedProjects().collectAsState(initial = emptyList())
+    val savedProjects = viewModel.savedProjects.collectAsState(initial = emptyList())
 
     Column(modifier = Modifier
         .fillMaxSize()
@@ -45,7 +46,7 @@ fun SavedScreen(
                 .wrapContentWidth(Alignment.Start)
         )
 
-        if (savedProjects.isEmpty()) {
+        if (savedProjects.value.isEmpty()) {
             // Show empty state message
             Box(
                 modifier = Modifier
@@ -71,7 +72,7 @@ fun SavedScreen(
         } else {
             // Display a scrollable list of saved projects
             LazyColumn {
-                items(savedProjects) { project ->
+                items(savedProjects.value) { project ->
                     // Each project can be swiped to delete
                     SwipeToDeleteItem(
                         project = project,

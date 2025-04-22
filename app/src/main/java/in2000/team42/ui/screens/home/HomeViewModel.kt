@@ -57,14 +57,12 @@ class HomeViewModel : ViewModel() {
     fun setCoordinates(longitude: Double, latitude: Double) {
         _config.value = _config.value.copy(longitude = longitude, latitude = latitude)
     }
-    private val savedProjectDao = SavedProjectDatabase.getDatabase().savedProjectDao()
-    private val _address = MutableStateFlow("")
 
 
     fun setAddress(address: String) {
         _config.value = _config.value.copy(adress = address)
     }
-
+    private val savedProjectDao = SavedProjectDatabase.getDatabase().savedProjectDao()
     fun saveProject() {
         viewModelScope.launch {
             savedProjectDao.insert(

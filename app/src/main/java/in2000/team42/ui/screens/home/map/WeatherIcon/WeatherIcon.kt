@@ -16,6 +16,9 @@ import in2000.team42.ui.screens.home.DisplayWeather
 import in2000.team42.ui.screens.home.HomeViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun WeatherIconButton(
@@ -26,8 +29,10 @@ fun WeatherIconButton(
     val apiData by viewModel.apiDataFlow.collectAsState()
     val weatherData = apiData.weatherData
 
-    // Select the latest DisplayWeather (or null if empty)
-    val latestWeather = weatherData.maxByOrNull { it.month }
+    val dateFormat = SimpleDateFormat("MMM yyyy", Locale.getDefault())
+    val latestWeather = weatherData.maxByOrNull { displayWeather ->
+        dateFormat.parse(displayWeather.month)?.time ?: Long.MIN_VALUE
+    }
 
     // Parse snow and cloud values, removing units (mm for snow, % for cloud)
     val snowValue = latestWeather?.snow?.replace("mm", "")?.trim()?.toDoubleOrNull() ?: 0.0

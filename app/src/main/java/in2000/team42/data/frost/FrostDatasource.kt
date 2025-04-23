@@ -72,7 +72,7 @@ class FrostDatasource() {
                 val response: String = client.get(url) {
                     parameter("geometry", "nearest(POINT($longitude $latitude))")
                     parameter("validtime", referenceTime)
-                    parameter("nearestmaxcount", 3) // Henter de x antall naermeste stasjonene
+                    parameter("nearestmaxcount", 2) // Henter de x antall naermeste stasjonene if (element == cloudAreaFraction) 1 else 3
                     parameter("elements", element)
                 }.body()
 
@@ -135,6 +135,15 @@ class FrostDatasource() {
                         val body = response.body<FrostResponse>()
                         responses.add(body)
                         Log.d(TAG, "Fetched data for $element from stations $supportingStations")
+                        Log.d(TAG, "Raw FrostResponse for $element:")
+                        body.data.forEachIndexed { index, observation ->
+                            Log.d(TAG, "  Observation [$index]:")
+                            Log.d(TAG, "    Station ID: ${observation.sourceId}")
+                            Log.d(TAG, "    Reference Time: ${observation.referenceTime}")
+                            observation.observations.forEach { obs ->
+                                Log.d(TAG, "    Element: ${obs.elementId}, Value: ${obs.value}")
+                            }
+                        }
                     } else {
                         val errorBody = response.body<FrostErrorResponse>()
                         Log.e(TAG, "Error fetching $element: ${errorBody.error.reason}")
@@ -180,7 +189,7 @@ class FrostDatasource() {
                     when (obs.elementId) {
                         temp -> value?.let { dataByTime[refTime] = updatedData.copy(temperature = it) }
                         snow -> value?.let { dataByTime[refTime] = updatedData.copy(snow = it) }
-                        cloudAreaFraction -> value?.let { dataByTime[refTime] = updatedData.copy((((it-1/7)*100).toString()))}
+                        cloudAreaFraction -> value?.let { dataByTime[refTime] = updatedData.copy(cloudAreaFraction = it * 12.5) }
                     }
                 }
                 // Setter StationId hvis den ikke allerede er satt

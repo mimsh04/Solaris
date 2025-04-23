@@ -84,8 +84,12 @@ fun Map(
          if (config.value.bottomSheetDetent == "medium") 0.00035 else 0.00008
 
 
-    if (config.value.latitude != 0.0) {
-        startPos = Point.fromLngLat(config.value.longitude, config.value.latitude - getSheetMapOffset())
+    if (config.value.polygon != null) {
+        startPos = calculateCentroid(config.value.polygon!!)
+        startPos = Point.fromLngLat(
+            startPos.longitude(),
+            startPos.latitude() - getSheetMapOffset()
+        )
         startZoom = 18.0
     }
 

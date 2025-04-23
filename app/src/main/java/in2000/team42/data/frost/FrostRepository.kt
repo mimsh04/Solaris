@@ -35,7 +35,7 @@ class FrostRepository(private val dataSource: FrostDatasource) {
      * @param latitude Latitude of the location
      * @param longitude Longitude of the location
      * @param referenceTime Tidintervall for data (e.g., "2024-01-01/2024-12-31")
-     * @return FrostResult med en liste av FrostData-objekter, der nullverdier erstattes med standardverdier.
+     * @return FrostResult med en liste av FrostData-objekter, der nullverdier erstattes med standardverdier
      * @see FrostDatasource.getWeatherData
      */
     suspend fun getWeatherByCoordinates(latitude: Double, longitude: Double, referenceTime: String): FrostResult {

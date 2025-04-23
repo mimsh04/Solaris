@@ -11,16 +11,16 @@ import java.util.TimeZone
 class FrostRepository(private val dataSource: FrostDatasource) {
     private val TAG = "FrostRepository" // Logcat tag for this class
 
-    fun getLast24HoursReferenceTime(): String {
+    fun get1YearReferenceTime(): String {
         val calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Oslo"))
         val endTime = calendar.time // Current time
 
         // Subtract 24 hours
-        calendar.add(Calendar.HOUR_OF_DAY, -24)
+        calendar.add(Calendar.YEAR, -1)
         val startTime = calendar.time
 
         // Formatterer data med
-        val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
         formatter.timeZone = TimeZone.getTimeZone("Europe/Oslo")
 
         val startFormatted = formatter.format(startTime)
@@ -41,15 +41,15 @@ class FrostRepository(private val dataSource: FrostDatasource) {
      */
     suspend fun getWeatherByCoordinates(latitude: Double, longitude: Double, referenceTime: String): FrostResult {
         val referenceTimeTest = "2024-01-01/2024-12-31"
-        Log.d(TAG, "Getting weather data for coordinates ($latitude, $longitude) at time $referenceTimeTest")
+        Log.d(TAG, "Getting weather data for coordinates ($latitude, $longitude) at time $referenceTime")
 
-        val stationIds = dataSource.getNearestStation(latitude, longitude, referenceTimeTest) ?: run {
+        val stationIds = dataSource.getNearestStation(latitude, longitude, referenceTime) ?: run {
             Log.w(TAG, "No station found for coordinates ($latitude, $longitude)")
             return FrostResult.Failure("No station found for coordinates ($latitude, $longitude)")
         }
         Log.i(TAG, "Using station IDs: $stationIds for weather data")
 
-        val weatherResult = dataSource.getWeatherData(stationIds, referenceTimeTest)
+        val weatherResult = dataSource.getWeatherData(stationIds, referenceTime)
         return when (weatherResult) {
             is FrostResult.Success -> {
                 // Erstatter null-verdier med standardverdier

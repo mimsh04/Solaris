@@ -1,7 +1,6 @@
 package in2000.team42.ui.screens.home
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import in2000.team42.data.frost.FrostDatasource
@@ -100,7 +99,7 @@ class HomeViewModel : ViewModel() {
     private fun updateWeatherData() {
         viewModelScope.launch {
             try {
-                val referenceTime = frostRepository.getLast24HoursReferenceTime()
+                val referenceTime = frostRepository.get1YearReferenceTime()
                 val weather = frostRepository.getWeatherByCoordinates(
                     latitude = _latitude.value,
                     longitude = _longitude.value,
@@ -111,9 +110,9 @@ class HomeViewModel : ViewModel() {
                         val displayData = weather.data.map { it.toDisplayWeather() }
 
                         // Uncomment dette hvis du ønsker mer oversikt over daten du henter
-                        /*displayData.forEachIndexed { index, displayWeather ->
+                        displayData.forEachIndexed { index, displayWeather ->
                             Log.d(TAG, "DisplayWeather [$index]: month=${displayWeather.month}, temp=${displayWeather.temp}, snow=${displayWeather.snow}, cloud=${displayWeather.cloud}")
-                        }*/
+                        }
                         _weatherData.value = displayData
                         Log.d(TAG, "Weather data updated: $displayData")
                     }

@@ -21,8 +21,6 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
-// TODO: Filtrere ut nullverdier og gi komplett data til HomeViewModel
-
 class FrostDatasource() {
     private val TAG = "FrostDatasource" // LogCat tag for denne klassen
     private val CLIENTID = "5fa50311-61ee-4aa0-8f29-2262c21212e5"
@@ -178,7 +176,7 @@ class FrostDatasource() {
                     when (obs.elementId) {
                         temp -> value?.let { dataByTime[refTime] = updatedData.copy(temperature = it) }
                         snow -> value?.let { dataByTime[refTime] = updatedData.copy(snow = it) }
-                        cloudAreaFraction -> value?.let { dataByTime[refTime] = updatedData.copy((((it-1/7)*100).toString()))} // TODO:
+                        cloudAreaFraction -> value?.let { dataByTime[refTime] = updatedData.copy(cloudAreaFraction = it * 12.5) }
                     }
                 }
                 // Setter StationId hvis den ikke allerede er satt

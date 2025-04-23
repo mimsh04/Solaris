@@ -4,6 +4,13 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mapbox.geojson.Point
+import com.mapbox.search.ApiType
+import com.mapbox.search.ResponseInfo
+import com.mapbox.search.ReverseGeoOptions
+import com.mapbox.search.SearchCallback
+import com.mapbox.search.SearchEngine
+import com.mapbox.search.SearchEngineSettings
+import com.mapbox.search.result.SearchResult
 import in2000.team42.data.frost.FrostDatasource
 import in2000.team42.data.pgvis.PgvisDatasource
 import in2000.team42.data.pgvis.PgvisRepository
@@ -16,6 +23,7 @@ import in2000.team42.data.frost.FrostRepository
 import in2000.team42.data.pgvis.PvTech
 import in2000.team42.data.pgvis.model.KwhMonthlyResponse
 import in2000.team42.data.saved.*
+import in2000.team42.ui.screens.home.map.getAdressOfPoint
 import kotlinx.coroutines.flow.Flow
 
 // Data class to hold API-related data
@@ -58,10 +66,16 @@ class HomeViewModel : ViewModel() {
         _config.value = _config.value.copy(longitude = longitude, latitude = latitude)
     }
 
-
     fun setAddress(address: String) {
         _config.value = _config.value.copy(adress = address)
     }
+
+    fun setGeoAddress(point: Point) {
+        getAdressOfPoint(point) {
+            setAddress(it)
+        }
+    }
+
     private val savedProjectDao = SavedProjectDatabase.getDatabase().savedProjectDao()
     fun saveProject() {
         viewModelScope.launch {

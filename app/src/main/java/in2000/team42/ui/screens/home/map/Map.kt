@@ -156,16 +156,16 @@ fun Map(
     fun onMapClicked(point: Point): Boolean {
         clearScreen()
         val offset = getSheetMapOffset()
+        viewModel.setGeoAddress(point)
         loadHouse(point, onComplete = { polygon ->
             mapEaseTo(calculateCentroid(polygon), 1000, offset)
         })
         return true
     }
 
-    fun settNyttPunkt(point: Point, address: String) : Boolean{
-
+    fun settNyttPunkt(point: Point) : Boolean{
         clearScreen()
-        viewModel.setAddress(address)
+        viewModel.setGeoAddress(point)
         val offset = getSheetMapOffset()
         mapEaseTo(point, 2000, offset)
         loadHouse(point, delay = 2400)
@@ -218,13 +218,9 @@ fun Map(
 
         SearchBar(
             placeAutocomplete = placeAutoComplete,
-            onLocationSelected = { point, address -> settNyttPunkt(point, address) },
+            onLocationSelected = { point -> settNyttPunkt(point) },
             modifier = Modifier.padding(top = 26.dp),
             isMapClicked = mapClicked
         )
     }
-
-
-
-
 }

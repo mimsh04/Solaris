@@ -176,7 +176,7 @@ class FrostDatasource() {
                     when (obs.elementId) {
                         temp -> value?.let { dataByTime[refTime] = updatedData.copy(temperature = it) }
                         snow -> value?.let { dataByTime[refTime] = updatedData.copy(snow = it) }
-                        cloudAreaFraction -> value?.let { dataByTime[refTime] = updatedData.copy(cloudAreaFraction = it * 12.5) }
+                        cloudAreaFraction -> value?.let { dataByTime[refTime] = updatedData.copy((((it-1/7)*100).toString()))}
                     }
                 }
                 // Setter StationId hvis den ikke allerede er satt

@@ -99,11 +99,7 @@ fun Map(
                 isMapClicked = mapClicked
             )
 
-            WeatherIconButton()
+            WeatherIconButton(modifier = modifier, viewModel = viewModel)
         }
     }
-
-
-
-
 }

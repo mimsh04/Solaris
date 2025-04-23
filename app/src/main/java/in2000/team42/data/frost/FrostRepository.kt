@@ -31,8 +31,7 @@ class FrostRepository(private val dataSource: FrostDatasource) {
 
     /**
      * Henter værdata basert på koordinater og sikrer at alle FrostData-objekter har verdier som ikke er null
-     * ved å erstatte nullverdier med standardverdier (f.eks. 0.0).
-     *
+     * ved å erstatte nullverdier med standardverdier (f.eks. 0.0).*
      * @param latitude Latitude of the location
      * @param longitude Longitude of the location
      * @param referenceTime Tidintervall for data (e.g., "2024-01-01/2024-12-31")

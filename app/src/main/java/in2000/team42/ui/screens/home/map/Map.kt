@@ -44,7 +44,6 @@ import kotlinx.coroutines.withContext
 
 @OptIn(MapboxExperimental::class)
 private suspend fun MapState.queryBuildingCoordinatesAt(point: Point): List<List<Point>>? {
-    // Use withContext to ensure map operations run on the main thread
     return withContext(Dispatchers.Main) {
         val selectedBuildings = queryRenderedFeatures(
             geometry = RenderedQueryGeometry(pixelForCoordinate(point)),
@@ -172,6 +171,14 @@ fun Map(
         return true
     }
 
+    fun handleDraggedConrner (draggedPoint: Point, index: Int) {
+        val newPolygon = config.value.polygon!![0].toMutableList()
+        newPolygon[index] = draggedPoint
+        val nyListe = listOf(newPolygon)
+        viewModel.setAreal(calculatePolygonArea(nyListe).toFloat())
+        viewModel.setPolygon(nyListe)
+    }
+
     val pointIcon = rememberIconImage(key = "point-icon", painter = painterResource(id = R.drawable.polygon_corner))
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -203,13 +210,8 @@ fun Map(
                         iconImage = pointIcon
                         iconSize = 1.0
                         interactionsState.isDraggable = true
-                        interactionsState.onDragged { draggedPoint ->
-                            val newPolygon = config.value.polygon!![0].toMutableList()
-                            newPolygon[index] = draggedPoint.point
-                            val nyListe = listOf(newPolygon)
-                            viewModel.setAreal(calculatePolygonArea(nyListe).toFloat())
-                            viewModel.setPolygon(nyListe)
-
+                        interactionsState.onDragged {
+                            handleDraggedConrner(it.point, index)
                         }
                     }
                 }

@@ -55,8 +55,8 @@ class HomeViewModel : ViewModel() {
     private val frostRepository = FrostRepository(FrostDatasource())
     private val TAG = "HomeViewModel"
 
-    private val config = Config()
-    private val apiData = ApiData()
+    private val config = Config() // Instance of the Config class
+    private val apiData = ApiData() // Instance of the ApiData class
 
     private val _apiData = MutableStateFlow(apiData)
     private val _config = MutableStateFlow(config)
@@ -102,6 +102,7 @@ class HomeViewModel : ViewModel() {
         _config.value = _config.value.copy(vinkel = vinkel)
     }
 
+    // For setting areal and solcelleEffekt
     fun setAreal(areal: Float) {
         _config.value = _config.value.copy(areal = areal)
     }
@@ -141,6 +142,7 @@ class HomeViewModel : ViewModel() {
             _apiData.value = _apiData.value.copy(sunRadiation = radiationData)
             Log.d(TAG, "Radiation data: $radiationData")
         }
+
     }
 
     fun updateKwhMonthly(pvTech: PvTech = PvTech.CRYST_SI) {

@@ -139,7 +139,7 @@ class HomeViewModel : ViewModel() {
     // transformerer FrostData til DisplayData
     private fun FrostData.toDisplayWeather(): DisplayWeather {
         val dateFormat = SimpleDateFormat("MMM yyyy", Locale.getDefault())
-        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val date = inputFormat.parse(referenceTime) ?: Date()
         return DisplayWeather(
             month = dateFormat.format(date),

@@ -92,7 +92,9 @@ fun BottomSheet(
                     .padding(horizontal = 16.dp)
                     .padding(top = 40.dp)
             ) {
-
+                item {
+                    AdresseFelt(config.value.adress)
+                }
                 item {
                     Vinkelinputs(
                         incline = config.value.incline,

@@ -159,9 +159,10 @@ fun Map(
     fun onMapClicked(point: Point): Boolean {
         clearScreen()
         val offset = getSheetMapOffset()
-        viewModel.setGeoAddress(point)
+
         loadHouse(point, onComplete = { polygon ->
             mapEaseTo(calculateCentroid(polygon), 1000, offset)
+            viewModel.setGeoAddress(point)
         })
         return true
     }

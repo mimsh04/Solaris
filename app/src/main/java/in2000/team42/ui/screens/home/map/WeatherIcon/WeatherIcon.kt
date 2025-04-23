@@ -1,6 +1,5 @@
 package in2000.team42.ui.screens.home.map.WeatherIcon
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,7 +12,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import in2000.team42.R
+import in2000.team42.ui.screens.home.DisplayWeather
 import in2000.team42.ui.screens.home.HomeViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 @Composable
 fun WeatherIconButton(
@@ -21,16 +23,21 @@ fun WeatherIconButton(
     viewModel: HomeViewModel
 ) {
     var showPopup by remember { mutableStateOf(false) }
-    val weatherData by viewModel.weatherData.collectAsState()
+    val apiData by viewModel.apiDataFlow.collectAsState()
+    val weatherData = apiData.weatherData
 
     // Select the latest DisplayWeather (or null if empty)
     val latestWeather = weatherData.maxByOrNull { it.month }
 
-    // Velger hva slags vaerIkon som skal vises baser på data
+    // Parse snow and cloud values, removing units (mm for snow, % for cloud)
+    val snowValue = latestWeather?.snow?.replace("mm", "")?.trim()?.toDoubleOrNull() ?: 0.0
+    val cloudValue = latestWeather?.cloud?.replace("%", "")?.trim()?.toDoubleOrNull() ?: 0.0
+
+    // Select weather icon based on data
     val iconResource = when {
         latestWeather == null -> R.drawable.ic_unknown_weather
-        latestWeather.snow.toDoubleOrNull()?.let { it > 0.0 } == true -> R.drawable.ic_snow_cloud
-        latestWeather.cloud.toDoubleOrNull()?.let { it > 50.0 } == true -> R.drawable.ic_cloudy
+        snowValue > 0.0 -> R.drawable.ic_snow_cloud
+        cloudValue > 50.0 -> R.drawable.ic_cloudy
         else -> R.drawable.ic_sol
     }
 
@@ -69,17 +76,20 @@ fun WeatherIconButton(
                         )
 
                         if (latestWeather != null) {
-                            Text("Temperatur: ${latestWeather.temp}")
-                            Text("Snø: ${latestWeather.snow}mm")
-                            Text("Værdekke: ${latestWeather.cloud}")
+                            Text("Temperature: ${latestWeather.temp}")
+                            Text("Snow: ${latestWeather.snow}")
+                            Text("Cloud Cover: ${latestWeather.cloud}")
                         } else {
-                            Text("Ingen værdata tilgjengelig for dette området")
+                            Text("No weather data available for this area")
                         }
 
                         Spacer(modifier = Modifier.height(16.dp))
 
                         Button(
-                            onClick = { showPopup = false }
+                            onClick = { showPopup = false },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary // Solar Yellow
+                            )
                         ) {
                             Text("Close")
                         }
@@ -90,10 +100,18 @@ fun WeatherIconButton(
     }
 }
 
-@SuppressLint("ViewModelConstructorInComposable")
 @Preview(showBackground = true)
 @Composable
 fun WeatherIconButtonPreview() {
+    // Mock DisplayWeather for preview
+    val mockWeather = DisplayWeather(
+        month = "Jan 2025",
+        temp = "5.0°C",
+        snow = "0.0mm",
+        cloud = "30.0%"
+    )
+
+
     MaterialTheme {
         WeatherIconButton(viewModel = HomeViewModel())
     }

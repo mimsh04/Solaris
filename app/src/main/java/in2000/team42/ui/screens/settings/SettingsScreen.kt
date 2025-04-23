@@ -18,14 +18,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import in2000.team42.data.saved.SavedProjectEntity
 import in2000.team42.ui.screens.faq.FaqDialog
-import in2000.team42.ui.screens.settings.komponenter.AnbefalteProdukter
-import in2000.team42.ui.screens.settings.komponenter.JohnDoe
-import in2000.team42.ui.screens.settings.komponenter.LurerDuPaaNoe
-import in2000.team42.ui.screens.settings.komponenter.SolarPanelData
+import in2000.team42.ui.screens.settings.komponenter.*
 
 @Composable
-fun SettingsScreen (navController: NavHostController,modifier : Modifier = Modifier) {
+fun SettingsScreen (navController: NavHostController,
+                    project: SavedProjectEntity?,
+                    modifier : Modifier = Modifier) {
     var showFAQ by remember { mutableStateOf(false) }
 
     Box(
@@ -43,14 +43,16 @@ fun SettingsScreen (navController: NavHostController,modifier : Modifier = Modif
                     .padding(20.dp)
             ) {
 
-                JohnDoe()
-
                 Column {
-                    AnbefalteProdukter()
+                    JohnDoe()
+                    Column {
+                        ProjectContent(project)
+                        AnbefalteProdukter()
 
-                    LurerDuPaaNoe(navController,showFAQ,{showFAQ=it})
+                        LurerDuPaaNoe(navController, showFAQ, { showFAQ = it })
 
-                    SolarPanelData()
+                        SolarPanelData()
+                    }
                 }
 
             }

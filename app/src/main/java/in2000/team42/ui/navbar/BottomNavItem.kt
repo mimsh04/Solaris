@@ -14,12 +14,20 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
+/**
+ * A single item in the bottom navigation bar.
+ *
+ * @param modifier Optional styling.
+ * @param navItem The navigation item (icon + label).
+ * @param isSelected Whether this item is currently selected.
+ */
 @Composable
  fun BottomNavItem(
     modifier: Modifier = Modifier,
     navItem: NavItem,
     isSelected: Boolean,
 ) {
+    // Animations for selected state
     val animatedHeight by animateDpAsState(
         targetValue = if (isSelected) 50.dp else 36.dp,
         animationSpec = spring(
@@ -54,16 +62,10 @@ import androidx.compose.ui.unit.dp
                 )
                 .clip(RoundedCornerShape(24.dp))
                 .background(MaterialTheme.colorScheme.surface),
-//                .then(
-//                    if (isSelected){
-//                        Modifier.border(2.dp,Color.LightGray, RoundedCornerShape(24.dp))
-//                    }else{
-//                        Modifier
-//                    }
-//                ),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
         ) {
+            // Animated icon (flips when selected)
             FlipIcon(
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
@@ -77,6 +79,7 @@ import androidx.compose.ui.unit.dp
                 contentDescription = navItem.title
             )
 
+            // Label (only shown when selected)
             AnimatedVisibility(
                 visible = isSelected,
                 enter = fadeIn() + expandHorizontally(),

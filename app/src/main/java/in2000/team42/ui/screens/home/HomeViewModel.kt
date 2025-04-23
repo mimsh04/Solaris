@@ -3,6 +3,7 @@ package in2000.team42.ui.screens.home
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mapbox.geojson.Point
 import in2000.team42.data.frost.FrostDatasource
 import in2000.team42.data.pgvis.PgvisDatasource
 import in2000.team42.data.pgvis.PgvisRepository
@@ -14,6 +15,8 @@ import in2000.team42.data.frost.model.FrostData
 import in2000.team42.data.frost.FrostRepository
 import in2000.team42.data.pgvis.PvTech
 import in2000.team42.data.pgvis.model.KwhMonthlyResponse
+import in2000.team42.data.saved.*
+import kotlinx.coroutines.flow.Flow
 
 // Data class to hold API-related data
 data class ApiData(
@@ -29,8 +32,12 @@ data class Config(
     var incline: Float = 35f,
     var vinkel: Float = 0f,
     var areal: Float = 1f,
-    var solcelleEffekt: Float = 15f
+    var solcelleEffekt: Float = 15f,
+    var polygon: List<List<Point>>? = null,
+    var bottomSheetDetent : String = "medium",
+    var adress: String = "",
 )
+
 
 class HomeViewModel : ViewModel() {
     private val radiationRepository = PgvisRepository(PgvisDatasource())
@@ -43,8 +50,6 @@ class HomeViewModel : ViewModel() {
     private val _config = MutableStateFlow(config)
 
     // Added to hold the current SheetDetent
-    private val _currentSheetDetent = MutableStateFlow("medium") // Default to medium
-    val currentSheetDetent = _currentSheetDetent.asStateFlow()
 
     val apiDataFlow = _apiData.asStateFlow()
     val configFlow = _config.asStateFlow()
@@ -52,6 +57,32 @@ class HomeViewModel : ViewModel() {
     fun setCoordinates(longitude: Double, latitude: Double) {
         _config.value = _config.value.copy(longitude = longitude, latitude = latitude)
     }
+
+
+    fun setAddress(address: String) {
+        _config.value = _config.value.copy(adress = address)
+    }
+    private val savedProjectDao = SavedProjectDatabase.getDatabase().savedProjectDao()
+    fun saveProject() {
+        viewModelScope.launch {
+            savedProjectDao.insert(
+                SavedProjectEntity(
+                    config = _config.value
+                )
+            )
+        }
+    }
+
+    fun getSavedProjects(): Flow<List<SavedProjectEntity>> {
+        return savedProjectDao.getAllProjects()
+    }
+
+    fun deleteProject(project: SavedProjectEntity) {
+        viewModelScope.launch {
+            savedProjectDao.delete(project)
+        }
+    }
+
 
     fun setIncline(incline: Float) {
         _config.value = _config.value.copy(incline = incline)
@@ -68,6 +99,15 @@ class HomeViewModel : ViewModel() {
 
     fun setSolcelleEffekt(solcelleEffekt: Float) {
         _config.value = _config.value.copy(solcelleEffekt = solcelleEffekt)
+    }
+
+    fun setPolygon(polygon: List<List<Point>>?) {
+        Log.d("HomeViewModel", "Setting polygon: $polygon")
+        _config.value = _config.value.copy(polygon = polygon)
+    }
+
+    fun setBottomSheetDetent(bottomSheetDetent: String) {
+        _config.value = _config.value.copy(bottomSheetDetent = bottomSheetDetent)
     }
 
     fun updateAllApi() {
@@ -128,11 +168,5 @@ class HomeViewModel : ViewModel() {
                 _apiData.value = _apiData.value.copy(weatherData = emptyList()) // Clear weather data on failure
             }
         }
-    }
-
-    // Function to update the current SheetDetent
-    fun updateSheetDetent(detent: String) {
-        _currentSheetDetent.value = detent
-        Log.i("HomeViewModel", "Current Sheet detent value: " + _currentSheetDetent.value)
     }
 }

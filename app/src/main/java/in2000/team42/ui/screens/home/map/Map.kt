@@ -12,7 +12,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mapbox.common.MapboxOptions
@@ -25,8 +27,9 @@ import com.mapbox.maps.Style
 import com.mapbox.maps.extension.compose.MapState
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.animation.viewport.rememberMapViewportState
+import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
 import com.mapbox.maps.extension.compose.annotation.generated.PolygonAnnotation
-import com.mapbox.maps.extension.compose.annotation.generated.PolygonAnnotationState
+import com.mapbox.maps.extension.compose.annotation.rememberIconImage
 import com.mapbox.maps.extension.compose.rememberMapState
 import com.mapbox.maps.extension.compose.style.MapStyle
 import com.mapbox.maps.interactions.TypedFeaturesetDescriptor
@@ -36,7 +39,6 @@ import in2000.team42.R
 import in2000.team42.ui.screens.home.HomeViewModel
 import in2000.team42.ui.screens.home.map.search.SearchBar
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -49,7 +51,6 @@ private suspend fun MapState.queryBuildingCoordinatesAt(point: Point): List<List
             descriptor = TypedFeaturesetDescriptor.Layer("building")
         )
         if (selectedBuildings.isEmpty()) {
-            Log.d("HouseClick", "Clicked outside of building")
             null
         } else {
             Log.d("HouseClick", "Feature properties: ${selectedBuildings.first().properties}")
@@ -58,58 +59,12 @@ private suspend fun MapState.queryBuildingCoordinatesAt(point: Point): List<List
     }
 }
 
-private fun calculatePolygonArea(mapPolygon: List<List<Point>>): Double {
-    if (mapPolygon.isEmpty()) {
-        return 0.0
-    }
-
-    // Use the exterior ring of the polygon (first list of points)
-    val vertices = mapPolygon[0]
-    if (vertices.size < 3) {
-        return 0.0
-    }
-
-    // Calculate using the Shoelace formula
-    var area = 0.0
-    for (i in 0 until vertices.size - 1) {
-        // Convert to local projected coordinates for more accurate area calculation
-        // A simple approximation for small areas is to use longitude and latitude directly
-        val lng1 = vertices[i].longitude()
-        val lat1 = vertices[i].latitude()
-        val lng2 = vertices[i + 1].longitude()
-        val lat2 = vertices[i + 1].latitude()
-
-        area += (lng1 * lat2) - (lng2 * lat1)
-    }
-
-    // Close the polygon
-    val lastIndex = vertices.size - 1
-    val lng1 = vertices[lastIndex].longitude()
-    val lat1 = vertices[lastIndex].latitude()
-    val lng2 = vertices[0].longitude()
-    val lat2 = vertices[0].latitude()
-    area += (lng1 * lat2) - (lng2 * lat1)
-
-    // Take absolute value and divide by 2
-    area = Math.abs(area) / 2.0
-
-    // Convert to square meters using an approximation
-    // This factor varies with latitude, better calculations would use a proper projection
-    val latMid = vertices.map { it.latitude() }.average()
-    val lonFactor = Math.cos(Math.toRadians(latMid))
-    val metersPerDegreeLat = 111320.0 // Approximate meters per degree of latitude
-    val metersPerDegreeLon = metersPerDegreeLat * lonFactor
-
-    return area * metersPerDegreeLat * metersPerDegreeLon
-}
 
 @Composable
 fun Map(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel
-)
-{
-
+) {
     MapboxOptions.accessToken = stringResource(R.string.mapbox_access_token)
     val placeAutoComplete = PlaceAutocomplete.create()
 
@@ -118,44 +73,57 @@ fun Map(
     var mapClicked by remember { mutableStateOf(false) }
 
     val couroutineScope = rememberCoroutineScope()
-    
+
     val mapState = rememberMapState()
-
-    var mapPolygon: List<List<Point>>? by remember { mutableStateOf(null) }
-
-    val polygonAnnotationState = remember { PolygonAnnotationState() }
 
     val config = viewModel.configFlow.collectAsState()
 
+    var startPos = Point.fromLngLat(10.7522, 59.9139)
+    var startZoom = 10.0
+
+    fun getSheetMapOffset():Double =
+         if (config.value.bottomSheetDetent == "medium") 0.00035 else 0.00008
+
+
+    if (config.value.latitude != 0.0) {
+        startPos = Point.fromLngLat(config.value.longitude, config.value.latitude - getSheetMapOffset())
+        startZoom = 18.0
+    }
+
     val mapViewportState = rememberMapViewportState {
         setCameraOptions {
-            zoom(10.0)
-            center(Point.fromLngLat(10.7522, 59.9139))
+            zoom(startZoom)
+            center(startPos)
             pitch(0.0)
             bearing(0.0)
         }
     }
 
-    fun loadHouse(point: Point, delay: Long = 0, onComplete: () -> Unit = {}) {
+    fun loadHouse(point: Point, delay: Long = 0, onComplete: (List<List<Point>>) -> Unit = {}) {
         couroutineScope.launch {
-            mapPolygon = null
+            //viewModel.setPolygon(null)
             kotlinx.coroutines.delay(delay)
-            mapPolygon = mapState.queryBuildingCoordinatesAt(point)
-            Log.d("Map", mapPolygon.toString())
+            val newPolygon = mapState.queryBuildingCoordinatesAt(point)
 
-            if (mapPolygon.isNullOrEmpty()) {
+            if (newPolygon.isNullOrEmpty()) {
+                Log.i("HouseClick", "No building found")
                 return@launch
             }
-            onComplete()
+
+            val cleanedPolygon = newPolygon[0].toMutableList()
+            cleanedPolygon.removeAt(cleanedPolygon.lastIndex)
+
+            viewModel.setPolygon(listOf(cleanedPolygon))
 
             viewModel.setCoordinates(
                 longitude = point.longitude(),
                 latitude = point.latitude()
             )
             viewModel.setAreal(
-                areal = calculatePolygonArea(mapPolygon!!).toFloat(),
+                areal = calculatePolygonArea(listOf(cleanedPolygon)).toFloat(),
             )
             viewModel.updateAllApi()
+            onComplete(listOf(cleanedPolygon))
 
         }
     }
@@ -187,21 +155,24 @@ fun Map(
 
     fun onMapClicked(point: Point): Boolean {
         clearScreen()
-        loadHouse(point, onComplete = {
-            mapEaseTo(point, 1000, 0.0004)
+        val offset = getSheetMapOffset()
+        loadHouse(point, onComplete = { polygon ->
+            mapEaseTo(calculateCentroid(polygon), 1000, offset)
         })
         return true
     }
 
-    fun settNyttPunkt(point: Point) : Boolean{
+    fun settNyttPunkt(point: Point, address: String) : Boolean{
 
         clearScreen()
-        mapEaseTo(point, 2000, 0.0004)
+        viewModel.setAddress(address)
+        val offset = getSheetMapOffset()
+        mapEaseTo(point, 2000, offset)
         loadHouse(point, delay = 2400)
-
-
         return true
     }
+
+    val pointIcon = rememberIconImage(key = "point-icon", painter = painterResource(id = R.drawable.polygon_corner))
 
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -215,21 +186,45 @@ fun Map(
                 MapStyle(style = Style.MAPBOX_STREETS)
             },
         ) {
-            if (mapPolygon.isNullOrEmpty().not()) {
+            if (config.value.polygon.isNullOrEmpty().not()) {
 
                 PolygonAnnotation(
-                    points = mapPolygon!!,
+                    points = config.value.polygon!!,
 
-                )
+                ) {
+                    fillColor = Color.Blue
+                    fillOpacity = 0.3
+
+                }
+                config.value.polygon!![0].forEachIndexed { index, point ->
+                    PointAnnotation(
+                        point = point
+                    ) {
+                        iconImage = pointIcon
+                        iconSize = 1.0
+                        interactionsState.isDraggable = true
+                        interactionsState.onDragged { draggedPoint ->
+                            val newPolygon = config.value.polygon!![0].toMutableList()
+                            newPolygon[index] = draggedPoint.point
+                            val nyListe = listOf(newPolygon)
+                            viewModel.setAreal(calculatePolygonArea(nyListe).toFloat())
+                            viewModel.setPolygon(nyListe)
+
+                        }
+                    }
+                }
             }
         }
 
         SearchBar(
             placeAutocomplete = placeAutoComplete,
-            onLocationSelected = { settNyttPunkt(it) },
+            onLocationSelected = { point, address -> settNyttPunkt(point, address) },
             modifier = Modifier.padding(top = 26.dp),
             isMapClicked = mapClicked
         )
     }
-    
+
+
+
+
 }

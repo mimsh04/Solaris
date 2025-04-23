@@ -27,6 +27,7 @@ private fun getNavItems(): List<NavItem> = listOf(
 @Composable
 fun NavBar(navController: NavHostController) {
     val currentScreen = getCurrentScreen(navController, getNavItems())
+    val navItems = getNavItems()
 
     Box(
         modifier = Modifier
@@ -40,18 +41,12 @@ fun NavBar(navController: NavHostController) {
             modifier = Modifier.fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            getNavItems().forEach { navItem ->
+            navItems.forEach { navItem ->
                 val isSelected = navItem == currentScreen
-                val animatedWeight by animateFloatAsState(
-                    targetValue = if (isSelected) 1.8f else 1f,
-                    animationSpec = spring(
-                        stiffness = Spring.StiffnessLow,
-                        dampingRatio = Spring.DampingRatioMediumBouncy
-                    )
-                )
-
                 Box(
-                    modifier = Modifier.weight(animatedWeight),
+                    modifier = Modifier
+                        .weight(1f, fill = false)
+                        .fillMaxHeight(),
                     contentAlignment = Alignment.Center,
                 ) {
                     val interactionSource = remember { MutableInteractionSource() }
@@ -60,7 +55,7 @@ fun NavBar(navController: NavHostController) {
                             interactionSource = interactionSource,
                             indication = null
                         ) {
-                            handleNavItemClick(navController,navItem,currentScreen)
+                            handleNavItemClick(navController, navItem, currentScreen)
                         },
                         navItem = navItem,
                         isSelected = isSelected
@@ -72,20 +67,24 @@ fun NavBar(navController: NavHostController) {
 }
 
 
-//helper functions for cleaner navigation logic
+//Helper function to determine the current screen for navigation highlighting.
 @Composable
 private fun getCurrentScreen(navController: NavHostController,navItems: List<NavItem>): NavItem {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    val isProfileRelated = navController.previousBackStackEntry?.destination?.route == Screen.Settings.route
+    val isProfileRelated = navController.previousBackStackEntry?.destination?.route?.startsWith("settings/") == true
 
     return when {
-        currentRoute == Screen.Settings.route || isProfileRelated -> navItems[2] // Profile
-        else -> navItems.find { it.screen.route == currentRoute } ?: navItems[1] // Home
+        currentRoute == Screen.Home.route -> navItems[1] // Home
+        currentRoute == Screen.Saved.route -> navItems[0] // Saved
+        currentRoute == Screen.Settings.route ||
+                currentRoute?.startsWith("${Screen.Settings.route}/") == true ||
+                isProfileRelated -> navItems[2] // Profile
+        else -> navItems[1] // Default to Home
     }
 }
 
-
+//Handles navigation logic when a bottom bar item is clicked.
 private fun handleNavItemClick(
     navController: NavHostController,
     navItem: NavItem,
@@ -94,12 +93,30 @@ private fun handleNavItemClick(
     val isProfileRelated = navController.previousBackStackEntry?.destination?.route == Screen.Settings.route
 
     when {
-        navItem.screen.route == Screen.Settings.route && isProfileRelated -> navController.popBackStack(Screen.Settings.route, false)
-        navItem != currentScreen -> navController.navigate(navItem.screen.route) {
-            popUpTo(navController.graph.startDestinationId) { saveState = true }
-            launchSingleTop = true
-            restoreState = true
+        // Profile navigation
+        navItem.screen == Screen.Settings && isProfileRelated -> {
+            navController.popBackStack(Screen.Settings.route, false)
+        }
+
+        // navigation to Saved
+        navItem.screen == Screen.Saved -> {
+            navController.navigate(Screen.Saved.route) {
+                popUpTo(navController.graph.id) { // Clear entire back stack
+                    saveState = false
+                }
+                launchSingleTop = true
+            }
+        }
+
+        // Normal navigation
+        navItem != currentScreen -> {
+            navController.navigate(navItem.screen.route) {
+                popUpTo(navController.graph.startDestinationId) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
         }
     }
-
 }

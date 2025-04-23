@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     kotlin("plugin.serialization") version "2.0.21"
+    alias(libs.plugins.ksp)
+
 }
 
 android {
@@ -57,7 +59,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
     val nav_version = "2.8.8"
 
     // Jetpack Compose integration
@@ -100,7 +101,12 @@ dependencies {
     implementation("com.mapbox.search:offline:2.8.0-rc.1")
     implementation("com.mapbox.search:mapbox-search-android:2.8.0-rc.1")
     implementation("com.mapbox.search:mapbox-search-android-ui:2.8.0-rc.1")
-
+    //Database
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+    //BottomSheet
     implementation("com.composables:core:1.20.1")
+
 
 }

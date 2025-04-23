@@ -44,7 +44,6 @@ import kotlinx.coroutines.withContext
 
 @OptIn(MapboxExperimental::class)
 private suspend fun MapState.queryBuildingCoordinatesAt(point: Point): List<List<Point>>? {
-    // Use withContext to ensure map operations run on the main thread
     return withContext(Dispatchers.Main) {
         val selectedBuildings = queryRenderedFeatures(
             geometry = RenderedQueryGeometry(pixelForCoordinate(point)),
@@ -85,8 +84,12 @@ fun Map(
          if (config.value.bottomSheetDetent == "medium") 0.00035 else 0.00008
 
 
-    if (config.value.latitude != 0.0) {
-        startPos = Point.fromLngLat(config.value.longitude, config.value.latitude - getSheetMapOffset())
+    if (config.value.polygon != null) {
+        startPos = calculateCentroid(config.value.polygon!!)
+        startPos = Point.fromLngLat(
+            startPos.longitude(),
+            startPos.latitude() - getSheetMapOffset()
+        )
         startZoom = 18.0
     }
 
@@ -156,20 +159,29 @@ fun Map(
     fun onMapClicked(point: Point): Boolean {
         clearScreen()
         val offset = getSheetMapOffset()
+
         loadHouse(point, onComplete = { polygon ->
             mapEaseTo(calculateCentroid(polygon), 1000, offset)
+            viewModel.setGeoAddress(point)
         })
         return true
     }
 
-    fun settNyttPunkt(point: Point, address: String) : Boolean{
-
+    fun settNyttPunkt(point: Point) : Boolean{
         clearScreen()
-        viewModel.setAddress(address)
+        viewModel.setGeoAddress(point)
         val offset = getSheetMapOffset()
         mapEaseTo(point, 2000, offset)
         loadHouse(point, delay = 2400)
         return true
+    }
+
+    fun handleDraggedConrner (draggedPoint: Point, index: Int) {
+        val newPolygon = config.value.polygon!![0].toMutableList()
+        newPolygon[index] = draggedPoint
+        val nyListe = listOf(newPolygon)
+        viewModel.setAreal(calculatePolygonArea(nyListe).toFloat())
+        viewModel.setPolygon(nyListe)
     }
 
     val pointIcon = rememberIconImage(key = "point-icon", painter = painterResource(id = R.drawable.polygon_corner))
@@ -203,13 +215,8 @@ fun Map(
                         iconImage = pointIcon
                         iconSize = 1.0
                         interactionsState.isDraggable = true
-                        interactionsState.onDragged { draggedPoint ->
-                            val newPolygon = config.value.polygon!![0].toMutableList()
-                            newPolygon[index] = draggedPoint.point
-                            val nyListe = listOf(newPolygon)
-                            viewModel.setAreal(calculatePolygonArea(nyListe).toFloat())
-                            viewModel.setPolygon(nyListe)
-
+                        interactionsState.onDragged {
+                            handleDraggedConrner(it.point, index)
                         }
                     }
                 }
@@ -218,13 +225,9 @@ fun Map(
 
         SearchBar(
             placeAutocomplete = placeAutoComplete,
-            onLocationSelected = { point, address -> settNyttPunkt(point, address) },
+            onLocationSelected = { point -> settNyttPunkt(point) },
             modifier = Modifier.padding(top = 26.dp),
             isMapClicked = mapClicked
         )
     }
-
-
-
-
 }

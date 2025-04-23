@@ -11,16 +11,16 @@ import java.util.TimeZone
 class FrostRepository(private val dataSource: FrostDatasource) {
     private val TAG = "FrostRepository" // Logcat tag for this class
 
-    fun getLast24HoursReferenceTime(): String {
+    fun get1YearReferenceTime(): String {
         val calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Oslo"))
         val endTime = calendar.time // Current time
 
         // Subtract 24 hours
-        calendar.add(Calendar.HOUR_OF_DAY, -24)
+        calendar.add(Calendar.YEAR, -1)
         val startTime = calendar.time
 
         // Formatterer data med
-        val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
         formatter.timeZone = TimeZone.getTimeZone("Europe/Oslo")
 
         val startFormatted = formatter.format(startTime)
@@ -31,8 +31,7 @@ class FrostRepository(private val dataSource: FrostDatasource) {
 
     /**
      * Henter værdata basert på koordinater og sikrer at alle FrostData-objekter har verdier som ikke er null
-     * ved å erstatte nullverdier med standardverdier (f.eks. 0.0).
-     *
+     * ved å erstatte nullverdier med standardverdier (f.eks. 0.0).*
      * @param latitude Latitude of the location
      * @param longitude Longitude of the location
      * @param referenceTime Tidintervall for data (e.g., "2024-01-01/2024-12-31")

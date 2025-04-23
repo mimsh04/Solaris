@@ -26,7 +26,7 @@ fun WeatherIconButton(
     // Select the latest DisplayWeather (or null if empty)
     val latestWeather = weatherData.maxByOrNull { it.month }
 
-    // Determine the icon based on weather conditions
+    // Velger hva slags vaerIkon som skal vises baser på data
     val iconResource = when {
         latestWeather == null -> R.drawable.ic_unknown_weather
         latestWeather.snow.toDoubleOrNull()?.let { it > 0.0 } == true -> R.drawable.ic_snow_cloud

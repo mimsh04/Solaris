@@ -56,7 +56,9 @@ fun BottomSheet(
         Closed,
     )
     // alle høydene sheeten kan ligge
-    val sheetState = rememberBottomSheetState(initialDetent = Medium, detents = detents)
+    val sheetState = rememberBottomSheetState(initialDetent = detents.find {
+        it.identifier == config.value.bottomSheetDetent
+    }!!, detents = detents)
 
 
     LaunchedEffect(sheetState.currentDetent) {

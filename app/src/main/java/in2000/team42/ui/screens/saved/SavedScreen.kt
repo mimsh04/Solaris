@@ -1,76 +1,87 @@
 package in2000.team42.ui.screens.saved
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.runtime.*
+import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.font.*
+import androidx.compose.ui.unit.*
 import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
+import in2000.team42.ui.screens.Screen
+import in2000.team42.ui.screens.home.HomeViewModel
+import in2000.team42.ui.screens.saved.project.SwipeToDeleteItem
+import androidx.compose.foundation.Image
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
+import in2000.team42.R
+import in2000.team42.ui.screens.saved.project.ProjectViewModel
+
 
 @Composable
-fun SavedScreen(navController: NavController,modifier: Modifier =Modifier){
-
-Column(
-    modifier=Modifier
-        .fillMaxSize()
+fun SavedScreen(
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    viewModel: ProjectViewModel
 ) {
-    Spacer(modifier = Modifier.padding(20.dp))
+    val savedProjects = viewModel.savedProjects.collectAsState(initial = emptyList())
 
-    Text(
-        text = "Lagrede Prosjekter",
-        fontWeight = FontWeight.Bold,
-        fontSize = 30.sp,
-        modifier = Modifier
-            .padding(top = 25.dp, bottom = 10.dp)
-            .fillMaxWidth()
-            .wrapContentWidth(Alignment.Start)
-    )
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp)
+    ) {
+        Spacer(modifier = Modifier.height(20.dp))
 
-        Box(
-            modifier= Modifier
+        Text(
+            text = "Lagrede Prosjekter",
+            fontWeight = FontWeight.Bold,
+            fontSize = 30.sp,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier
+                .padding(bottom = 16.dp)
                 .fillMaxWidth()
-                .height(200.dp)
-                .clip(RoundedCornerShape(10.dp))
-                .background(Color.Gray)
-                .border(1.dp, Color.Gray, RoundedCornerShape(10.dp))
-        ){
-            Text(
-                text="Prosjekt 1",
-                fontSize = 24.sp
-            )
+                .wrapContentWidth(Alignment.Start)
+        )
+
+        if (savedProjects.value.isEmpty()) {
+            // Show empty state message
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Image(
+                        painter = painterResource(id = R.drawable.nosaved),
+                        contentDescription = "No saved projects",
+                        modifier = Modifier.size(250.dp),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "Når du lagrer et prosjekt, vil det vises her.",
+                        fontSize = 16.sp, // Updated: Slightly smaller font size
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f) // Updated: Using themed onSurface with reduced opacity
+                    )
+                }
+            }
+        } else {
+            // Display a scrollable list of saved projects
+            LazyColumn {
+                items(savedProjects.value) { project ->
+                    // Each project can be swiped to delete
+                    SwipeToDeleteItem(
+                        project = project,
+                        onDeleteConfirmed = { viewModel.deleteProject(it) },
+                        onClick = {  navController.navigate("settings/${project.id}")}
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
         }
-
-    Spacer(modifier = Modifier.padding(20.dp))
-
-        Box(
-            modifier= Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .clip(RoundedCornerShape(10.dp))
-                .background(Color.Gray)
-                .border(1.dp, Color.Gray, RoundedCornerShape(10.dp))
-        ){
-            Text(
-                text="Prosjekt 2",
-                fontSize = 24.sp
-            )
-        }
-}
-
+    }
 }

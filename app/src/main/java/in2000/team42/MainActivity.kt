@@ -25,7 +25,10 @@ import in2000.team42.ui.screens.home.HomeScreen
 import in2000.team42.ui.screens.settings.SettingsScreen
 import android.Manifest
 import in2000.team42.ui.screens.guide.InstallasjonScreen
+import in2000.team42.data.saved.*
+import in2000.team42.ui.screens.home.HomeViewModel
 import in2000.team42.ui.screens.saved.SavedScreen
+import in2000.team42.ui.screens.saved.project.ProjectViewModel
 
 
 class MainActivity : ComponentActivity() {
@@ -50,13 +53,19 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         requestLocationPermissions()
         enableEdgeToEdge()
+        SavedProjectDatabase.initialize(applicationContext)
         setContent {
             val navController = rememberNavController()
+
+            // Create shared ViewModels at the activity level
+            val homeViewModel: HomeViewModel = viewModel()
+            val projectViewModel: ProjectViewModel = viewModel()
+
             IN2000_team42Theme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = { NavBar(navController) }
-                    ) { innerPadding ->
+                ) { innerPadding ->
                     NavHost(
                         navController = navController,
                         startDestination = Screen.Home.route,
@@ -66,19 +75,24 @@ class MainActivity : ComponentActivity() {
                         popExitTransition = { ExitTransition.None }
                     ) {
                         composable(Screen.Home.route){
-                            HomeScreen(navController, viewModel = viewModel(), modifier = Modifier
-                                .padding(innerPadding)
+                            // Pass the shared ViewModel instead of creating a new one
+                            HomeScreen(
+                                navController,
+                                viewModel = homeViewModel,
+                                modifier = Modifier.padding(innerPadding)
                             )
                         }
-                        composable(Screen.Settings.route) {
-                            SettingsScreen(navController, Modifier
-                                .padding(innerPadding)
-                            )
+                        composable(Screen.Settings.route) { backStackEntry ->
+                            val projectId = backStackEntry.arguments?.getString("projectId")
+                            val project = projectId?.let { projectViewModel.getProjectById(it) }
+                            SettingsScreen(navController, project)
                         }
 
                         composable(Screen.Saved.route) {
-                            SavedScreen(navController, Modifier
-                                .padding(innerPadding)
+                            SavedScreen(
+                                navController,
+                                Modifier.padding(innerPadding),
+                                viewModel = projectViewModel  // Use the shared ProjectViewModel
                             )
                         }
 
@@ -86,7 +100,6 @@ class MainActivity : ComponentActivity() {
                             InstallasjonScreen(navController)
                         }
                     }
-
                 }
             }
         }

@@ -43,7 +43,7 @@ fun StrommenContent() {
     ) {
         // Title
         Text(
-            text = "Hva koster strøm?",
+            text = "Hva koster strømmen?",
             style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(bottom = 16.dp)

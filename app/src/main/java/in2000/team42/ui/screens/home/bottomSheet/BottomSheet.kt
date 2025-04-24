@@ -102,7 +102,7 @@ fun BottomSheet(
                         ) {
                             AdresseFelt(config.value.adress)
                             ArealFelt(config.value.areal, modifier = Modifier
-                                .padding(top = 8.dp)
+                                .padding(top = 0.dp)
                             )
 
                         }

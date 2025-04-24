@@ -12,26 +12,16 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun AdresseFelt(adresse: String, modifier: Modifier = Modifier) {
-    Column {
-        if (adresse.isNotEmpty()) {
-            Column (
-                modifier = modifier,
-            ) {
-                Text(
-                    text = "Valgt adresse:",
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Text(
-                    text = adresse,
-                    modifier = modifier,
-                    fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                )
-            }
-
-        } else {
+    Column (modifier = modifier) {
+        Column {
             Text(
-                text = "Bruk søkefeltet eller trykk på bygg på kartet for å velge en adresse",
-                modifier = modifier
+                text = "Valgt adresse:",
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = adresse,
+                modifier = modifier,
+                fontSize = MaterialTheme.typography.titleLarge.fontSize,
             )
         }
         Spacer(modifier = Modifier.padding(bottom = 8.dp))

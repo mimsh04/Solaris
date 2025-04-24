@@ -72,8 +72,6 @@ class HomeViewModel : ViewModel() {
     val apiDataFlow = _apiData.asStateFlow()
     val configFlow = _config.asStateFlow()
 
-    private val savedProjectDao = SavedProjectDatabase.getDatabase().savedProjectDao()
-
     fun setCoordinates(longitude: Double, latitude: Double) {
         _config.value = _config.value.copy(longitude = longitude, latitude = latitude)
     }

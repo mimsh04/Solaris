@@ -32,7 +32,7 @@ fun Produksjon(apiData: ApiData) {
         horizontalArrangement = Arrangement.SpaceEvenly
         ){
         if (apiData.kwhMonthlyData.isEmpty()) {
-            Text("Ingen data (velg posisjon med search)")
+            Text("Trykk på regn ut produksjon knappen")
         } else {
             Column  (
                 horizontalAlignment = Alignment.CenterHorizontally

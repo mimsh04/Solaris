@@ -169,10 +169,10 @@ fun Map(
 
     fun settNyttPunkt(point: Point) : Boolean{
         clearScreen()
-        viewModel.setGeoAddress(point)
+        //viewModel.setGeoAddress(point)
         val offset = getSheetMapOffset()
         mapEaseTo(point, 2000, offset)
-        loadHouse(point, delay = 2400)
+        //loadHouse(point, delay = 2400)
         return true
     }
 

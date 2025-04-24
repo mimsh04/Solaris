@@ -2,6 +2,7 @@ package in2000.team42.ui.screens.home.bottomSheet
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -43,21 +44,29 @@ fun BottomSheet(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel
 ) {
-    val config = viewModel.configFlow.collectAsState() // Collecting Config state
-    val apiData = viewModel.apiDataFlow.collectAsState() // Collecting API data state
+    val configState = viewModel.configFlow.collectAsState()
+    val apiDataState = viewModel.apiDataFlow.collectAsState()
     val focusManager = LocalFocusManager.current
-    //for melding om prosjekt ble lagret
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val detents = listOf(
-        Peek,
-        Medium,
-        Closed,
-    )
-    // alle høydene sheeten kan ligge
-    val sheetState = rememberBottomSheetState(initialDetent = Medium, detents = detents)
+    // State for Greeting Visibility
+    val showGreeting = remember { mutableStateOf(true) }
 
+    val initialConfig = remember { configState.value }
+    val initialApiData = remember { apiDataState.value }
+
+    // Fjerner greeting ved bruk av info i bottomSheet
+    LaunchedEffect(apiDataState.value, configState.value) {
+        if (apiDataState.value != initialApiData || configState.value != initialConfig) {
+            if (showGreeting.value) {
+                showGreeting.value = false
+            }
+        }
+    }
+
+    val detents = remember { listOf(Peek, Medium, Closed) }
+    val sheetState = rememberBottomSheetState(initialDetent = Medium, detents = detents)
 
     LaunchedEffect(sheetState.currentDetent) {
         focusManager.clearFocus()
@@ -73,7 +82,7 @@ fun BottomSheet(
         state = sheetState
     ) {
         Box(
-            modifier = Modifier.fillMaxWidth().height(1200.dp),
+            modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.TopCenter
         ) {
             DragIndication(
@@ -86,15 +95,25 @@ fun BottomSheet(
             LazyVerticalGrid(
                 columns = GridCells.Fixed(1),
                 modifier = Modifier
-                    .padding(bottom = 16.dp)
-                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth()
                     .padding(top = 40.dp)
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 70.dp)
             ) {
 
+                // Legger inn greeting først
+                if (showGreeting.value) {
+                    item {
+                        GreetingContent()
+                        Spacer(modifier = Modifier.height(16.dp)) // Spacer etter greeting
+                    }
+                }
+
+                // Resten av innholdet
                 item {
                     Vinkelinputs(
-                        incline = config.value.incline,
-                        direction = config.value.vinkel,
+                        incline = configState.value.incline,
+                        direction = configState.value.vinkel,
                         onInclineChange = { viewModel.setIncline(it) },
                         onDirectionChange = { viewModel.setVinkel(it) }
                     )
@@ -105,32 +124,36 @@ fun BottomSheet(
                 }*/
 
                 item {
-                    SolcelleInputs(viewModel) // Assuming this component accepts HomeViewModel directly
+                    SolcelleInputs(viewModel)
                 }
 
                 item {
-                    Produksjon(apiData.value) // Assuming this component accepts HomeViewModel directly
+                    Produksjon(apiDataState.value)
                 }
                 item {
-                    Button(onClick = {
-                        viewModel.saveProject()
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                message = "Prosjekt lagret!",
-                                duration = SnackbarDuration.Short //hvor langt skal melding vises
-                            )
-                        }
-                                     },
-                        modifier= Modifier.padding(16.dp))
-                    {Text("Lagre prosjekt") }
+                    Button(
+                        onClick = {
+                            viewModel.saveProject()
+                            scope.launch {
+                                snackbarHostState.showSnackbar(
+                                    message = "Prosjekt lagret!",
+                                    duration = SnackbarDuration.Short
+                                )
+                            }
+                        },
+                        modifier = Modifier.padding(top = 16.dp)
+                    )
+                    { Text("Lagre prosjekt") }
                 }
             }
+
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+            )
         }
-        SnackbarHost(
-            hostState = snackbarHostState,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom=16.dp)
-        )
     }
 }

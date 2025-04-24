@@ -12,24 +12,28 @@ import com.mapbox.search.SearchEngine
 import com.mapbox.search.SearchEngineSettings
 import com.mapbox.search.result.SearchResult
 import in2000.team42.data.frost.FrostDatasource
+import in2000.team42.data.frost.FrostRepository
+import in2000.team42.data.frost.model.FrostData
+import in2000.team42.data.frost.model.FrostResult
 import in2000.team42.data.pgvis.PgvisDatasource
 import in2000.team42.data.pgvis.PgvisRepository
 import in2000.team42.data.pgvis.model.DailyProfile
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import in2000.team42.data.frost.model.FrostData
-import in2000.team42.data.frost.FrostRepository
 import in2000.team42.data.pgvis.PvTech
 import in2000.team42.data.pgvis.model.KwhMonthlyResponse
 import in2000.team42.data.saved.*
 import in2000.team42.ui.screens.home.map.getAdressOfPoint
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 // Data class to hold API-related data
 data class ApiData(
     val sunRadiation: List<DailyProfile> = emptyList(),
-    val weatherData: List<FrostData> = emptyList(),
+    val weatherData: List<DisplayWeather> = emptyList(), // Updated to use DisplayWeather
     val kwhMonthlyData: List<KwhMonthlyResponse.MonthlyKwhData> = emptyList()
 )
 
@@ -42,14 +46,22 @@ data class Config(
     var areal: Float = 1f,
     var solcelleEffekt: Float = 15f,
     var polygon: List<List<Point>>? = null,
-    var bottomSheetDetent : String = "medium",
+    var bottomSheetDetent: String = "medium",
     var adress: String = "",
 )
 
+// Display-friendly data class for weather
+data class DisplayWeather(
+    val month: String,
+    val temp: String,
+    val snow: String,
+    val cloud: String
+)
 
 class HomeViewModel : ViewModel() {
     private val radiationRepository = PgvisRepository(PgvisDatasource())
     private val frostRepository = FrostRepository(FrostDatasource())
+    private val TAG = "HomeViewModel"
 
     private val config = Config() // Instance of the Config class
     private val apiData = ApiData() // Instance of the ApiData class
@@ -57,10 +69,10 @@ class HomeViewModel : ViewModel() {
     private val _apiData = MutableStateFlow(apiData)
     private val _config = MutableStateFlow(config)
 
-    // Added to hold the current SheetDetent
-
     val apiDataFlow = _apiData.asStateFlow()
     val configFlow = _config.asStateFlow()
+
+    private val savedProjectDao = SavedProjectDatabase.getDatabase().savedProjectDao()
 
     fun setCoordinates(longitude: Double, latitude: Double) {
         _config.value = _config.value.copy(longitude = longitude, latitude = latitude)
@@ -70,6 +82,7 @@ class HomeViewModel : ViewModel() {
         _config.value = _config.value.copy(adress = address)
     }
 
+
     fun setGeoAddress(point: Point) {
         getAdressOfPoint(point) {
             setAddress(it)
@@ -77,6 +90,7 @@ class HomeViewModel : ViewModel() {
     }
 
     private val savedProjectDao = SavedProjectDatabase.getDatabase().savedProjectDao()
+
     fun saveProject() {
         viewModelScope.launch {
             savedProjectDao.insert(
@@ -97,7 +111,6 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-
     fun setIncline(incline: Float) {
         _config.value = _config.value.copy(incline = incline)
     }
@@ -116,7 +129,7 @@ class HomeViewModel : ViewModel() {
     }
 
     fun setPolygon(polygon: List<List<Point>>?) {
-        Log.d("HomeViewModel", "Setting polygon: $polygon")
+        Log.d(TAG, "Setting polygon: $polygon")
         _config.value = _config.value.copy(polygon = polygon)
     }
 
@@ -143,9 +156,10 @@ class HomeViewModel : ViewModel() {
                 _config.value.incline,
                 _config.value.vinkel
             )
-            _apiData.value = _apiData.value.copy(sunRadiation = radiationData) // Update API data
-            Log.d("HomeViewModel", "Radiation data: $radiationData")
+            _apiData.value = _apiData.value.copy(sunRadiation = radiationData)
+            Log.d(TAG, "Radiation data: $radiationData")
         }
+
     }
 
     fun updateKwhMonthly(pvTech: PvTech = PvTech.CRYST_SI) {
@@ -159,8 +173,8 @@ class HomeViewModel : ViewModel() {
                 peakPower,
                 pvTech
             )
-            _apiData.value = _apiData.value.copy(kwhMonthlyData = monthlyKwhData) // Update API data
-            Log.d("HomeViewModel", "Monthly kwh data: $monthlyKwhData")
+            _apiData.value = _apiData.value.copy(kwhMonthlyData = monthlyKwhData)
+            Log.d(TAG, "Monthly kwh data: $monthlyKwhData")
         }
     }
 
@@ -169,18 +183,43 @@ class HomeViewModel : ViewModel() {
     private fun updateWeatherData() {
         viewModelScope.launch {
             try {
-                val referenceTime = frostRepository.getLast24HoursReferenceTime()
+                val referenceTime = frostRepository.get1YearReferenceTime()
                 val weather = frostRepository.getWeatherByCoordinates(
                     latitude = _config.value.latitude,
                     longitude = _config.value.longitude,
                     referenceTime = referenceTime
                 )
-                _apiData.value = _apiData.value.copy(weatherData = weather) // Update API data
-                Log.d("HomeViewModel", "Weather data: $weather")
+                when (weather) {
+                    is FrostResult.Success -> {
+                        val displayData = weather.data.map { it.toDisplayWeather() }
+                        displayData.forEachIndexed { index, displayWeather ->
+                            Log.d(TAG, "DisplayWeather [$index]: month=${displayWeather.month}, temp=${displayWeather.temp}, snow=${displayWeather.snow}, cloud=${displayWeather.cloud}")
+                        }
+                        _apiData.value = _apiData.value.copy(weatherData = displayData)
+                        Log.d(TAG, "Weather data updated: $displayData")
+                    }
+                    is FrostResult.Failure -> {
+                        _apiData.value = _apiData.value.copy(weatherData = emptyList())
+                        Log.e(TAG, "Failed to fetch weather data: ${weather.message}")
+                    }
+                }
             } catch (e: Exception) {
-                Log.e("HomeViewModel", "Failed to fetch weather data: ${e.message}")
-                _apiData.value = _apiData.value.copy(weatherData = emptyList()) // Clear weather data on failure
+                _apiData.value = _apiData.value.copy(weatherData = emptyList())
+                Log.e(TAG, "Exception fetching weather data: ${e.message}", e)
             }
         }
+    }
+
+    // Transform FrostData to DisplayWeather
+    private fun FrostData.toDisplayWeather(): DisplayWeather {
+        val dateFormat = SimpleDateFormat("MMM yyyy", Locale.getDefault())
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val date = inputFormat.parse(referenceTime) ?: Date()
+        return DisplayWeather(
+            month = dateFormat.format(date),
+            temp = String.format("%.1f°C", temperature),
+            snow = String.format("%.1f", snow),
+            cloud = String.format("%.1f%%", cloudAreaFraction)
+        )
     }
 }

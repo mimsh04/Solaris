@@ -1,7 +1,6 @@
 package in2000.team42.ui.screens.home.bottomSheet
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -25,7 +24,7 @@ fun AdresseFelt(adresse: String, modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .width(270.dp),
                 maxLines = 1,
-                fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                style = MaterialTheme.typography.titleLarge,
                 overflow = TextOverflow.Ellipsis
             )
         }

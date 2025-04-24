@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.composables.core.DragIndication
 import com.composables.core.SheetDetent
 import com.composables.core.rememberBottomSheetState
+import in2000.team42.model.solarPanels.defaultPanels
 import in2000.team42.ui.screens.home.HomeViewModel
 import kotlinx.coroutines.launch
 
@@ -70,7 +71,9 @@ fun BottomSheet(
         state = sheetState
     ) {
         Box(
-            modifier = Modifier.fillMaxWidth().height(1200.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1200.dp),
             contentAlignment = Alignment.TopCenter
         ) {
             DragIndication(
@@ -103,14 +106,20 @@ fun BottomSheet(
                             onDirectionChange = { viewModel.setVinkel(it) }
                         )
                     }
+                    item { // Added item for dropdown
+
+                        SolcelleDropdown(
+                            panelOptions = defaultPanels,
+                            selectedPanel = config.value.selectedPanelModel,
+                            onPanelSelected = { viewModel.setSelectedSolarPanel(it) },
+                        )
+                        Spacer(Modifier.height(8.dp))
+                    }
 
                     /*item {
                         StrommenContent()
                     }*/
 
-                    item {
-                        SolcelleInputs(viewModel) // Assuming this component accepts HomeViewModel directly
-                    }
 
                     item {
                         Produksjon(apiData.value) // Assuming this component accepts HomeViewModel directly
@@ -137,7 +146,7 @@ fun BottomSheet(
             hostState = snackbarHostState,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom=16.dp)
+                .padding(bottom = 16.dp)
         )
     }
 }

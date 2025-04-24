@@ -24,6 +24,7 @@ import in2000.team42.ui.screens.Screen
 import in2000.team42.ui.screens.home.HomeScreen
 import in2000.team42.ui.screens.settings.SettingsScreen
 import android.Manifest
+import androidx.compose.runtime.mutableStateOf
 import in2000.team42.ui.screens.guide.InstallasjonScreen
 import in2000.team42.data.saved.*
 import in2000.team42.ui.screens.home.HomeViewModel
@@ -74,11 +75,13 @@ class MainActivity : ComponentActivity() {
                         popEnterTransition = { EnterTransition.None },
                         popExitTransition = { ExitTransition.None }
                     ) {
+                        val projectSharedState = mutableStateOf<SavedProjectEntity?>(null)
                         composable(Screen.Home.route){
                             // Pass the shared ViewModel instead of creating a new one
                             HomeScreen(
                                 navController,
                                 viewModel = homeViewModel,
+                                projectSharedState = projectSharedState,
                                 modifier = Modifier.padding(innerPadding)
                             )
                         }
@@ -92,7 +95,8 @@ class MainActivity : ComponentActivity() {
                             SavedScreen(
                                 navController,
                                 Modifier.padding(innerPadding),
-                                viewModel = projectViewModel  // Use the shared ProjectViewModel
+                                viewModel = projectViewModel,
+                                projectSharedState = projectSharedState
                             )
                         }
 

@@ -99,14 +99,11 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    fun getSavedProjects(): Flow<List<SavedProjectEntity>> {
-        return savedProjectDao.getAllProjects()
-    }
-
-    fun deleteProject(project: SavedProjectEntity) {
-        viewModelScope.launch {
-            savedProjectDao.delete(project)
-        }
+    fun loadProject(project: SavedProjectEntity) {
+        _config.value = project.config.copy(
+            bottomSheetDetent = "medium" // Force sheet to expand
+        )
+        updateAllApi()
     }
 
     fun setIncline(incline: Float) {

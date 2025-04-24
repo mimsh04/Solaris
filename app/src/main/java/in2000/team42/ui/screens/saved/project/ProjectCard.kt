@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,7 +36,7 @@ import in2000.team42.data.saved.SavedProjectEntity
 fun ProjectCard(
     project: SavedProjectEntity,
     onClick: () -> Unit = {},
-    isInSwipeContext: Boolean = false
+    isInSwipeContext: Boolean
 ) {
     Card(
         modifier = Modifier
@@ -115,6 +114,8 @@ fun ProjectCard(
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
                     .padding(end = 16.dp)
+                    .clickable {
+                    }
             )
         }
 

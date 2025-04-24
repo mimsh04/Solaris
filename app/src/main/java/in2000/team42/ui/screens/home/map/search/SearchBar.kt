@@ -43,7 +43,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun SearchBar(
     placeAutocomplete: PlaceAutocomplete,
-    onLocationSelected: (Point, String) -> Unit,
+    onLocationSelected: (Point) -> Unit,
     modifier: Modifier = Modifier,
     isMapClicked: Boolean = false
 ) {
@@ -67,7 +67,7 @@ fun SearchBar(
                 val result = placeAutocomplete.select(suggestion)
                 val point = result.value?.coordinate!!
                 focusManager.clearFocus()
-                onLocationSelected(point, suggestion.name)
+                onLocationSelected(point)
                 searchQuery = suggestion.name
                 isExpanded = false
             } catch (e: Exception) {

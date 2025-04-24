@@ -20,15 +20,17 @@ import in2000.team42.ui.screens.home.HomeViewModel
 import kotlinx.coroutines.launch
 
 
-val Peek = SheetDetent("peek") { containerHeight, _ ->
+val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
     containerHeight * 1f
 }
 
-val Medium = SheetDetent(identifier = "medium") { containerHeight, _ ->
+val Medium = SheetDetent(identifier = "medium") {
+        containerHeight, sheetHeight ->
     containerHeight * 0.6f
 }
 
-val Closed = SheetDetent(identifier = "closed") { containerHeight, _ ->
+val Closed = SheetDetent(identifier = "closed") {
+        containerHeight, sheetHeight ->
     containerHeight * 0.3f
 }
 
@@ -37,41 +39,26 @@ fun BottomSheet(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel
 ) {
-    val configState = viewModel.configFlow.collectAsState()
-    val apiDataState = viewModel.apiDataFlow.collectAsState()
+    val config = viewModel.configFlow.collectAsState() // Collecting Config state
+    val apiData = viewModel.apiDataFlow.collectAsState() // Collecting API data state
     val focusManager = LocalFocusManager.current
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val showGreeting = remember { mutableStateOf(true) }
-
-    val initialConfig = remember { configState.value }
-    val initialApiData = remember { apiDataState.value }
-
-    val detents = remember { listOf(Peek, Medium, Closed) }
-    val initialDetentObject = Medium
-    val initialDetentIdentifier = initialDetentObject.identifier
-
-    val sheetState = rememberBottomSheetState(
-        initialDetent = initialDetentObject,
-        detents = detents
+    val detents = listOf(
+        Peek,
+        Medium,
+        Closed,
     )
 
-    // Fjerner greeting ved bruk av funksjoner
+    val sheetState = rememberBottomSheetState(initialDetent = detents.find {
+        it.identifier == config.value.bottomSheetDetent
+    }!!, detents = detents)
 
-    LaunchedEffect(apiDataState.value, configState.value, initialApiData, initialConfig) {
-        if (showGreeting.value && (apiDataState.value != initialApiData || configState.value != initialConfig)) {
-            showGreeting.value = false
-        }
-    }
 
     LaunchedEffect(sheetState.currentDetent) {
         focusManager.clearFocus()
         viewModel.setBottomSheetDetent(sheetState.currentDetent.identifier)
-
-        if (showGreeting.value && sheetState.currentDetent.identifier != initialDetentIdentifier) {
-            showGreeting.value = false
-        }
     }
 
     com.composables.core.BottomSheet(
@@ -82,82 +69,75 @@ fun BottomSheet(
             .background(MaterialTheme.colorScheme.background),
         state = sheetState
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 50.dp, bottom = 70.dp)
-                    .align(Alignment.TopCenter)
-            ) {
-                // Legger inn greeting først
-                if (showGreeting.value) {
-                    GreetingContent(
-                    )
-                } else {
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(1),
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 16.dp)
-                    ) {
-                        // BottomSheet innhold
-                        item {
-                            Vinkelinputs(
-                                incline = configState.value.incline,
-                                direction = configState.value.vinkel,
-                                onInclineChange = { viewModel.setIncline(it) },
-                                onDirectionChange = { viewModel.setVinkel(it) }
-                            )
-                            Spacer(Modifier.height(8.dp))
-                        }
-                        /*item {
-                            StrommenContent()
-                            Spacer(Modifier.height(8.dp))
-                        }*/
-                        item {
-                            SolcelleInputs(viewModel)
-                            Spacer(Modifier.height(8.dp))
-                        }
-                        item {
-                            Produksjon(apiDataState.value)
-                        }
-                        item {
-                            Button(
-                                onClick = {
-                                    viewModel.saveProject()
-                                    scope.launch {
-                                        snackbarHostState.showSnackbar(
-                                            message = "Prosjekt lagret!",
-                                            duration = SnackbarDuration.Short
-                                        )
-                                    }
-                                },
-                                modifier = Modifier.padding(top = 16.dp)
-                            ) { Text("Lagre prosjekt") }
-                        }
-                        item { Spacer(Modifier.height(16.dp)) }
-                    }
-                }
-            }
-
+        Box(
+            modifier = Modifier.fillMaxWidth().height(1200.dp),
+            contentAlignment = Alignment.TopCenter
+        ) {
             DragIndication(
                 modifier = Modifier
-                    .align(Alignment.TopCenter)
                     .padding(top = 22.dp)
                     .background(Color.Black.copy(0.4f), RoundedCornerShape(100))
                     .width(32.dp)
                     .height(4.dp)
             )
+            if (config.value.adress == "") {
+                GreetingContent( modifier = Modifier.padding(top = 40.dp)
+                )
+            } else {
 
-            SnackbarHost(
-                hostState = snackbarHostState,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 16.dp)
-            )
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(1),
+                    modifier = Modifier
+                        .padding(bottom = 16.dp)
+                        .padding(horizontal = 16.dp)
+                        .padding(top = 40.dp)
+                ) {
+                    item {
+                        AdresseFelt(config.value.adress)
+                    }
+                    item {
+                        Vinkelinputs(
+                            incline = config.value.incline,
+                            direction = config.value.vinkel,
+                            onInclineChange = { viewModel.setIncline(it) },
+                            onDirectionChange = { viewModel.setVinkel(it) }
+                        )
+                    }
+
+                    /*item {
+                        StrommenContent()
+                    }*/
+
+                    item {
+                        SolcelleInputs(viewModel) // Assuming this component accepts HomeViewModel directly
+                    }
+
+                    item {
+                        Produksjon(apiData.value) // Assuming this component accepts HomeViewModel directly
+                    }
+                    item {
+                        Button(
+                            onClick = {
+                                viewModel.saveProject()
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = "Prosjekt lagret!",
+                                        duration = SnackbarDuration.Short //hvor langt skal melding vises
+                                    )
+                                }
+                            },
+                            modifier = Modifier.padding(16.dp)
+                        )
+                        { Text("Lagre prosjekt") }
+                    }
+                }
+            }
         }
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom=16.dp)
+        )
     }
 }

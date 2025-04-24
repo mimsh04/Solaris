@@ -56,7 +56,9 @@ fun BottomSheet(
         Closed,
     )
     // alle høydene sheeten kan ligge
-    val sheetState = rememberBottomSheetState(initialDetent = Medium, detents = detents)
+    val sheetState = rememberBottomSheetState(initialDetent = detents.find {
+        it.identifier == config.value.bottomSheetDetent
+    }!!, detents = detents)
 
 
     LaunchedEffect(sheetState.currentDetent) {
@@ -90,7 +92,9 @@ fun BottomSheet(
                     .padding(horizontal = 16.dp)
                     .padding(top = 40.dp)
             ) {
-
+                item {
+                    AdresseFelt(config.value.adress)
+                }
                 item {
                     Vinkelinputs(
                         incline = config.value.incline,

@@ -93,7 +93,17 @@ fun BottomSheet(
                         .padding(top = 40.dp)
                 ) {
                     item {
-                        AdresseFelt(config.value.adress)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            AdresseFelt(config.value.adress)
+                            ArealFelt(config.value.areal, modifier = Modifier
+                                .padding(top = 8.dp)
+                            )
+
+                        }
+
                     }
                     item {
                         Vinkelinputs(
@@ -104,14 +114,11 @@ fun BottomSheet(
                         )
                     }
 
-                    /*item {
-                        StrommenContent()
-                    }*/
-
                     item {
-                        SolcelleInputs(viewModel) // Assuming this component accepts HomeViewModel directly
+                        UpdateApiButton {
+                            viewModel.updateAllApi()
+                        }
                     }
-
                     item {
                         Produksjon(apiData.value) // Assuming this component accepts HomeViewModel directly
                     }

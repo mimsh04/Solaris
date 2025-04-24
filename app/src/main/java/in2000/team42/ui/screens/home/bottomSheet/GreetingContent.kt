@@ -36,7 +36,7 @@ fun GreetingContent(modifier: Modifier = Modifier) {
 
         // Rask guide
         Text(
-            text = "For å starte, søk etter en adresse i feltet over.",
+            text = "For å starte, søk etter en adresse i feltet over og trykket på bygget som skal ha solcellepaneler.",
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center
         )

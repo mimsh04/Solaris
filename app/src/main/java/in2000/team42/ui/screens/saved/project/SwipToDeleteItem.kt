@@ -102,20 +102,28 @@ fun SwipeToDeleteItem(
                 isInSwipeContext = true
             )
 
-        }
+            Box(
+                modifier=Modifier
+                    .fillMaxHeight()
+                    .align(Alignment.CenterEnd),
+                contentAlignment = Alignment.Center
+            ){
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = "Arrow",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(end = 16.dp)
+                        .size(30.dp)
+                        .clickable {
+                            swipeOffset = if (swipeOffset == 0f) -maxSwipeDistance else 0f
+                        }
+                )
 
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            contentDescription = "Arrow",
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(end = 16.dp)
-                .size(30.dp)
-                .clickable {
-                    swipeOffset = if (swipeOffset == 0f) -maxSwipeDistance else 0f
-                }
-        )
+            }
+
+        }
 
     }
 

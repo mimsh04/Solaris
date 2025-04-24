@@ -42,7 +42,7 @@ fun WeatherIconButton(
     val iconResource = when {
         latestWeather == null -> R.drawable.ic_unknown_weather
         snowValue > 0.0 -> R.drawable.ic_snow_cloud
-        cloudValue > 50.0 -> R.drawable.ic_cloudy
+        cloudValue > 70.0 -> R.drawable.ic_cloudy
         else -> R.drawable.ic_sol
     }
 

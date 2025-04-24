@@ -94,9 +94,12 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.Saved.route) {
                             SavedScreen(
                                 navController,
-                                Modifier.padding(innerPadding),
+                                modifier = Modifier.padding(innerPadding),
                                 viewModel = projectViewModel,
-                                projectSharedState = projectSharedState
+                                onProjectClick = { project ->
+                                    homeViewModel.loadProject(project)
+                                    navController.navigate(Screen.Home.route)
+                                }
                             )
                         }
 

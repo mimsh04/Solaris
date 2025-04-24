@@ -103,7 +103,9 @@ class HomeViewModel : ViewModel() {
         _config.value = project.config.copy(
             bottomSheetDetent = "medium" // Force sheet to expand
         )
-        updateAllApi()
+        viewModelScope.launch {
+            updateAllApi()
+        }
     }
 
     fun setIncline(incline: Float) {

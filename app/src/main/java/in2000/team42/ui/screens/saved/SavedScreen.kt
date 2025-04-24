@@ -27,7 +27,7 @@ fun SavedScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
     viewModel: ProjectViewModel,
-    projectSharedState: MutableState<SavedProjectEntity?>
+    onProjectClick: (SavedProjectEntity) -> Unit // Add this parameter
 ) {
     val savedProjects = viewModel.savedProjects.collectAsState(initial = emptyList())
 
@@ -80,10 +80,7 @@ fun SavedScreen(
                         project = project,
                         onDeleteConfirmed = { viewModel.deleteProject(it) },
                         onClick = {
-                            projectSharedState.value = project
-                            navController.navigate(Screen.Home.route) {
-                                popUpTo(Screen.Home.route) { inclusive = true }
-                            }
+                            onProjectClick(project)
                         }
                     )
                     Spacer(modifier = Modifier.height(8.dp))

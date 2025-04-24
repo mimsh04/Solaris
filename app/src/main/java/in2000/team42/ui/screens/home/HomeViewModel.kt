@@ -4,13 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mapbox.geojson.Point
-import com.mapbox.search.ApiType
-import com.mapbox.search.ResponseInfo
-import com.mapbox.search.ReverseGeoOptions
-import com.mapbox.search.SearchCallback
-import com.mapbox.search.SearchEngine
-import com.mapbox.search.SearchEngineSettings
-import com.mapbox.search.result.SearchResult
 import in2000.team42.data.frost.FrostDatasource
 import in2000.team42.data.frost.FrostRepository
 import in2000.team42.data.frost.model.FrostData
@@ -21,6 +14,8 @@ import in2000.team42.data.pgvis.model.DailyProfile
 import in2000.team42.data.pgvis.PvTech
 import in2000.team42.data.pgvis.model.KwhMonthlyResponse
 import in2000.team42.data.saved.*
+import in2000.team42.model.solarPanels.SolarPanelModel
+import in2000.team42.model.solarPanels.defaultPanels
 import in2000.team42.ui.screens.home.map.getAdressOfPoint
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,6 +24,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+
 
 // Data class to hold API-related data
 data class ApiData(
@@ -44,10 +40,10 @@ data class Config(
     var incline: Float = 35f,
     var vinkel: Float = 0f,
     var areal: Float = 1f,
-    var solcelleEffekt: Float = 15f,
     var polygon: List<List<Point>>? = null,
     var bottomSheetDetent: String = "medium",
     var adress: String = "",
+    var selectedPanelModel: SolarPanelModel = defaultPanels[0]
 )
 
 // Display-friendly data class for weather
@@ -62,6 +58,7 @@ class HomeViewModel : ViewModel() {
     private val radiationRepository = PgvisRepository(PgvisDatasource())
     private val frostRepository = FrostRepository(FrostDatasource())
     private val TAG = "HomeViewModel"
+
 
     private val config = Config() // Instance of the Config class
     private val apiData = ApiData() // Instance of the ApiData class
@@ -122,8 +119,9 @@ class HomeViewModel : ViewModel() {
         _config.value = _config.value.copy(areal = areal)
     }
 
-    fun setSolcelleEffekt(solcelleEffekt: Float) {
-        _config.value = _config.value.copy(solcelleEffekt = solcelleEffekt)
+    fun setSelectedSolarPanel(panel: SolarPanelModel) {
+        Log.d(TAG, "Panel selected: ${panel.name}")
+        _config.value = _config.value.copy(selectedPanelModel = panel)
     }
 
     fun setPolygon(polygon: List<List<Point>>?) {
@@ -176,7 +174,7 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    private fun calculatePeakPower() = _config.value.solcelleEffekt / 100 * _config.value.areal
+    private fun calculatePeakPower() = _config.value.selectedPanelModel.efficiency / 100 * _config.value.areal
 
     private fun updateWeatherData() {
         viewModelScope.launch {

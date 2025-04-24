@@ -77,7 +77,7 @@ fun SavedScreen(
                     SwipeToDeleteItem(
                         project = project,
                         onDeleteConfirmed = { viewModel.deleteProject(it) },
-                        onClick = {  navController.navigate("settings/${project.id}")}
+                        onClick = {}
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }

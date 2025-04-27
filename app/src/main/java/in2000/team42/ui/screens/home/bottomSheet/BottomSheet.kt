@@ -10,7 +10,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.composables.core.DragIndication
@@ -20,18 +19,15 @@ import in2000.team42.model.solarPanels.defaultPanels
 import in2000.team42.ui.screens.home.HomeViewModel
 import kotlinx.coroutines.launch
 
-
 val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
     containerHeight * 1f
 }
 
-val Medium = SheetDetent(identifier = "medium") {
-        containerHeight, sheetHeight ->
+val Medium = SheetDetent(identifier = "medium") { containerHeight, sheetHeight ->
     containerHeight * 0.6f
 }
 
-val Closed = SheetDetent(identifier = "closed") {
-        containerHeight, sheetHeight ->
+val Closed = SheetDetent(identifier = "closed") { containerHeight, sheetHeight ->
     containerHeight * 0.3f
 }
 
@@ -40,22 +36,17 @@ fun BottomSheet(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel
 ) {
-    val config = viewModel.configFlow.collectAsState() // Collecting Config state
-    val apiData = viewModel.apiDataFlow.collectAsState() // Collecting API data state
+    val config = viewModel.configFlow.collectAsState()
+    val apiData = viewModel.apiDataFlow.collectAsState()
     val focusManager = LocalFocusManager.current
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val detents = listOf(
-        Peek,
-        Medium,
-        Closed,
+    val detents = listOf(Peek, Medium, Closed)
+    val sheetState = rememberBottomSheetState(
+        initialDetent = detents.find { it.identifier == config.value.bottomSheetDetent }!!,
+        detents = detents
     )
-
-    val sheetState = rememberBottomSheetState(initialDetent = detents.find {
-        it.identifier == config.value.bottomSheetDetent
-    }!!, detents = detents)
-
 
     LaunchedEffect(sheetState.currentDetent) {
         focusManager.clearFocus()
@@ -79,15 +70,16 @@ fun BottomSheet(
             DragIndication(
                 modifier = Modifier
                     .padding(top = 22.dp)
-                    .background(Color.Black.copy(0.4f), RoundedCornerShape(100))
+                    .background(
+                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
+                        RoundedCornerShape(100)
+                    )
                     .width(32.dp)
                     .height(4.dp)
             )
             if (config.value.adress == "") {
-                GreetingContent( modifier = Modifier.padding(top = 40.dp)
-                )
+                GreetingContent(modifier = Modifier.padding(top = 40.dp))
             } else {
-
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(1),
                     modifier = Modifier
@@ -101,12 +93,11 @@ fun BottomSheet(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             AdresseFelt(config.value.adress)
-                            ArealFelt(config.value.areal, modifier = Modifier
-                                .padding(top = 8.dp)
+                            ArealFelt(
+                                config.value.areal,
+                                modifier = Modifier.padding(top = 8.dp)
                             )
-
                         }
-
                     }
                     item {
                         Vinkelinputs(
@@ -116,8 +107,7 @@ fun BottomSheet(
                             onDirectionChange = { viewModel.setVinkel(it) }
                         )
                     }
-                    item { // Added item for dropdown
-
+                    item {
                         SolcelleDropdown(
                             panelOptions = defaultPanels,
                             selectedPanel = config.value.selectedPanelModel,
@@ -125,14 +115,13 @@ fun BottomSheet(
                         )
                         Spacer(Modifier.height(8.dp))
                     }
-
                     item {
                         UpdateApiButton {
                             viewModel.updateAllApi()
                         }
                     }
                     item {
-                        Produksjon(apiData.value) // Assuming this component accepts HomeViewModel directly
+                        Produksjon(apiData.value)
                     }
                     item {
                         Button(
@@ -141,13 +130,12 @@ fun BottomSheet(
                                 scope.launch {
                                     snackbarHostState.showSnackbar(
                                         message = "Prosjekt lagret!",
-                                        duration = SnackbarDuration.Short //hvor langt skal melding vises
+                                        duration = SnackbarDuration.Short
                                     )
                                 }
                             },
                             modifier = Modifier.padding(16.dp)
-                        )
-                        { Text("Lagre prosjekt") }
+                        ) { Text("Lagre prosjekt") }
                     }
                 }
             }

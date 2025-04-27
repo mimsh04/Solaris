@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import in2000.team42.data.saved.SavedProjectEntity
@@ -22,9 +21,9 @@ fun YearlySummary(project: SavedProjectEntity) {
     }
 
     Column(Modifier.padding(16.dp)
-        .background(Color.Yellow)) {
-        Text("Project Stats", fontWeight = FontWeight.Bold, color= Color.Black)
-        Text("Energy: $randomEnergy kWh", color= Color.Black)
+        .background(MaterialTheme.colorScheme.primary)) {
+        Text("Project Stats", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onPrimary)
+        Text("Energy: $randomEnergy kWh", color = MaterialTheme.colorScheme.onPrimary)
     }
 }
 @Composable
@@ -52,7 +51,7 @@ private fun NoProjectMessage() {
     ) {
         Text(
             text = "Oops! No project selected",
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.bodyLarge
         )
     }

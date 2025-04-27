@@ -25,6 +25,7 @@ fun ArealFelt(areal: Float, modifier: Modifier = Modifier) {
         Text(
             text = String.format("%.2f m²", areal),
             style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onBackground
         )
         Image(
             painter = painterResource(id = R.drawable.square),

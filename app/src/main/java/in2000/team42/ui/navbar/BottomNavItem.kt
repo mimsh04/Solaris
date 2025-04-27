@@ -11,7 +11,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 /**
@@ -22,7 +21,7 @@ import androidx.compose.ui.unit.dp
  * @param isSelected Whether this item is currently selected.
  */
 @Composable
- fun BottomNavItem(
+fun BottomNavItem(
     modifier: Modifier = Modifier,
     navItem: NavItem,
     isSelected: Boolean,
@@ -87,6 +86,7 @@ import androidx.compose.ui.unit.dp
             ) {
                 Text(
                     text = navItem.title,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(start = 8.dp, end = 10.dp),
                     maxLines = 1,
                 )

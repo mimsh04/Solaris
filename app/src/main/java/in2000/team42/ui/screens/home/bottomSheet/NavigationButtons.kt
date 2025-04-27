@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
-
 @Composable
 fun NavigationButtons(
     onPrevious: () -> Unit,
@@ -36,7 +35,6 @@ fun NavigationButtons(
             onClick = onNext,
             enabled = enabled,
             modifier = Modifier
-
         ) {
             Icon(
                 imageVector = Icons.Default.ArrowForward,

@@ -15,7 +15,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
@@ -40,13 +39,11 @@ fun SwipeToDeleteItem(
     var swipeOffset by remember { mutableFloatStateOf(0f) }
     var showDeleteConfirmationDialog by remember { mutableStateOf(false) }
     val maxSwipeDistance = with(LocalDensity.current) { 80.dp.toPx() }
-    val deleteButtonBackgroundColor = Color(0xFFEB5545)
 
     val animatedSwipeOffset by animateFloatAsState(
         targetValue = swipeOffset,
         animationSpec = tween(durationMillis = 300)
     )
-
 
     Box(
         modifier = Modifier
@@ -61,7 +58,7 @@ fun SwipeToDeleteItem(
                 .width(80.dp)
                 .fillMaxHeight()
                 .background(
-                    color = deleteButtonBackgroundColor,
+                    color = MaterialTheme.colorScheme.error,
                     shape = RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp)
                 )
                 .clickable { showDeleteConfirmationDialog = true },

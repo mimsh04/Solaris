@@ -19,7 +19,7 @@ fun DeleteDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Slett Prosjekt") },
+        title = { Text("Slett prosjekt") },
         text = { Text("Er du sikker på at du vil slette dette prosjektet?") },
         confirmButton = {
             TextButton(

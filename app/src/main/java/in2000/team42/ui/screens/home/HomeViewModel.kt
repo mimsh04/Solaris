@@ -96,13 +96,12 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    fun getSavedProjects(): Flow<List<SavedProjectEntity>> {
-        return savedProjectDao.getAllProjects()
-    }
-
-    fun deleteProject(project: SavedProjectEntity) {
+    fun loadProject(project: SavedProjectEntity) {
+        _config.value = project.config.copy(
+            bottomSheetDetent = "medium" // Force sheet to expand
+        )
         viewModelScope.launch {
-            savedProjectDao.delete(project)
+            updateAllApi()
         }
     }
 

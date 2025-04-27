@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -229,5 +230,17 @@ fun Map(
             modifier = Modifier.padding(top = 26.dp),
             isMapClicked = mapClicked
         )
+    }
+    LaunchedEffect(config.value.latitude, config.value.longitude) {
+        if (config.value.latitude != 0.0 && config.value.longitude != 0.0) {
+            val point = Point.fromLngLat(config.value.longitude, config.value.latitude)
+            mapViewportState.easeTo(
+                cameraOptions = CameraOptions.Builder()
+                    .center(point)
+                    .zoom(18.0)
+                    .build()
+            )
+            loadHouse(point) // Will update polygon and area
+        }
     }
 }

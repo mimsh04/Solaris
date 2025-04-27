@@ -24,6 +24,9 @@ import in2000.team42.ui.screens.Screen
 import in2000.team42.ui.screens.home.HomeScreen
 import in2000.team42.ui.screens.settings.SettingsScreen
 import android.Manifest
+import androidx.compose.animation.*
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import in2000.team42.ui.screens.guide.InstallasjonScreen
 import in2000.team42.data.saved.*
 import in2000.team42.ui.screens.home.HomeViewModel
@@ -61,6 +64,8 @@ class MainActivity : ComponentActivity() {
             val homeViewModel: HomeViewModel = viewModel()
             val projectViewModel: ProjectViewModel = viewModel()
 
+            val projectSharedState = remember { mutableStateOf<SavedProjectEntity?>(null) }
+
             IN2000_team42Theme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
@@ -69,8 +74,8 @@ class MainActivity : ComponentActivity() {
                     NavHost(
                         navController = navController,
                         startDestination = Screen.Home.route,
-                        enterTransition = { EnterTransition.None},
-                        exitTransition = { ExitTransition.None },
+                        enterTransition = { fadeIn()},
+                        exitTransition = { fadeOut() },
                         popEnterTransition = { EnterTransition.None },
                         popExitTransition = { ExitTransition.None }
                     ) {
@@ -79,6 +84,7 @@ class MainActivity : ComponentActivity() {
                             HomeScreen(
                                 navController,
                                 viewModel = homeViewModel,
+                                projectSharedState = projectSharedState,
                                 modifier = Modifier.padding(innerPadding)
                             )
                         }
@@ -91,8 +97,12 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.Saved.route) {
                             SavedScreen(
                                 navController,
-                                Modifier.padding(innerPadding),
-                                viewModel = projectViewModel  // Use the shared ProjectViewModel
+                                modifier = Modifier.padding(innerPadding),
+                                viewModel = projectViewModel,
+                                onProjectClick = { project ->
+                                    homeViewModel.loadProject(project)
+                                    navController.navigate(Screen.Home.route)
+                                }
                             )
                         }
 

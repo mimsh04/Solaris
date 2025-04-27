@@ -18,6 +18,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import in2000.team42.R
+import in2000.team42.data.saved.SavedProjectEntity
 import in2000.team42.ui.screens.saved.project.ProjectViewModel
 
 
@@ -25,7 +26,8 @@ import in2000.team42.ui.screens.saved.project.ProjectViewModel
 fun SavedScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    viewModel: ProjectViewModel
+    viewModel: ProjectViewModel,
+    onProjectClick: (SavedProjectEntity) -> Unit // Add this parameter
 ) {
     val savedProjects = viewModel.savedProjects.collectAsState(initial = emptyList())
 
@@ -77,7 +79,9 @@ fun SavedScreen(
                     SwipeToDeleteItem(
                         project = project,
                         onDeleteConfirmed = { viewModel.deleteProject(it) },
-                        onClick = {  navController.navigate("settings/${project.id}")}
+                        onClick = {
+                            onProjectClick(project)
+                        }
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }

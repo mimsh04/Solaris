@@ -206,7 +206,7 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    // Transform FrostData to DisplayWeather
+    // Transformerer FrostData til DisplayData for enklere håndtering
     private fun FrostData.toDisplayWeather(): DisplayWeather {
         val dateFormat = SimpleDateFormat("MMM yyyy", Locale.getDefault())
         val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())

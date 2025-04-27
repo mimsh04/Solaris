@@ -109,5 +109,8 @@ dependencies {
     implementation("com.composables:core:1.20.1")
     implementation("androidx.compose.material:material-icons-core:1.6.7")
 
+    testImplementation (libs.mockwebserver.v4120)
+    androidTestImplementation (libs.mockwebserver.v4120)
+
 
 }

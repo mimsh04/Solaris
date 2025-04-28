@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,7 +33,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,13 +41,14 @@ import in2000.team42.ui.screens.faq.FaqDialog
 import in2000.team42.ui.screens.guide.InstallasjonScreen
 
 @Composable
-fun LurerDuPaaNoe(navController: NavController,showFAQ:Boolean,onShowFAQchange:(Boolean)->Unit){
-    val gridState= rememberLazyGridState()
+fun LurerDuPaaNoe(navController: NavController, showFAQ: Boolean, onShowFAQchange: (Boolean) -> Unit) {
+    val gridState = rememberLazyGridState()
 
     Text(
         text = "Lurer du på noe?",
         fontWeight = FontWeight.Bold,
         fontSize = 30.sp,
+        color = MaterialTheme.colorScheme.onBackground,
         modifier = Modifier
             .padding(top = 25.dp, bottom = 10.dp)
             .fillMaxWidth()
@@ -60,7 +61,6 @@ fun LurerDuPaaNoe(navController: NavController,showFAQ:Boolean,onShowFAQchange:(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
-
     ) {
         items(2) { index ->
             val text = if (index == 0) "Installasjons\nGuide" else "FAQs"
@@ -71,49 +71,45 @@ fun LurerDuPaaNoe(navController: NavController,showFAQ:Boolean,onShowFAQchange:(
                 else -> Icons.Default.Edit
             }
 
-
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(100.dp)
                     .clip(RoundedCornerShape(10.dp))
-                    .background(Color.White)
-                    .border(1.dp, Color.Gray, RoundedCornerShape(10.dp))
+                    .background(MaterialTheme.colorScheme.surface)
+                    .border(1.dp, MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f), RoundedCornerShape(10.dp))
                     .clickable {
-                        if(index==0){
+                        if (index == 0) {
                             navController.navigate("installasjonsguide")
-                        }
-                        else{
+                        } else {
                             onShowFAQchange(true)
                         }
                     }
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(top = 30.dp, start = 10.dp)
                 ) {
                     Icon(
                         imageVector = icon,
                         contentDescription = null,
-                        tint = Color.Unspecified,
+                        tint = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.size(30.dp)
-
                     )
                 }
                 Text(
                     text = text,
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(start = 50.dp, top = 30.dp)
                 )
-
             }
-
         }
     }
 
-    if(showFAQ){
-        FaqDialog(onDismiss = {onShowFAQchange(false)})
+    if (showFAQ) {
+        FaqDialog(onDismiss = { onShowFAQchange(false) })
     }
 }

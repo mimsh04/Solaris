@@ -11,7 +11,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.unit.dp
 
-
 @Composable
 fun RegionSelector(
     selectedRegion: String,
@@ -48,11 +47,13 @@ fun RegionSelector(
             ) {
                 Text(
                     text = "Region: $selectedDisplayName",
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer
                 )
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,
-                    contentDescription = "Velg region"
+                    contentDescription = "Velg region",
+                    tint = MaterialTheme.colorScheme.onSecondaryContainer
                 )
             }
         }
@@ -65,7 +66,7 @@ fun RegionSelector(
         ) {
             regions.forEach { (regionCode, displayName) ->
                 DropdownMenuItem(
-                    text = { Text(displayName, style = MaterialTheme.typography.bodyMedium) },
+                    text = { Text(displayName, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurface) },
                     onClick = {
                         onRegionSelected(regionCode)
                         expanded = false

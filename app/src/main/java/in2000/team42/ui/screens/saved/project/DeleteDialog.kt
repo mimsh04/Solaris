@@ -1,10 +1,10 @@
 package in2000.team42.ui.screens.saved.project
 
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 
 /**
  * A confirmation dialog shown before deleting a project.
@@ -19,20 +19,20 @@ fun DeleteDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Slett prosjekt") },
-        text = { Text("Er du sikker på at du vil slette dette prosjektet?") },
+        title = { Text("Slett prosjekt", color = MaterialTheme.colorScheme.onSurface) },
+        text = { Text("Er du sikker på at du vil slette dette prosjektet?", color = MaterialTheme.colorScheme.onSurface) },
         confirmButton = {
             TextButton(
                 onClick = onConfirm
             ) {
-                Text("Slett", color = Color.Red)
+                Text("Slett", color = MaterialTheme.colorScheme.error)
             }
         },
         dismissButton = {
             TextButton(
                 onClick = onDismiss
             ) {
-                Text("Avbryt")
+                Text("Avbryt", color = MaterialTheme.colorScheme.primary)
             }
         }
     )

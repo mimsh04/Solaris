@@ -10,10 +10,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,7 +28,7 @@ fun JohnDoe(){
             Icon(
                 imageVector = Icons.Default.AccountCircle,
                 contentDescription = "ProfilePicture",
-                tint = Color.Cyan,
+                tint = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.size(50.dp)
             )
 
@@ -40,11 +40,12 @@ fun JohnDoe(){
                 Text(
                     text = "John Doe",
                     fontSize = 25.sp,
-                    fontWeight = FontWeight.Bold
-
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
-                    text = "Solar Enthusiast"
+                    text = "Solar Enthusiast",
+                    color = MaterialTheme.colorScheme.onBackground
                 )
 
             }

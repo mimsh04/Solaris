@@ -19,7 +19,6 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.unit.dp
 import in2000.team42.model.solarPanels.SolarPanelModel
 
-
 @Composable
 fun SolcelleDropdown(
     modifier: Modifier = Modifier,
@@ -51,17 +50,18 @@ fun SolcelleDropdown(
             Icon(
                 imageVector = Icons.Filled.ArrowDropDown,
                 contentDescription = if (expanded) "Skjul valg" else "Vis valg",
+                tint = MaterialTheme.colorScheme.onSurface,
                 // Roterer 180 grader hvis expanded, ellers 0 degrees. Fikk ikke ArrowDropUp til å fungere, så roterer bare DropDown
                 modifier = Modifier.rotate(if (expanded) 180f else 0f)
             )
         }
 
-
-
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surface)
         ) {
             panelOptions.forEach { panel ->
                 DropdownItem(

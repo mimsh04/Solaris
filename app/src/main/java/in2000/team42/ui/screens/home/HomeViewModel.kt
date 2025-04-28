@@ -46,7 +46,7 @@ data class Config(
     var selectedPanelModel: SolarPanelModel = defaultPanels[0]
 )
 
-// Display-friendly data class for weather
+// Display-vennlig dataklasse for vaeret
 data class DisplayWeather(
     val month: String,
     val temp: String,
@@ -98,7 +98,7 @@ class HomeViewModel : ViewModel() {
 
     fun loadProject(project: SavedProjectEntity) {
         _config.value = project.config.copy(
-            bottomSheetDetent = "medium" // Force sheet to expand
+            bottomSheetDetent = "medium"
         )
         viewModelScope.launch {
             updateAllApi()
@@ -113,7 +113,7 @@ class HomeViewModel : ViewModel() {
         _config.value = _config.value.copy(vinkel = vinkel)
     }
 
-    // For setting areal and solcelleEffekt
+    // For aa sette areal of solcelleEffekt
     fun setAreal(areal: Float) {
         _config.value = _config.value.copy(areal = areal)
     }

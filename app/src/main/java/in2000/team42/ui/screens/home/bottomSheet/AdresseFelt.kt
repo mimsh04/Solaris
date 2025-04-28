@@ -16,12 +16,14 @@ fun AdresseFelt(adresse: String, modifier: Modifier = Modifier) {
         Column {
             Text(
                 text = "Valgt adresse:",
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onBackground
             )
             Text(
                 text = adresse,
                 modifier = modifier,
                 fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                color = MaterialTheme.colorScheme.onBackground
             )
         }
         Spacer(modifier = Modifier.padding(bottom = 8.dp))

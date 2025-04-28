@@ -1,6 +1,5 @@
 package in2000.team42.ui.screens.faq
 
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -16,32 +15,33 @@ import in2000.team42.model.faq.faqItems
 
 @Composable
 fun FaqDialog(onDismiss:()->Unit){
-   AlertDialog(
-       onDismissRequest = onDismiss,
-       title={
-           Text(
-               text= "FAQ",
-               style= MaterialTheme.typography.headlineSmall,
-               fontWeight = FontWeight.Bold
-               )},
-       text={
-           Column {
-               LazyColumn (
-                   modifier = Modifier.heightIn(max= 300.dp)
-                       .fillMaxWidth()
-               )
-               {
-                   items(faqItems){ faq->
-                       FAQItem(faq =faq)
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title={
+            Text(
+                text= "FAQ",
+                style= MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )},
+        text={
+            Column {
+                LazyColumn (
+                    modifier = Modifier.heightIn(max= 300.dp)
+                        .fillMaxWidth()
+                )
+                {
+                    items(faqItems){ faq->
+                        FAQItem(faq =faq)
 
-                   }
-               }
-           } },
-       confirmButton = {
-           Button(onClick = onDismiss){
-               Text("Lukk")
-           }
-       }
-   )
+                    }
+                }
+            } },
+        confirmButton = {
+            Button(onClick = onDismiss){
+                Text("Lukk", color = MaterialTheme.colorScheme.onPrimary)
+            }
+        }
+    )
 
 }

@@ -3,6 +3,7 @@ package in2000.team42.ui.screens.home.bottomSheet
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -13,7 +14,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 
@@ -31,10 +31,11 @@ fun FloatInputField(
         showedVal = verdi.toInt().toString()
     }
 
-    fun getOutlineColor(showedText: String): Color {
-        return if (showedText.isEmpty()) Color.Red
-        else if (showedText.toIntOrNull() in range) Color.Green
-        else Color.Red
+    @Composable // Måtte legge til Composable for å kunne bruke MaterialTheme.colorScheme.error
+    fun getOutlineColor(showedText: String): androidx.compose.ui.graphics.Color {
+        return if (showedText.isEmpty()) MaterialTheme.colorScheme.error
+        else if (showedText.toIntOrNull() in range) MaterialTheme.colorScheme.primary
+        else MaterialTheme.colorScheme.error
     }
 
     Row(
@@ -53,7 +54,7 @@ fun FloatInputField(
                     }
                 }
             },
-            label = { Text(tittel) },
+            label = { Text(tittel, color = MaterialTheme.colorScheme.onSurface) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             singleLine = true,
             modifier = Modifier.width(180.dp),

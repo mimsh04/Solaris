@@ -25,6 +25,7 @@ import in2000.team42.ui.screens.home.HomeScreen
 import in2000.team42.ui.screens.settings.SettingsScreen
 import android.Manifest
 import androidx.compose.animation.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import in2000.team42.ui.screens.guide.InstallasjonScreen
@@ -69,7 +70,8 @@ class MainActivity : ComponentActivity() {
             IN2000_team42Theme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    bottomBar = { NavBar(navController) }
+                    bottomBar = { NavBar(navController) },
+                    containerColor = MaterialTheme.colorScheme.background
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,

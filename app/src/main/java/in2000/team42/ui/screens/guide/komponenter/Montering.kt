@@ -18,7 +18,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import in2000.team42.data.installasjon.model.MonteringData
@@ -63,19 +62,21 @@ fun ExpandableMonteringItem(monteringData: MonteringData){
                 Text(
                     text=monteringData.question,
                     fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.weight(1f)
                 )
 
                 Text(
                     text= if (isExpanded) "-" else "+",
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
             }
 
             if (isExpanded){
                 Text(
                     text = monteringData.answer,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(top=10.dp),
                 )
             }
@@ -87,4 +88,3 @@ fun ExpandableMonteringItem(monteringData: MonteringData){
     }
 
 }
-

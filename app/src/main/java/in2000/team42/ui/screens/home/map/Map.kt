@@ -231,16 +231,4 @@ fun Map(
             isMapClicked = mapClicked
         )
     }
-    LaunchedEffect(config.value.latitude, config.value.longitude) {
-        if (config.value.latitude != 0.0 && config.value.longitude != 0.0) {
-            val point = Point.fromLngLat(config.value.longitude, config.value.latitude)
-            mapViewportState.easeTo(
-                cameraOptions = CameraOptions.Builder()
-                    .center(point)
-                    .zoom(18.0)
-                    .build()
-            )
-            loadHouse(point) // Will update polygon and area
-        }
-    }
 }

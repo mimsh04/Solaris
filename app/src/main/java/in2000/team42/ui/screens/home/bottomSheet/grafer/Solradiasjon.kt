@@ -5,6 +5,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
@@ -15,34 +16,24 @@ import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
 import kotlinx.coroutines.runBlocking
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
+import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 import in2000.team42.data.pgvis.model.DailyProfile
 
+private val monthNames = listOf(
+    "Januar", "Februar", "Mars", "April", "Mai", "Juni",
+    "Juli", "August", "September", "Oktober", "November", "Desember"
+)
+private fun formatMonthTime (dailyProfile: DailyProfile ) =
 
-@Composable
-private fun SolGraf(
-    modelProducer: CartesianChartModelProducer,
-    modifier: Modifier = Modifier,
-) {
-    CartesianChartHost(
-        chart =
-        rememberCartesianChart(
-            rememberLineCartesianLayer(),
-            startAxis = VerticalAxis.rememberStart(),
-            bottomAxis = HorizontalAxis.rememberBottom(),
-        ),
-        modelProducer = modelProducer,
-        modifier = modifier,
-    )
-}
+    "${dailyProfile.time} ${monthNames[dailyProfile.month!! - 1]}"
+
 
 @Composable
 fun Solradiasjon(modifier: Modifier = Modifier, solData: List<DailyProfile>) {
     val modelProducer = remember { CartesianChartModelProducer() }
     LaunchedEffect(Unit) {
         modelProducer.runTransaction {
-            // Learn more: https://patrykandpatrick.com/vmml6t.
             lineSeries {
-                // Use indices for x-axis and globalIrradiance for y-axis
                 series(
                     x = solData.indices.map { it.toFloat() },
                     y = solData.map { it.globalIrradiance ?: 0f }
@@ -50,19 +41,22 @@ fun Solradiasjon(modifier: Modifier = Modifier, solData: List<DailyProfile>) {
             }
         }
     }
-    SolGraf(modelProducer, modifier)
-}
-
-@Composable
-@Preview
-private fun Preview() {
-    val modelProducer = remember { CartesianChartModelProducer() }
-    // Use `runBlocking` only for previews, which don’t support asynchronous execution.
-    runBlocking {
-        modelProducer.runTransaction {
-            // Learn more: https://patrykandpatrick.com/vmml6t.
-            lineSeries { series(13, 8, 7, 12, 0, 1, 15, 14, 0, 11, 6, 12, 0, 11, 12, 11) }
-        }
-    }
-    SolGraf(modelProducer)
+    CartesianChartHost(
+        chart =
+        rememberCartesianChart(
+            rememberLineCartesianLayer(
+                pointSpacing = 10.dp
+            ),
+            startAxis = VerticalAxis.rememberStart(),
+            bottomAxis = HorizontalAxis.rememberBottom(
+                valueFormatter =
+                    { _, value, _ ->
+                        formatMonthTime(solData[value.toInt()])
+                    }
+                ,
+            ),
+        ),
+        modelProducer = modelProducer,
+        modifier = modifier,
+    )
 }

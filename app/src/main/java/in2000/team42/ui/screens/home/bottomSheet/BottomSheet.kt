@@ -17,6 +17,7 @@ import com.composables.core.SheetDetent
 import com.composables.core.rememberBottomSheetState
 import in2000.team42.model.solarPanels.defaultPanels
 import in2000.team42.ui.screens.home.HomeViewModel
+import in2000.team42.ui.screens.home.bottomSheet.grafer.Solradiasjon
 import kotlinx.coroutines.launch
 
 val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
@@ -136,6 +137,14 @@ fun BottomSheet(
                             },
                             modifier = Modifier.padding(16.dp)
                         ) { Text("Lagre prosjekt") }
+                    }
+                    item {
+                        if (apiData.value.sunRadiation.isNotEmpty()) {
+                            Solradiasjon(
+                                solData = apiData.value.sunRadiation
+                            )
+                        }
+
                     }
                 }
             }

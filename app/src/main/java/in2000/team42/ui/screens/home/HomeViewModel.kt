@@ -26,14 +26,14 @@ import java.util.Date
 import java.util.Locale
 
 
-// Data class to hold API-related data
+// Dataklasse for å holde på API-relatert data
 data class ApiData(
     val sunRadiation: List<DailyProfile> = emptyList(),
     val weatherData: List<DisplayWeather> = emptyList(), // Updated to use DisplayWeather
     val kwhMonthlyData: List<KwhMonthlyResponse.MonthlyKwhData> = emptyList()
 )
 
-// Data class to hold user-configurable parameters
+// Dataklasse for å holde på brukerkonfigurerbar parametere
 data class Config(
     var longitude: Double = 0.0,
     var latitude: Double = 0.0,

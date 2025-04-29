@@ -138,7 +138,7 @@ class FrostDatasourceInstrumentedTest {
         assertEquals("/observations/v0.jsonld", request.path)
         assertEquals("SN18700", request.requestUrl?.queryParameter("sources"))
         assertEquals("2024-01-01/2024-01-31", request.requestUrl?.queryParameter("referencetime"))
-        //Sjekker hvert element eksisterer i spørringen
+        //Sjekker hvert element eksisterer i spørringen og er ikke null
         assertEquals(true,request.requestUrl?.queryParameter("elements") != null)
 
     }

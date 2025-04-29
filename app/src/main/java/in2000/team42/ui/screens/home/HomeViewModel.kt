@@ -20,6 +20,9 @@ import in2000.team42.ui.screens.home.map.getAdressOfPoint
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -58,6 +61,7 @@ class HomeViewModel : ViewModel() {
     private val radiationRepository = PgvisRepository(PgvisDatasource())
     private val frostRepository = FrostRepository(FrostDatasource())
     private val TAG = "HomeViewModel"
+    private val savedProjectDao = SavedProjectDatabase.getDatabase().savedProjectDao()
 
 
     private val config = Config() // Instance of the Config class
@@ -84,15 +88,33 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    private val savedProjectDao = SavedProjectDatabase.getDatabase().savedProjectDao()
+    fun isCurrentProjectSaved(): Flow<Boolean> {
+        return savedProjectDao.getAllProjects().map { projects ->
+            projects.any { it.config.copy(bottomSheetDetent = "") == _config.value.copy(bottomSheetDetent = "") }
+        }
+    }
+
 
     fun saveProject() {
         viewModelScope.launch {
-            savedProjectDao.insert(
-                SavedProjectEntity(
-                    config = _config.value
-                )
-            )
+            val currentConfig = _config.value
+            val normalizedConfig = currentConfig.copy(bottomSheetDetent = "")
+            savedProjectDao.getAllProjects().first()
+                .firstOrNull { it.config.copy(bottomSheetDetent = "") == normalizedConfig }
+                ?.let { existing ->
+                    savedProjectDao.update(existing.copy(config = currentConfig))
+                } ?: run {
+                savedProjectDao.insert(SavedProjectEntity(config = currentConfig))
+            }
+        }
+    }
+
+    fun deleteCurrentProject() {
+        viewModelScope.launch {
+            val normalizedConfig = _config.value.copy(bottomSheetDetent = "")
+            savedProjectDao.getAllProjects().first()
+                .firstOrNull { it.config.copy(bottomSheetDetent = "") == normalizedConfig }
+                ?.let { savedProjectDao.delete(it) }
         }
     }
 

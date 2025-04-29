@@ -127,13 +127,9 @@ class FrostDatasourceInstrumentedTest {
 
         // Sjekker resultate
         if (result is FrostResult.Success) {
-            // Sjekker om det er data
             assertEquals(true, result.data.isNotEmpty())
-            // Sjekker om temperaturen er riktig
             assertEquals(10.0, result.data[0].temperature)
-            // Sjekker om skydekke er riktig
             assertEquals(10.0, result.data[0].cloudAreaFraction)
-            // Sjekker om snodekke er riktig
             assertEquals(0.5, result.data[0].snow)
         }
 

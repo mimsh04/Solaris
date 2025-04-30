@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">IN2000_team42</string>
+    <string name="remove_project">Fjern prosjekt</string>
+    <string name="save_project">Lagre prosjekt</string>
 </resources>

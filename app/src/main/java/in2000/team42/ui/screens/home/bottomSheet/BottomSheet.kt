@@ -107,13 +107,13 @@ fun BottomSheet(
                             onDirectionChange = { viewModel.setVinkel(it) }
                         )
                     }
+
                     item {
                         SolcelleDropdown(
                             panelOptions = defaultPanels,
                             selectedPanel = config.value.selectedPanelModel,
                             onPanelSelected = { viewModel.setSelectedSolarPanel(it) },
                         )
-                        Spacer(Modifier.height(8.dp))
                     }
                     item {
                         UpdateApiButton {

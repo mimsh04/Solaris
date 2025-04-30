@@ -25,7 +25,6 @@ fun DropdownItem(
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                // Effekt og pris
                 Text(
                     text = String.format(
                         Locale.getDefault(),

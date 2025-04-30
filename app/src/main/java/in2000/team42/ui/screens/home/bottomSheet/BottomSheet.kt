@@ -130,7 +130,7 @@ fun BottomSheet(
                             onShowSnackbar = { message ->
                                 scope.launch {
                                     snackbarHostState.showSnackbar(
-                                        message = "Prosjekt lagret!",
+                                        message = message,
                                         duration = SnackbarDuration.Short //hvor langt skal melding vises
                                     )
                                 }

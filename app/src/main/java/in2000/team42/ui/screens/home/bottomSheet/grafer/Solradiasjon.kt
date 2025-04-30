@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
@@ -14,9 +13,9 @@ import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
-import kotlinx.coroutines.runBlocking
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
+import com.patrykandpatrick.vico.core.cartesian.marker.CartesianMarker
+import com.patrykandpatrick.vico.core.common.data.ExtraStore
 import in2000.team42.data.pgvis.model.DailyProfile
 
 private val monthNames = listOf(
@@ -31,7 +30,7 @@ private fun formatMonthTime (dailyProfile: DailyProfile ) =
 @Composable
 fun Solradiasjon(modifier: Modifier = Modifier, solData: List<DailyProfile>) {
     val modelProducer = remember { CartesianChartModelProducer() }
-    LaunchedEffect(Unit) {
+    LaunchedEffect(solData) {
         modelProducer.runTransaction {
             lineSeries {
                 series(
@@ -47,8 +46,16 @@ fun Solradiasjon(modifier: Modifier = Modifier, solData: List<DailyProfile>) {
             rememberLineCartesianLayer(
                 pointSpacing = 10.dp
             ),
-            startAxis = VerticalAxis.rememberStart(),
+            startAxis = VerticalAxis.rememberStart(
+                valueFormatter =
+                    { _, value, _ ->
+                        "${value.toInt()} kWh/m²"
+                    }
+            ),
             bottomAxis = HorizontalAxis.rememberBottom(
+                itemPlacer = remember { HorizontalAxis.ItemPlacer.aligned(
+                    spacing = {12}
+                ) },
                 valueFormatter =
                     { _, value, _ ->
                         formatMonthTime(solData[value.toInt()])

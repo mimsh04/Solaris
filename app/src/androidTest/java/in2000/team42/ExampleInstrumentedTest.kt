@@ -127,13 +127,9 @@ class FrostDatasourceInstrumentedTest {
 
         // Sjekker resultate
         if (result is FrostResult.Success) {
-            // Sjekker om det er data
             assertEquals(true, result.data.isNotEmpty())
-            // Sjekker om temperaturen er riktig
             assertEquals(10.0, result.data[0].temperature)
-            // Sjekker om skydekke er riktig
             assertEquals(10.0, result.data[0].cloudAreaFraction)
-            // Sjekker om snodekke er riktig
             assertEquals(0.5, result.data[0].snow)
         }
 
@@ -142,7 +138,7 @@ class FrostDatasourceInstrumentedTest {
         assertEquals("/observations/v0.jsonld", request.path)
         assertEquals("SN18700", request.requestUrl?.queryParameter("sources"))
         assertEquals("2024-01-01/2024-01-31", request.requestUrl?.queryParameter("referencetime"))
-        //Sjekker hvert element eksisterer i spørringen
+        //Sjekker hvert element eksisterer i spørringen og er ikke null
         assertEquals(true,request.requestUrl?.queryParameter("elements") != null)
 
     }

@@ -28,6 +28,10 @@ fun UpdateApiButton(
             contentColor = MaterialTheme.colorScheme.onPrimary
         )
     ) {
-        Text(text = "Regn ut produksjon", style = MaterialTheme.typography.titleMedium)
+        Text(
+            text = "Regn ut produksjon",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onPrimary
+        )
     }
 }

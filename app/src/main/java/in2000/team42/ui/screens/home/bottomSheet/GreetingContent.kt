@@ -1,6 +1,5 @@
 package in2000.team42.ui.screens.home.bottomSheet
 
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -29,7 +28,8 @@ fun GreetingContent(modifier: Modifier = Modifier) {
         Text(
             text = "Velkommen!",
             style = MaterialTheme.typography.headlineMedium,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onBackground
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -38,7 +38,8 @@ fun GreetingContent(modifier: Modifier = Modifier) {
         Text(
             text = "For å starte, søk etter en adresse i feltet over og trykket på bygget som skal ha solcellepaneler.",
             style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onBackground
         )
 
         // Logo

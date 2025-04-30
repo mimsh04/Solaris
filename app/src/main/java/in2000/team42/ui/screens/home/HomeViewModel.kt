@@ -26,14 +26,14 @@ import java.util.Date
 import java.util.Locale
 
 
-// Data class to hold API-related data
+// Dataklasse for å holde på API-relatert data
 data class ApiData(
     val sunRadiation: List<DailyProfile> = emptyList(),
     val weatherData: List<DisplayWeather> = emptyList(), // Updated to use DisplayWeather
     val kwhMonthlyData: List<KwhMonthlyResponse.MonthlyKwhData> = emptyList()
 )
 
-// Data class to hold user-configurable parameters
+// Dataklasse for å holde på brukerkonfigurerbar parametere
 data class Config(
     var longitude: Double = 0.0,
     var latitude: Double = 0.0,
@@ -46,7 +46,7 @@ data class Config(
     var selectedPanelModel: SolarPanelModel = defaultPanels[0]
 )
 
-// Display-friendly data class for weather
+// Display-vennlig dataklasse for vaeret
 data class DisplayWeather(
     val month: String,
     val temp: String,
@@ -96,13 +96,12 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    fun getSavedProjects(): Flow<List<SavedProjectEntity>> {
-        return savedProjectDao.getAllProjects()
-    }
-
-    fun deleteProject(project: SavedProjectEntity) {
+    fun loadProject(project: SavedProjectEntity) {
+        _config.value = project.config.copy(
+            bottomSheetDetent = "medium"
+        )
         viewModelScope.launch {
-            savedProjectDao.delete(project)
+            updateAllApi()
         }
     }
 
@@ -114,7 +113,7 @@ class HomeViewModel : ViewModel() {
         _config.value = _config.value.copy(vinkel = vinkel)
     }
 
-    // For setting areal and solcelleEffekt
+    // For aa sette areal of solcelleEffekt
     fun setAreal(areal: Float) {
         _config.value = _config.value.copy(areal = areal)
     }
@@ -206,7 +205,7 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    // Transform FrostData to DisplayWeather
+    // Transformerer FrostData til DisplayData for enklere håndtering
     private fun FrostData.toDisplayWeather(): DisplayWeather {
         val dateFormat = SimpleDateFormat("MMM yyyy", Locale.getDefault())
         val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())

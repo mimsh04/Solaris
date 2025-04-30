@@ -134,11 +134,11 @@ class FrostDatasource() {
                     } else {
                         val errorBody = response.body<FrostErrorResponse>()
                         Log.e(TAG, "Error fetching $element: ${errorBody.error.reason}")
-                        return@withContext FrostResult.Failure(errorBody.error.reason)
+                        //return@withContext FrostResult.Failure(errorBody.error.reason)
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Error fetching $element: ${e.message}", e)
-                    return@withContext FrostResult.Failure(e.message ?: "Unknown error fetching $element")
+                    //return@withContext FrostResult.Failure(e.message ?: "Unknown error fetching $element")
                 }
             } else {
                 Log.w(TAG, "No stations support $element")

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import in2000.team42.model.faq.FAQ
@@ -29,12 +28,13 @@ fun FAQItem(faq: FAQ){
                 style= MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.weight(1f),
                 fontWeight = FontWeight.ExtraBold,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onSurface
 
             )
             Text(
                 text= if (expanded)"-" else "+",
                 style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(start= 8.dp)
             )
         }
@@ -44,7 +44,7 @@ fun FAQItem(faq: FAQ){
                 text = faq.answer,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(top=10.dp),
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }

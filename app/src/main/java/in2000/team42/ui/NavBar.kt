@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import in2000.team42.theme.IN2000_team42Theme
 import in2000.team42.ui.navbar.*
 import in2000.team42.ui.screens.Screen
 
@@ -120,3 +121,5 @@ private fun handleNavItemClick(
         }
     }
 }
+
+

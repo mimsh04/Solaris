@@ -9,8 +9,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mapbox.search.autocomplete.PlaceAutocompleteSuggestion
+import in2000.team42.theme.IN2000_team42Theme
 
 @Composable
 fun SuggestionItem(
@@ -25,7 +27,7 @@ fun SuggestionItem(
     ){
         Text(
             text = suggestion.name,
-
+            color = MaterialTheme.colorScheme.onSurface
         )
         if (suggestion.formattedAddress != null) {
             Text(
@@ -35,5 +37,4 @@ fun SuggestionItem(
             )
         }
     }
-
 }

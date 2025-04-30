@@ -80,6 +80,7 @@ fun BottomSheet(
             if (config.value.adress == "") {
                 GreetingContent(modifier = Modifier.padding(top = 40.dp))
             } else {
+
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(1),
                     modifier = Modifier
@@ -97,6 +98,7 @@ fun BottomSheet(
                                 config.value.areal,
                                 modifier = Modifier.padding(top = 8.dp)
                             )
+
                         }
                     }
                     item {

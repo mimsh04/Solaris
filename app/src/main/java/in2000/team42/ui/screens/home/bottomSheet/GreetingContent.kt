@@ -57,7 +57,7 @@ fun GreetingContent(modifier: Modifier = Modifier) {
         Box(
             contentAlignment = Alignment.Center
         ) {
-            // Logo Image
+            // Logo
             Image(
                 painter = painterResource(id = R.drawable.hovedlogo),
                 contentDescription = "App Logo",
@@ -68,7 +68,6 @@ fun GreetingContent(modifier: Modifier = Modifier) {
                 onClick = { showImageInfo = !showImageInfo },
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(top = 8.dp, end = 8.dp)
                     .size(32.dp)
             ) {
                 Icon(
@@ -81,9 +80,8 @@ fun GreetingContent(modifier: Modifier = Modifier) {
         }
 
         if (showImageInfo) {
-            Spacer(modifier = Modifier.height(6.dp))
             Text(
-                text = "bildet er generert av AI",
+                text = "Bildet er generert av AI",
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,

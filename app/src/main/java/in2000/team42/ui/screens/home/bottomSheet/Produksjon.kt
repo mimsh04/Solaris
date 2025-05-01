@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -30,14 +31,14 @@ fun Produksjon(apiData: ApiData) {
 
     Row (modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
-        ){
+    ){
         if (apiData.kwhMonthlyData.isEmpty()) {
-            Text("Ingen data (velg posisjon med search)")
+            Text("Trykk på regn ut produksjon knappen", color = MaterialTheme.colorScheme.onBackground)
         } else {
             Column  (
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
-                Text("Årlig produksjon: ${getYearlyProduction(apiData.kwhMonthlyData)} kWh")
+                Text("Årlig produksjon: ${getYearlyProduction(apiData.kwhMonthlyData)} kWh", color = MaterialTheme.colorScheme.onBackground)
             }
 
         }

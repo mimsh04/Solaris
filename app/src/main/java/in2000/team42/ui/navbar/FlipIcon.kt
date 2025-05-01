@@ -3,6 +3,7 @@ package in2000.team42.ui.navbar
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.graphicsLayer
@@ -40,7 +41,8 @@ fun FlipIcon(
         // Show active/inactive icon based on rotation angle
         Icon(
             imageVector = if (animationRotation > 90f) activeIcon else inactiveIcon,
-            contentDescription = contentDescription
+            contentDescription = contentDescription,
+            tint = MaterialTheme.colorScheme.onSurface
         )
     }
 }

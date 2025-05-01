@@ -28,9 +28,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mapbox.geojson.Point
 import com.mapbox.search.autocomplete.PlaceAutocomplete
@@ -38,12 +38,13 @@ import com.mapbox.search.autocomplete.PlaceAutocompleteOptions
 import com.mapbox.search.autocomplete.PlaceAutocompleteSuggestion
 import com.mapbox.search.autocomplete.PlaceAutocompleteType
 import com.mapbox.search.common.IsoCountryCode
+import in2000.team42.theme.IN2000_team42Theme
 import kotlinx.coroutines.launch
 
 @Composable
 fun SearchBar(
     placeAutocomplete: PlaceAutocomplete,
-    onLocationSelected: (Point, String) -> Unit,
+    onLocationSelected: (Point) -> Unit,
     modifier: Modifier = Modifier,
     isMapClicked: Boolean = false
 ) {
@@ -67,7 +68,7 @@ fun SearchBar(
                 val result = placeAutocomplete.select(suggestion)
                 val point = result.value?.coordinate!!
                 focusManager.clearFocus()
-                onLocationSelected(point, suggestion.name)
+                onLocationSelected(point)
                 searchQuery = suggestion.name
                 isExpanded = false
             } catch (e: Exception) {
@@ -124,16 +125,21 @@ fun SearchBar(
                 ,
                 placeholder = {
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Søk etter adresse")
+                    Text(
+                        "Søk etter adresse",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                 singleLine = true,
                 shape = MaterialTheme.shapes.extraLarge,
                 colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedIndicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0f),
+                    unfocusedIndicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0f),
                     focusedContainerColor = MaterialTheme.colorScheme.surface,
                     unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface
                 ),
                 leadingIcon = {
                     Icon(
@@ -159,7 +165,8 @@ fun SearchBar(
                             handleSuggestionClick(suggestion)
                         })
                         HorizontalDivider(
-                            modifier = Modifier.padding(horizontal = 16.dp)
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            color = MaterialTheme.colorScheme.outline
                         )
                     }
                 }

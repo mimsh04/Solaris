@@ -1,6 +1,6 @@
 package in2000.team42.ui.screens.saved.project
 
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -8,13 +8,13 @@ import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
@@ -36,10 +36,14 @@ fun SwipeToDeleteItem(
     onDeleteConfirmed: (SavedProjectEntity) -> Unit,
     onClick: () -> Unit = {}
 ) {
-    var swipeOffset by remember { mutableStateOf(0f) }
+    var swipeOffset by remember { mutableFloatStateOf(0f) }
     var showDeleteConfirmationDialog by remember { mutableStateOf(false) }
     val maxSwipeDistance = with(LocalDensity.current) { 80.dp.toPx() }
-    val deleteButtonBackgroundColor = Color(0xFFEB5545)
+
+    val animatedSwipeOffset by animateFloatAsState(
+        targetValue = swipeOffset,
+        animationSpec = tween(durationMillis = 300)
+    )
 
     Box(
         modifier = Modifier
@@ -54,7 +58,7 @@ fun SwipeToDeleteItem(
                 .width(80.dp)
                 .fillMaxHeight()
                 .background(
-                    color = deleteButtonBackgroundColor,
+                    color = MaterialTheme.colorScheme.error,
                     shape = RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp)
                 )
                 .clickable { showDeleteConfirmationDialog = true },
@@ -73,8 +77,7 @@ fun SwipeToDeleteItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .offset { IntOffset(swipeOffset.roundToInt(), 0) }
-                .animateContentSize(animationSpec = tween(durationMillis = 300))
+                .offset { IntOffset(animatedSwipeOffset.roundToInt(), 0) }
                 .pointerInput(Unit) {
                     detectHorizontalDragGestures(
                         onDragEnd = {
@@ -93,9 +96,32 @@ fun SwipeToDeleteItem(
             ProjectCard(
                 project = project,
                 onClick = onClick,
-                isInSwipeContext = true // Remove padding in swipe context
+                isInSwipeContext = true
             )
+
+            Box(
+                modifier=Modifier
+                    .fillMaxHeight()
+                    .align(Alignment.CenterEnd),
+                contentAlignment = Alignment.Center
+            ){
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = "Arrow",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(end = 16.dp)
+                        .size(30.dp)
+                        .clickable {
+                            swipeOffset = if (swipeOffset == 0f) -maxSwipeDistance else 0f
+                        }
+                )
+
+            }
+
         }
+
     }
 
     if (showDeleteConfirmationDialog) {

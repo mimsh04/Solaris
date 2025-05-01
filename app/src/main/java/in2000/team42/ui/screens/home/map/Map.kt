@@ -2,10 +2,10 @@ package in2000.team42.ui.screens.home.map
 
 import android.util.Log
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -87,8 +87,12 @@ fun Map(
          if (config.value.bottomSheetDetent == "medium") 0.00035 else 0.00008
 
 
-    if (config.value.latitude != 0.0) {
-        startPos = Point.fromLngLat(config.value.longitude, config.value.latitude - getSheetMapOffset())
+    if (config.value.polygon != null) {
+        startPos = calculateCentroid(config.value.polygon!!)
+        startPos = Point.fromLngLat(
+            startPos.longitude(),
+            startPos.latitude() - getSheetMapOffset()
+        )
         startZoom = 18.0
     }
 
@@ -158,20 +162,29 @@ fun Map(
     fun onMapClicked(point: Point): Boolean {
         clearScreen()
         val offset = getSheetMapOffset()
+
         loadHouse(point, onComplete = { polygon ->
             mapEaseTo(calculateCentroid(polygon), 1000, offset)
+            viewModel.setGeoAddress(point)
         })
         return true
     }
 
-    fun settNyttPunkt(point: Point, address: String) : Boolean{
-
+    fun settNyttPunkt(point: Point) : Boolean{
         clearScreen()
-        viewModel.setAddress(address)
+        //viewModel.setGeoAddress(point)
         val offset = getSheetMapOffset()
         mapEaseTo(point, 2000, offset)
-        loadHouse(point, delay = 2400)
+        //loadHouse(point, delay = 2400)
         return true
+    }
+
+    fun handleDraggedConrner (draggedPoint: Point, index: Int) {
+        val newPolygon = config.value.polygon!![0].toMutableList()
+        newPolygon[index] = draggedPoint
+        val nyListe = listOf(newPolygon)
+        viewModel.setAreal(calculatePolygonArea(nyListe).toFloat())
+        viewModel.setPolygon(nyListe)
     }
 
     val pointIcon = rememberIconImage(key = "point-icon", painter = painterResource(id = R.drawable.polygon_corner))
@@ -205,31 +218,31 @@ fun Map(
                         iconImage = pointIcon
                         iconSize = 1.0
                         interactionsState.isDraggable = true
-                        interactionsState.onDragged { draggedPoint ->
-                            val newPolygon = config.value.polygon!![0].toMutableList()
-                            newPolygon[index] = draggedPoint.point
-                            val nyListe = listOf(newPolygon)
-                            viewModel.setAreal(calculatePolygonArea(nyListe).toFloat())
-                            viewModel.setPolygon(nyListe)
-
+                        interactionsState.onDragged {
+                            handleDraggedConrner(it.point, index)
                         }
                     }
                 }
             }
         }
 
-        Column {
-            SearchBar(
-                placeAutocomplete = placeAutoComplete,
-                onLocationSelected = { point, address -> settNyttPunkt(point, address) },
-                modifier = Modifier.padding(top = 26.dp),
-                isMapClicked = mapClicked
+        SearchBar(
+            placeAutocomplete = placeAutoComplete,
+            onLocationSelected = { point -> settNyttPunkt(point) },
+            modifier = Modifier.padding(top = 26.dp),
+            isMapClicked = mapClicked
+        )
+    }
+    LaunchedEffect(config.value.latitude, config.value.longitude) {
+        if (config.value.latitude != 0.0 && config.value.longitude != 0.0) {
+            val point = Point.fromLngLat(config.value.longitude, config.value.latitude)
+            mapViewportState.easeTo(
+                cameraOptions = CameraOptions.Builder()
+                    .center(point)
+                    .zoom(18.0)
+                    .build()
             )
-            WeatherIconButton(modifier = modifier, viewModel = viewModel)
+            loadHouse(point) // Will update polygon and area
         }
     }
-
-
-
-
 }

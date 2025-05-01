@@ -14,35 +14,41 @@ import in2000.team42.data.pgvis.model.DailyProfile
 import in2000.team42.data.pgvis.PvTech
 import in2000.team42.data.pgvis.model.KwhMonthlyResponse
 import in2000.team42.data.saved.*
+import in2000.team42.model.solarPanels.SolarPanelModel
+import in2000.team42.model.solarPanels.defaultPanels
+import in2000.team42.ui.screens.home.map.getAdressOfPoint
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-// Data class to hold API-related data
+
+// Dataklasse for å holde på API-relatert data
 data class ApiData(
     val sunRadiation: List<DailyProfile> = emptyList(),
     val weatherData: List<DisplayWeather> = emptyList(), // Updated to use DisplayWeather
     val kwhMonthlyData: List<KwhMonthlyResponse.MonthlyKwhData> = emptyList()
 )
 
-// Data class to hold user-configurable parameters
+// Dataklasse for å holde på brukerkonfigurerbar parametere
 data class Config(
     var longitude: Double = 0.0,
     var latitude: Double = 0.0,
     var incline: Float = 35f,
     var vinkel: Float = 0f,
     var areal: Float = 1f,
-    var solcelleEffekt: Float = 15f,
     var polygon: List<List<Point>>? = null,
     var bottomSheetDetent: String = "medium",
     var adress: String = "",
+    var selectedPanelModel: SolarPanelModel = defaultPanels[0]
 )
 
-// Display-friendly data class for weather
+// Display-vennlig dataklasse for vaeret
 data class DisplayWeather(
     val month: String,
     val temp: String,
@@ -54,6 +60,8 @@ class HomeViewModel : ViewModel() {
     private val radiationRepository = PgvisRepository(PgvisDatasource())
     private val frostRepository = FrostRepository(FrostDatasource())
     private val TAG = "HomeViewModel"
+    private val savedProjectDao = SavedProjectDatabase.getDatabase().savedProjectDao()
+
 
     private val config = Config() // Instance of the Config class
     private val apiData = ApiData() // Instance of the ApiData class
@@ -64,8 +72,6 @@ class HomeViewModel : ViewModel() {
     val apiDataFlow = _apiData.asStateFlow()
     val configFlow = _config.asStateFlow()
 
-    private val savedProjectDao = SavedProjectDatabase.getDatabase().savedProjectDao()
-
     fun setCoordinates(longitude: Double, latitude: Double) {
         _config.value = _config.value.copy(longitude = longitude, latitude = latitude)
     }
@@ -74,23 +80,49 @@ class HomeViewModel : ViewModel() {
         _config.value = _config.value.copy(adress = address)
     }
 
-    fun saveProject() {
-        viewModelScope.launch {
-            savedProjectDao.insert(
-                SavedProjectEntity(
-                    config = _config.value
-                )
-            )
+
+    fun setGeoAddress(point: Point) {
+        getAdressOfPoint(point) {
+            setAddress(it)
         }
     }
 
-    fun getSavedProjects(): Flow<List<SavedProjectEntity>> {
-        return savedProjectDao.getAllProjects()
+    fun isCurrentProjectSaved(): Flow<Boolean> {
+        return savedProjectDao.getAllProjects().map { projects ->
+            projects.any { it.config.copy(bottomSheetDetent = "") == _config.value.copy(bottomSheetDetent = "") }
+        }
     }
 
-    fun deleteProject(project: SavedProjectEntity) {
+
+    fun saveProject() {
         viewModelScope.launch {
-            savedProjectDao.delete(project)
+            val currentConfig = _config.value
+            val normalizedConfig = currentConfig.copy(bottomSheetDetent = "")
+            savedProjectDao.getAllProjects().first()
+                .firstOrNull { it.config.copy(bottomSheetDetent = "") == normalizedConfig }
+                ?.let { existing ->
+                    savedProjectDao.update(existing.copy(config = currentConfig))
+                } ?: run {
+                savedProjectDao.insert(SavedProjectEntity(config = currentConfig))
+            }
+        }
+    }
+
+    fun deleteCurrentProject() {
+        viewModelScope.launch {
+            val normalizedConfig = _config.value.copy(bottomSheetDetent = "")
+            savedProjectDao.getAllProjects().first()
+                .firstOrNull { it.config.copy(bottomSheetDetent = "") == normalizedConfig }
+                ?.let { savedProjectDao.delete(it) }
+        }
+    }
+
+    fun loadProject(project: SavedProjectEntity) {
+        _config.value = project.config.copy(
+            bottomSheetDetent = "medium"
+        )
+        viewModelScope.launch {
+            updateAllApi()
         }
     }
 
@@ -102,13 +134,14 @@ class HomeViewModel : ViewModel() {
         _config.value = _config.value.copy(vinkel = vinkel)
     }
 
-    // For setting areal and solcelleEffekt
+    // For aa sette areal of solcelleEffekt
     fun setAreal(areal: Float) {
         _config.value = _config.value.copy(areal = areal)
     }
 
-    fun setSolcelleEffekt(solcelleEffekt: Float) {
-        _config.value = _config.value.copy(solcelleEffekt = solcelleEffekt)
+    fun setSelectedSolarPanel(panel: SolarPanelModel) {
+        Log.d(TAG, "Panel selected: ${panel.name}")
+        _config.value = _config.value.copy(selectedPanelModel = panel)
     }
 
     fun setPolygon(polygon: List<List<Point>>?) {
@@ -161,7 +194,7 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    private fun calculatePeakPower() = _config.value.solcelleEffekt / 100 * _config.value.areal
+    private fun calculatePeakPower() = _config.value.selectedPanelModel.efficiency / 100 * _config.value.areal
 
     private fun updateWeatherData() {
         viewModelScope.launch {
@@ -193,7 +226,7 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    // Transformerer FrostData til display vennlig data
+    // Transformerer FrostData til DisplayData for enklere håndtering
     private fun FrostData.toDisplayWeather(): DisplayWeather {
         val dateFormat = SimpleDateFormat("MMM yyyy", Locale.getDefault())
         val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())

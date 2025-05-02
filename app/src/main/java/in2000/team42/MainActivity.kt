@@ -24,15 +24,21 @@ import in2000.team42.ui.screens.Screen
 import in2000.team42.ui.screens.home.HomeScreen
 import in2000.team42.ui.screens.settings.SettingsScreen
 import android.Manifest
+import android.annotation.SuppressLint
 import androidx.compose.animation.*
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import in2000.team42.ui.screens.guide.InstallasjonScreen
 import in2000.team42.data.saved.*
 import in2000.team42.ui.screens.home.HomeViewModel
 import in2000.team42.ui.screens.saved.SavedScreen
 import in2000.team42.ui.screens.saved.project.ProjectViewModel
+import in2000.team42.utils.NetworkCheck
+import kotlinx.coroutines.launch
 
 
 class MainActivity : ComponentActivity() {
@@ -53,6 +59,7 @@ class MainActivity : ComponentActivity() {
         requestPermissionLauncher.launch(permissions)
     }
 
+    @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestLocationPermissions()
@@ -67,11 +74,25 @@ class MainActivity : ComponentActivity() {
 
             val projectSharedState = remember { mutableStateOf<SavedProjectEntity?>(null) }
 
+            // Sjekker internet-tilkobling og viser snackbar hvis ikke tilkoblet
+            val snackbarHostState = remember { SnackbarHostState() }
+            val scope = rememberCoroutineScope()
+
+            if (!NetworkCheck.isOnline(this)) {
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = "Ingen internett-tilkobling",
+                        duration = androidx.compose.material3.SnackbarDuration.Long
+                    )
+                }
+            }
+
             IN2000_team42Theme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = { NavBar(navController) },
-                    containerColor = MaterialTheme.colorScheme.background
+                    containerColor = MaterialTheme.colorScheme.background,
+                    snackbarHost = {SnackbarHost(snackbarHostState)}
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,

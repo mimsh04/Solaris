@@ -12,6 +12,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.composables.core.DragIndication
 import com.composables.core.SheetDetent
 import com.composables.core.rememberBottomSheetState
@@ -81,6 +82,7 @@ fun BottomSheet(
             if (config.value.adress == "") {
                 GreetingContent(modifier = Modifier.padding(top = 40.dp))
             } else {
+
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(1),
                     modifier = Modifier
@@ -98,6 +100,7 @@ fun BottomSheet(
                                 config.value.areal,
                                 modifier = Modifier.padding(top = 8.dp)
                             )
+
                         }
                     }
                     item {
@@ -108,13 +111,13 @@ fun BottomSheet(
                             onDirectionChange = { viewModel.setVinkel(it) }
                         )
                     }
+
                     item {
                         SolcelleDropdown(
                             panelOptions = defaultPanels,
                             selectedPanel = config.value.selectedPanelModel,
                             onPanelSelected = { viewModel.setSelectedSolarPanel(it) },
                         )
-                        Spacer(Modifier.height(8.dp))
                     }
                     item {
                         UpdateApiButton {
@@ -125,18 +128,18 @@ fun BottomSheet(
                         Produksjon(apiData.value)
                     }
                     item {
-                        Button(
-                            onClick = {
-                                viewModel.saveProject()
+                        SaveButton(
+                            viewModel = viewModel,
+                            onShowSnackbar = { message ->
                                 scope.launch {
                                     snackbarHostState.showSnackbar(
-                                        message = "Prosjekt lagret!",
-                                        duration = SnackbarDuration.Short
+                                        message = message,
+                                        duration = SnackbarDuration.Short //hvor langt skal melding vises
                                     )
                                 }
                             },
                             modifier = Modifier.padding(16.dp)
-                        ) { Text("Lagre prosjekt") }
+                        )
                     }
                     item {
                         if (apiData.value.sunRadiation.isNotEmpty()) {
@@ -153,7 +156,22 @@ fun BottomSheet(
             hostState = snackbarHostState,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 16.dp)
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp),
+            snackbar = { snackbarData ->
+                Snackbar(
+                    modifier = Modifier,
+                    shape = MaterialTheme.shapes.medium,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    content = {
+                        Text(
+                            text = snackbarData.visuals.message,
+                            style = MaterialTheme.typography.bodyMedium.copy(fontSize = 18.sp),
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                )
+            }
         )
     }
 }

@@ -1,17 +1,17 @@
 package in2000.team42.model.solarPanels
 
-// Panelvalg, ikke ekte paneler foreløpig
+// effekt ikke ekte foreløpig
 val standardPanel = SolarPanelModel(
     id = "standard",
-    name = "Standard Panel",
+    name = "Solcelleplater",
     efficiency = 18f, // 18%
-    pricePerM2 = 1500f
+    pricePerM2 = 2500f
 )
 val premiumPanel = SolarPanelModel(
-    id = "premium",
-    name = "Premium Panel",
+    id = "solcelletakstein",
+    name = "Solcelletakstein",
     efficiency = 22f, // 22%
-    pricePerM2 = 2500f
+    pricePerM2 = 4000f
 )
 
 val defaultPanels = listOf(standardPanel, premiumPanel)

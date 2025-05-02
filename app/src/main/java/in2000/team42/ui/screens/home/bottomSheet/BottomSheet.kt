@@ -121,6 +121,9 @@ fun BottomSheet(
                     }
                     item {
                         UpdateApiButton {
+                            scope.launch {
+                                sheetState.animateTo(Peek)
+                            }
                             viewModel.updateAllApi()
                         }
                     }
@@ -146,6 +149,16 @@ fun BottomSheet(
                             Solradiasjon(
                                 solData = apiData.value.sunRadiation
                             )
+                        } else {
+                            Box(
+                                modifier = Modifier.fillMaxWidth(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "Data er ikke hentet",
+                                    style = MaterialTheme.typography.titleSmall
+                                )
+                            }
                         }
 
                     }

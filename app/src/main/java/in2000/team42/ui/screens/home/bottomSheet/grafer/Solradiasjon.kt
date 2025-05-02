@@ -1,8 +1,15 @@
 package in2000.team42.ui.screens.home.bottomSheet.grafer
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
@@ -40,30 +47,43 @@ fun Solradiasjon(modifier: Modifier = Modifier, solData: List<DailyProfile>) {
             }
         }
     }
-    CartesianChartHost(
-        chart =
-        rememberCartesianChart(
-            rememberLineCartesianLayer(
-                pointSpacing = 10.dp
-            ),
-            startAxis = VerticalAxis.rememberStart(
-                valueFormatter =
-                    { _, value, _ ->
-                        "${value.toInt()} kWh/m²"
-                    }
-            ),
-            bottomAxis = HorizontalAxis.rememberBottom(
-                itemPlacer = remember { HorizontalAxis.ItemPlacer.aligned(
-                    spacing = {12}
-                ) },
-                valueFormatter =
-                    { _, value, _ ->
-                        formatMonthTime(solData[value.toInt()])
-                    }
-                ,
-            ),
-        ),
-        modelProducer = modelProducer,
-        modifier = modifier,
-    )
+    Column {
+        Box (
+            modifier = Modifier
+                .fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("Solstråling",
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
+
+        CartesianChartHost(
+            chart =
+                rememberCartesianChart(
+                    rememberLineCartesianLayer(
+                        pointSpacing = 10.dp
+                    ),
+                    startAxis = VerticalAxis.rememberStart(
+                        valueFormatter =
+                            { _, value, _ ->
+                                "${value.toInt()} kWh/m²"
+                            }
+                    ),
+                    bottomAxis = HorizontalAxis.rememberBottom(
+                        itemPlacer = remember { HorizontalAxis.ItemPlacer.aligned(
+                            spacing = {12}
+                        ) },
+                        valueFormatter =
+                            { _, value, _ ->
+                                formatMonthTime(solData[value.toInt()])
+                            }
+                        ,
+                    ),
+                ),
+            modelProducer = modelProducer,
+            modifier = modifier,
+        )
+    }
+
 }

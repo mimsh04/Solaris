@@ -104,7 +104,9 @@ fun Map(
     }
 
     fun loadHouse(point: Point, delay: Long = 0, onComplete: (List<List<Point>>) -> Unit = {}) {
+        viewModel.clearApiData()
         couroutineScope.launch {
+
             //viewModel.setPolygon(null)
             kotlinx.coroutines.delay(delay)
             val newPolygon = mapState.queryBuildingCoordinatesAt(point)
@@ -119,14 +121,15 @@ fun Map(
 
             viewModel.setPolygon(listOf(cleanedPolygon))
 
+            val centerPoint = calculateCentroid(listOf(cleanedPolygon))
             viewModel.setCoordinates(
-                longitude = point.longitude(),
-                latitude = point.latitude()
+                longitude = centerPoint.longitude(),
+                latitude = centerPoint.latitude()
             )
             viewModel.setAreal(
                 areal = calculatePolygonArea(listOf(cleanedPolygon)).toFloat(),
             )
-            viewModel.updateAllApi()
+            //viewModel.updateAllApi()
             onComplete(listOf(cleanedPolygon))
 
         }

@@ -153,6 +153,10 @@ class HomeViewModel : ViewModel() {
         _config.value = _config.value.copy(bottomSheetDetent = bottomSheetDetent)
     }
 
+    fun clearApiData() {
+        _apiData.value = ApiData()
+    }
+
     fun updateAllApi() {
         launchDataUpdates()
     }

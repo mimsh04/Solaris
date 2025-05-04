@@ -1,21 +1,23 @@
 package in2000.team42.data.frost
 
 import android.util.Log
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.auth.*
-import io.ktor.client.plugins.auth.providers.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.request.*
-import io.ktor.serialization.kotlinx.json.*
 import in2000.team42.data.frost.model.FrostData
 import in2000.team42.data.frost.model.FrostErrorResponse
-import in2000.team42.data.frost.model.FrostResponse // Import FrostResponse
+import in2000.team42.data.frost.model.FrostResponse
 import in2000.team42.data.frost.model.FrostResult
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.auth.Auth
+import io.ktor.client.plugins.auth.providers.BasicAuthCredentials
+import io.ktor.client.plugins.auth.providers.basic
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.isSuccess
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
@@ -114,12 +116,6 @@ class FrostDatasource() {
         stationMap: Map<String, List<String>>,
         referenceTime: String
     ): FrostResult = withContext(Dispatchers.IO) {
-        /*val elements = listOf(
-            temp,
-            snow,
-            cloudAreaFraction
-        )*/
-
         val responses = mutableListOf<FrostResponse>()
 
         for (element in elements) {
@@ -147,11 +143,9 @@ class FrostDatasource() {
                     } else {
                         val errorBody = response.body<FrostErrorResponse>()
                         Log.e(TAG, "Error fetching $element: ${errorBody.error.reason}")
-                        //return@withContext FrostResult.Failure(errorBody.error.reason)
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Error fetching $element: ${e.message}", e)
-                    //return@withContext FrostResult.Failure(e.message ?: "Unknown error fetching $element")
                 }
             } else {
                 Log.w(TAG, "No stations support $element")
@@ -163,42 +157,61 @@ class FrostDatasource() {
             return@withContext FrostResult.Failure("No weather data available")
         }
 
-        val weatherData = aggregateWeatherData(responses)
-        Log.i(TAG, "Aggregated ${weatherData.size} weather data points")
+        val weatherData = processWeatherData(responses)
+        Log.i(TAG, "Processed ${weatherData.size} weather data points")
         FrostResult.Success(weatherData)
     }
 
-    private fun aggregateWeatherData(responses: List<FrostResponse>): List<FrostData> {
+    private fun processWeatherData(responses: List<FrostResponse>): List<FrostData> {
+        // Samler alle reference times fra alle responsene
+        val allRefTimes = responses.flatMap { response ->
+            response.data.map { it.referenceTime }
+        }.distinct().sorted()
+
         val dataByTime = mutableMapOf<String, FrostData>()
 
+        // Initialiserer data med reference times
+        allRefTimes.forEach { refTime ->
+            dataByTime[refTime] = FrostData(
+                stationId = null,
+                referenceTime = refTime,
+                temperature = null,
+                snow = null,
+                cloudAreaFraction = null
+            )
+        }
+
+        // Fyller inn data fra responsene
         for (response in responses) {
             response.data.forEach { observation ->
                 val refTime = observation.referenceTime
-                val currentData = dataByTime.getOrPut(refTime) {
-                    FrostData(
-                        stationId = null,
-                        referenceTime = refTime,
-                        temperature = null,
-                        snow = null,
-                        cloudAreaFraction = null
-                    )
-                }
+                val currentData = dataByTime[refTime]!!
                 observation.observations.forEach { obs ->
                     val value = obs.value?.toDouble()
-                    val updatedData = dataByTime[refTime] ?: currentData
                     when (obs.elementId) {
-                        temp -> value?.let { dataByTime[refTime] = updatedData.copy(temperature = it) }
-                        snow -> value?.let { dataByTime[refTime] = updatedData.copy(snow = it) }
-                        cloudAreaFraction -> value?.let { dataByTime[refTime] = updatedData.copy(cloudAreaFraction = it * 12.5) }
+                        temp -> value?.let {
+                            dataByTime[refTime] = currentData.copy(
+                                stationId = observation.sourceId.split(":")[0],
+                                temperature = it
+                            )
+                        }
+                        snow -> value?.let {
+                            dataByTime[refTime] = currentData.copy(
+                                stationId = observation.sourceId.split(":")[0],
+                                snow = it
+                            )
+                        }
+                        cloudAreaFraction -> value?.let {
+                            dataByTime[refTime] = currentData.copy(
+                                stationId = observation.sourceId.split(":")[0],
+                                cloudAreaFraction = it * 12.5
+                            )
+                        }
                     }
-                }
-                // Setter StationId hvis den ikke allerede er satt
-                if (dataByTime[refTime]?.stationId == null) {
-                    val stationId = observation.sourceId.split(":")[0]
-                    dataByTime[refTime] = (dataByTime[refTime] ?: currentData).copy(stationId = stationId)
                 }
             }
         }
+
         return dataByTime.values.toList()
     }
 

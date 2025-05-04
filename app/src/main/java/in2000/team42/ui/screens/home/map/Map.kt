@@ -2,6 +2,7 @@ package in2000.team42.ui.screens.home.map
 
 import android.util.Log
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -226,12 +227,18 @@ fun Map(
             }
         }
 
-        SearchBar(
-            placeAutocomplete = placeAutoComplete,
-            onLocationSelected = { point -> settNyttPunkt(point) },
-            modifier = Modifier.padding(top = 26.dp),
-            isMapClicked = mapClicked
-        )
+        Column {
+            SearchBar(
+                placeAutocomplete = placeAutoComplete,
+                onLocationSelected = { point -> settNyttPunkt(point) },
+                modifier = Modifier.padding(top = 26.dp),
+                isMapClicked = mapClicked
+            )
+            WeatherIconButton(
+                modifier = Modifier.padding(top = 26.dp),
+                viewModel = viewModel
+            )
+        }
     }
     LaunchedEffect(config.value.latitude, config.value.longitude) {
         if (config.value.latitude != 0.0 && config.value.longitude != 0.0) {

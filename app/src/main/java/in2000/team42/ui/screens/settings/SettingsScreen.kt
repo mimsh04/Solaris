@@ -24,7 +24,6 @@ import in2000.team42.ui.screens.settings.komponenter.*
 
 @Composable
 fun SettingsScreen (navController: NavHostController,
-                    project: SavedProjectEntity?,
                     modifier : Modifier = Modifier) {
     var showFAQ by remember { mutableStateOf(false) }
 

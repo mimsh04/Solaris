@@ -112,9 +112,8 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(Screen.Settings.route) { backStackEntry ->
-                            val projectId = backStackEntry.arguments?.getString("projectId")
-                            val project = projectId?.let { projectViewModel.getProjectById(it) }
-                            SettingsScreen(navController, project)
+                            SettingsScreen(navController,
+                                modifier = Modifier.padding(innerPadding))
                         }
 
                         composable(Screen.Saved.route) {

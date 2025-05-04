@@ -38,7 +38,7 @@ fun WeatherIconButton(
     val snowValue = latestWeather?.snow?.replace("mm", "")?.trim()?.toDoubleOrNull() ?: 0.0
     val cloudValue = latestWeather?.cloud?.replace("%", "")?.trim()?.toDoubleOrNull() ?: 0.0
 
-    // Select weather icon based on data
+    // Velger vær ikon basert på værdata
     val iconResource = when {
         latestWeather == null -> R.drawable.ic_unknown_weather
         snowValue > 0.0 -> R.drawable.ic_snow_cloud
@@ -51,7 +51,9 @@ fun WeatherIconButton(
             onClick = { showPopup = true }
         ) {
             Image(
-                painter = painterResource(id = iconResource),
+                painter = painterResource(
+                    id = iconResource
+                ),
                 contentDescription = "Weather",
                 modifier = Modifier.size(24.dp)
             )

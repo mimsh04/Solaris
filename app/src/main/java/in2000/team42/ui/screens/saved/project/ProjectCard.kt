@@ -78,7 +78,7 @@ fun ProjectCard(
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
-                        text = "Incline: ${project.config.incline}",
+                        text = "Angle: ${project.config.incline}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

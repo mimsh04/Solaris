@@ -44,14 +44,11 @@ fun SettingsScreen (navController: NavHostController,
             ) {
 
                 Column {
-                    JohnDoe()
                     Column {
-                        ProjectContent(project)
                         AnbefalteProdukter()
 
                         LurerDuPaaNoe(navController, showFAQ, { showFAQ = it })
 
-                        SolarPanelData()
                     }
                 }
 

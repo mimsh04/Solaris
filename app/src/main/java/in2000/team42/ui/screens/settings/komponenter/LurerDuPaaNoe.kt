@@ -48,7 +48,7 @@ fun LurerDuPaaNoe(navController: NavController, showFAQ: Boolean, onShowFAQchang
         text = "Lurer du på noe?",
         fontWeight = FontWeight.Bold,
         fontSize = 30.sp,
-        color = MaterialTheme.colorScheme.onBackground,
+        color = MaterialTheme.colorScheme.primary,
         modifier = Modifier
             .padding(top = 25.dp, bottom = 10.dp)
             .fillMaxWidth()

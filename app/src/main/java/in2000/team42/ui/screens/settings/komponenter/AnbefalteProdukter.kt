@@ -35,7 +35,7 @@ fun AnbefalteProdukter () {
                 .padding(top = 80.dp,bottom=10.dp)
                 .fillMaxWidth()
                 .wrapContentWidth(Alignment.Start),
-            color = MaterialTheme.colorScheme.onBackground
+            color = MaterialTheme.colorScheme.primary
         )
 
         LazyVerticalGrid(
@@ -49,7 +49,7 @@ fun AnbefalteProdukter () {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(150.dp)
+                        .height(120.dp)
                         .clip(RoundedCornerShape(10.dp))
                         .background(MaterialTheme.colorScheme.secondary)
                         .clickable {
@@ -74,7 +74,7 @@ fun AnbefalteProdukter () {
                         text = "Otovo",
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 16.sp,
-                        color = MaterialTheme.colorScheme.onSecondary,
+                        color = Color.White,
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
                             .padding(8.dp)
@@ -85,7 +85,7 @@ fun AnbefalteProdukter () {
                 Box(
                     modifier= Modifier
                         .fillMaxWidth()
-                        .height(150.dp)
+                        .height(120.dp)
                         .clip(RoundedCornerShape(10.dp))
                         .background(MaterialTheme.colorScheme.secondary)
                         .clickable {

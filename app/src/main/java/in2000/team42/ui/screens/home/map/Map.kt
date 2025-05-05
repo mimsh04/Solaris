@@ -85,7 +85,7 @@ fun Map(
     var startZoom = 10.0
 
     fun getSheetMapOffset():Double =
-         if (config.value.bottomSheetDetent == "medium") 0.00035 else 0.00008
+         if (config.value.bottomSheetDetent == "medium") 0.00031 else 0.00008
 
 
     if (config.value.polygon != null) {

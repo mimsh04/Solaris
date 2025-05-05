@@ -72,7 +72,6 @@ class MainActivity : ComponentActivity() {
             val homeViewModel: HomeViewModel = viewModel()
             val projectViewModel: ProjectViewModel = viewModel()
 
-            val projectSharedState = remember { mutableStateOf<SavedProjectEntity?>(null) }
 
             // Sjekker internet-tilkobling og viser snackbar hvis ikke tilkoblet
             val snackbarHostState = remember { SnackbarHostState() }
@@ -107,7 +106,7 @@ class MainActivity : ComponentActivity() {
                             HomeScreen(
                                 navController,
                                 viewModel = homeViewModel,
-                                projectSharedState = projectSharedState,
+
                                 modifier = Modifier.padding(innerPadding)
                             )
                         }

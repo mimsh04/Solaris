@@ -15,15 +15,10 @@ import in2000.team42.ui.screens.home.map.Map
 fun HomeScreen(navController: NavHostController,
                modifier: Modifier = Modifier,
                viewModel: HomeViewModel,
-               projectSharedState: MutableState<SavedProjectEntity?>
+
 ) {
 
-    LaunchedEffect(projectSharedState.value) {
-        projectSharedState.value?.let { project ->
-            viewModel.loadProject(project)
-            projectSharedState.value = null
-        }
-    }
+
     Map(modifier = modifier, viewModel = viewModel)
     BottomSheet(modifier = modifier, viewModel = viewModel)
 }

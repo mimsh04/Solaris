@@ -53,7 +53,7 @@ fun Solradiasjon(modifier: Modifier = Modifier, solData: List<DailyProfile>) {
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-            Text("Solstråling",
+            Text("Gjennomsnitlig solstråling for måned i løpet av året",
                 style = MaterialTheme.typography.titleMedium
             )
         }

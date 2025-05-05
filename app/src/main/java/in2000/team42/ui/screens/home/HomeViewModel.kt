@@ -121,6 +121,7 @@ class HomeViewModel : ViewModel() {
         _config.value = project.config.copy(
             bottomSheetDetent = "medium"
         )
+        _apiData.value = ApiData()
         viewModelScope.launch {
             updateAllApi()
         }

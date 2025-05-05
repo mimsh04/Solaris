@@ -3,7 +3,6 @@ package in2000.team42.ui.screens.home.bottomSheet.grafer
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -11,18 +10,21 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
+import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLine
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
-import com.patrykandpatrick.vico.core.cartesian.marker.CartesianMarker
-import com.patrykandpatrick.vico.core.common.data.ExtraStore
+import com.patrykandpatrick.vico.compose.common.fill
+import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
 import in2000.team42.data.pgvis.model.DailyProfile
 
 private val monthNames = listOf(
@@ -37,6 +39,7 @@ private fun formatMonthTime (dailyProfile: DailyProfile ) =
 @Composable
 fun Solradiasjon(modifier: Modifier = Modifier, solData: List<DailyProfile>) {
     val modelProducer = remember { CartesianChartModelProducer() }
+    val lineColor = Color.Yellow
     LaunchedEffect(solData) {
         modelProducer.runTransaction {
             lineSeries {
@@ -53,7 +56,7 @@ fun Solradiasjon(modifier: Modifier = Modifier, solData: List<DailyProfile>) {
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-            Text("Gjennomsnitlig solstråling for måned i løpet av året",
+            Text("Gjennomsnitlig solstråling hver måned",
                 style = MaterialTheme.typography.titleMedium
             )
         }
@@ -62,7 +65,13 @@ fun Solradiasjon(modifier: Modifier = Modifier, solData: List<DailyProfile>) {
             chart =
                 rememberCartesianChart(
                     rememberLineCartesianLayer(
-                        pointSpacing = 10.dp
+                        pointSpacing = 10.dp,
+                        lineProvider = LineCartesianLayer.LineProvider.series(
+                            LineCartesianLayer.rememberLine(
+                                fill = LineCartesianLayer.LineFill.single(fill(lineColor)), // Solid line color
+
+                            )
+                        ),
                     ),
                     startAxis = VerticalAxis.rememberStart(
                         valueFormatter =

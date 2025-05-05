@@ -21,7 +21,7 @@ import in2000.team42.ui.screens.Screen
 private fun getNavItems(): List<NavItem> = listOf(
     NavItem(Screen.Saved, "Lagret", Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder),
     NavItem(Screen.Home, "Hjem", Icons.Filled.Home, Icons.Outlined.Home),
-    NavItem(Screen.Settings, "Profil", Icons.Filled.AccountCircle, Icons.Outlined.AccountCircle)
+    NavItem(Screen.Settings, "Innstillinger", Icons.Filled.Settings, Icons.Outlined.Settings)
 )
 
 

@@ -29,7 +29,6 @@ import androidx.compose.animation.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import in2000.team42.ui.screens.guide.InstallasjonScreen
@@ -46,9 +45,9 @@ class MainActivity : ComponentActivity() {
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         val locationGranted = permissions.entries.all { it.value }
-        if (!locationGranted) {
+        //if (!locationGranted) {
             // TODO: Fikse en popup om lokasjon ikke er skrudd på
-        }
+        //}
     }
 
     private fun requestLocationPermissions() {
@@ -102,15 +101,13 @@ class MainActivity : ComponentActivity() {
                         popExitTransition = { ExitTransition.None }
                     ) {
                         composable(Screen.Home.route){
-                            // Pass the shared ViewModel instead of creating a new one
                             HomeScreen(
                                 navController,
                                 viewModel = homeViewModel,
-
                                 modifier = Modifier.padding(innerPadding)
                             )
                         }
-                        composable(Screen.Settings.route) { backStackEntry ->
+                        composable(Screen.Settings.route) {
                             SettingsScreen(navController,
                                 modifier = Modifier.padding(innerPadding))
                         }

@@ -211,12 +211,21 @@ class HomeViewModel : ViewModel() {
                 )
                 when (weather) {
                     is FrostResult.Success -> {
-                        val displayData = weather.data.map { it.toDisplayWeather() }
-                        displayData.forEachIndexed { index, displayWeather ->
-                            Log.d(TAG, "DisplayWeather [$index]: month=${displayWeather.month}, temp=${displayWeather.temp}, snow=${displayWeather.snow}, cloud=${displayWeather.cloud}")
+                        // Sjekker om FrostData inneholder gyldige verdier for hver verdi
+                        val isValidData = weather.data.any { data ->
+                            data.temperature != null || data.snow != null || data.cloudAreaFraction != null
                         }
-                        _apiData.value = _apiData.value.copy(weatherData = displayData)
-                        Log.d(TAG, "Weather data updated: $displayData")
+                        if (isValidData) {
+                            val displayData = weather.data.mapNotNull { it.toDisplayWeather() }
+                            displayData.forEachIndexed { index, displayWeather ->
+                                Log.d(TAG, "DisplayWeather [$index]: month=${displayWeather.month}, temp=${displayWeather.temp}, snow=${displayWeather.snow}, cloud=${displayWeather.cloud}")
+                            }
+                            _apiData.value = _apiData.value.copy(weatherData = displayData)
+                            Log.d(TAG, "Weather data updated: $displayData")
+                        } else {
+                            _apiData.value = _apiData.value.copy(weatherData = emptyList())
+                            Log.w(TAG, "Weather data is empty or all values are null")
+                        }
                     }
                     is FrostResult.Failure -> {
                         _apiData.value = _apiData.value.copy(weatherData = emptyList())
@@ -231,15 +240,19 @@ class HomeViewModel : ViewModel() {
     }
 
     // Transformerer FrostData til DisplayData for enklere håndtering
-    private fun FrostData.toDisplayWeather(): DisplayWeather {
+    private fun FrostData.toDisplayWeather(): DisplayWeather? {
+        // Hopper over data hvis alle verdier er null
+        if (temperature == null && snow == null && cloudAreaFraction == null) {
+            return null
+        }
         val dateFormat = SimpleDateFormat("MMM yyyy", Locale.getDefault())
         val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val date = inputFormat.parse(referenceTime) ?: Date()
         return DisplayWeather(
             month = dateFormat.format(date),
-            temp = String.format("%.1f°C", temperature),
-            snow = String.format("%.1f", snow),
-            cloud = String.format("%.1f%%", cloudAreaFraction)
+            temp = temperature?.let { String.format("%.1f°C", it) } ?: "Ukjent",
+            snow = snow?.let { String.format("%.1fmm", it) } ?: "Ukjent",
+            cloud = cloudAreaFraction?.let { String.format("%.1f%%", it) } ?: "Ukjent"
         )
     }
 }

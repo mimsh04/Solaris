@@ -2,6 +2,7 @@ package in2000.team42.ui.screens.home.map
 
 import android.util.Log
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -38,6 +39,7 @@ import com.mapbox.maps.plugin.animation.MapAnimationOptions
 import com.mapbox.search.autocomplete.PlaceAutocomplete
 import in2000.team42.R
 import in2000.team42.ui.screens.home.HomeViewModel
+import in2000.team42.ui.screens.home.map.WeatherIcon.WeatherIconButton
 import in2000.team42.ui.screens.home.map.search.SearchBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,6 +47,7 @@ import kotlinx.coroutines.withContext
 
 @OptIn(MapboxExperimental::class)
 private suspend fun MapState.queryBuildingCoordinatesAt(point: Point): List<List<Point>>? {
+    // Use withContext to ensure map operations run on the main thread
     return withContext(Dispatchers.Main) {
         val selectedBuildings = queryRenderedFeatures(
             geometry = RenderedQueryGeometry(pixelForCoordinate(point)),
@@ -227,11 +230,17 @@ fun Map(
             }
         }
 
-        SearchBar(
-            placeAutocomplete = placeAutoComplete,
-            onLocationSelected = { point -> settNyttPunkt(point) },
-            modifier = Modifier.padding(top = 26.dp),
-            isMapClicked = mapClicked
-        )
+        Column {
+            SearchBar(
+                placeAutocomplete = placeAutoComplete,
+                onLocationSelected = { point -> settNyttPunkt(point) },
+                modifier = Modifier.padding(top = 26.dp),
+                isMapClicked = mapClicked
+            )
+            WeatherIconButton(
+                modifier = Modifier.padding(top = 26.dp),
+                viewModel = viewModel
+            )
+        }
     }
 }

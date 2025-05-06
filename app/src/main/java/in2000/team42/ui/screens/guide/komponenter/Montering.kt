@@ -62,14 +62,14 @@ fun ExpandableMonteringItem(monteringData: MonteringData){
                 Text(
                     text=monteringData.question,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.weight(1f)
                 )
 
                 Text(
                     text= if (isExpanded) "-" else "+",
                     style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = MaterialTheme.colorScheme.onBackground,
                 )
             }
 

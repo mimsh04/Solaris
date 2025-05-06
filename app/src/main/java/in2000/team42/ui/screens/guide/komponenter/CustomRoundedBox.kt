@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -26,8 +27,8 @@ fun CustomRoundedBox(
     height: Dp =200.dp,
     fontWeight: FontWeight=FontWeight.Normal,
     fontSize:TextUnit =16.sp,
-    textColor: Color = Color.Black,
-    backgroundColor:Color =Color.White,
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
+    backgroundColor:Color =MaterialTheme.colorScheme.surface,
     content: (@Composable () -> Unit)?=null
 ){
     Box(

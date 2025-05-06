@@ -2,7 +2,13 @@ package in2000.team42.ui.screens.home.bottomSheet.grafer
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,13 +24,18 @@ import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLine
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
+import com.patrykandpatrick.vico.compose.common.component.shapeComponent
 import com.patrykandpatrick.vico.compose.common.fill
+import com.patrykandpatrick.vico.compose.common.insets
+import com.patrykandpatrick.vico.compose.common.rememberHorizontalLegend
 import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.columnSeries
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
 import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
+import com.patrykandpatrick.vico.core.common.LegendItem
+import com.patrykandpatrick.vico.core.common.data.ExtraStore
 import in2000.team42.data.pgvis.model.DailyProfile
 import in2000.team42.data.pgvis.model.KwhMonthlyResponse
 import in2000.team42.data.produksjonKalkulering.calculateWithCoverage
@@ -35,7 +46,6 @@ private val monthNames = listOf(
     "Juli", "August", "September", "Oktober", "November", "Desember"
 )
 
-
 @Composable
 fun StromProduksjonGraf (
     kwhMonthlyData: List<KwhMonthlyResponse.MonthlyKwhData>,
@@ -43,20 +53,37 @@ fun StromProduksjonGraf (
     modifier: Modifier = Modifier
 ) {
     val modelProducer = remember { CartesianChartModelProducer() }
-    val lineColor = Color(0xffd4ac3f)
+    val colors = listOf(
+        Color(0xff6438a7),
+        Color(0xff3490de),
+        Color(0xff73e8dc),
+        Color(0xfff6b93b)
+    )
     LaunchedEffect(kwhMonthlyData, weatherData) {
         val utregnetData = calculateWithCoverage(kwhMonthlyData, weatherData)
         modelProducer.runTransaction {
             lineSeries {
                 series(
                     x = utregnetData.map { it.month },
+                    y = utregnetData.map { it.kWhPotential }
+                )
+            }
+            lineSeries {
+                series(
+                    x = utregnetData.map { it.month },
                     y = utregnetData.map { it.kWhEtterUtregning }
                 )
             }
-            columnSeries {
+            lineSeries {
                 series(
                     x = utregnetData.map { it.month },
-                    y = utregnetData.map { it.kWhPotential }
+                    y = utregnetData.map { it.skyTap }
+                )
+            }
+            lineSeries {
+                series(
+                    x = utregnetData.map { it.month },
+                    y = utregnetData.map { it.snoTap }
                 )
             }
         }
@@ -67,16 +94,43 @@ fun StromProduksjonGraf (
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-            Text("Produksjon av strøm hver måned med skydekke",
+            Text("Produksjon med værdata",
                 style = MaterialTheme.typography.titleMedium
             )
         }
 
+        StromProduksjonLegend(colors)
         CartesianChartHost(
             chart =
                 rememberCartesianChart(
+
                     rememberLineCartesianLayer(
-                        pointSpacing = 1.dp,
+                        lineProvider = LineCartesianLayer.LineProvider.series(
+                            LineCartesianLayer.rememberLine(
+                                fill = LineCartesianLayer.LineFill.single(fill(colors[0])),
+                            )
+                        ),
+                    ),
+                    rememberLineCartesianLayer(
+                        lineProvider = LineCartesianLayer.LineProvider.series(
+                            LineCartesianLayer.rememberLine(
+                                fill = LineCartesianLayer.LineFill.single(fill(colors[1])),
+                            )
+                        ),
+                    ),
+                    rememberLineCartesianLayer(
+                        lineProvider = LineCartesianLayer.LineProvider.series(
+                            LineCartesianLayer.rememberLine(
+                                fill = LineCartesianLayer.LineFill.single(fill(colors[2])),
+                            )
+                        ),
+                    ),
+                    rememberLineCartesianLayer(
+                        lineProvider = LineCartesianLayer.LineProvider.series(
+                            LineCartesianLayer.rememberLine(
+                                fill = LineCartesianLayer.LineFill.single(fill(colors[3])),
+                            )
+                        ),
                     ),
                     startAxis = VerticalAxis.rememberStart(
                         valueFormatter =
@@ -86,17 +140,19 @@ fun StromProduksjonGraf (
                     ),
                     bottomAxis = HorizontalAxis.rememberBottom(
                         itemPlacer = remember { HorizontalAxis.ItemPlacer.aligned(
-
+                            spacing = { 1 }
                         ) },
                         valueFormatter =
                             { _, value, _ ->
                                 monthNames[value.toInt() - 1]
-                            }
-                        ,
+                            },
+
+                        labelRotationDegrees = 90f
                     ),
                 ),
             modelProducer = modelProducer,
             modifier = modifier,
         )
     }
+
 }

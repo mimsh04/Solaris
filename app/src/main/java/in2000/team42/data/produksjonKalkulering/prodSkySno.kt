@@ -43,7 +43,7 @@ private fun calculateCloudImpact(
     kWhPotential: Double, cloudCoveragePercent: Double
 ): Triple<Double, Double, Double> {
     // Constant for loss per 1% cloud coverage
-    val lossCoefficient = 0.002
+    val lossCoefficient = 0.003
 
     // Calculate percentage loss
     val percentageLoss = 0.8 * cloudCoveragePercent

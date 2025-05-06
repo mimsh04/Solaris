@@ -8,8 +8,6 @@ import io.mockk.mockk
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-//import kotlin.math.toRadians
-
 class MapMatteTest {
 
     @Test

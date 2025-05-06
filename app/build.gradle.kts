@@ -115,6 +115,8 @@ dependencies {
     testImplementation (libs.junit)
     testImplementation (libs.mockk)
     testImplementation (libs.mapbox.sdk.geojson)
+    testImplementation(kotlin("test"))
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
 
 
 }

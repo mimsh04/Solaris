@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.runtime.android)
+    implementation(libs.androidx.runtime)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -109,7 +110,13 @@ dependencies {
     implementation("com.composables:core:1.20.1")
     implementation("androidx.compose.material:material-icons-core:1.6.7")
 
+    // Unit tests
     androidTestImplementation(libs.mockwebserver.v4120)
+    testImplementation (libs.junit)
+    testImplementation (libs.mockk)
+    testImplementation (libs.mapbox.sdk.geojson)
+    testImplementation(kotlin("test"))
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
 
 
 }

@@ -39,7 +39,7 @@ private fun formatMonthTime (dailyProfile: DailyProfile ) =
 @Composable
 fun Solradiasjon(modifier: Modifier = Modifier, solData: List<DailyProfile>) {
     val modelProducer = remember { CartesianChartModelProducer() }
-    val lineColor = Color.Yellow
+    val lineColor = Color(0xffd4ac3f)
     LaunchedEffect(solData) {
         modelProducer.runTransaction {
             lineSeries {
@@ -68,8 +68,7 @@ fun Solradiasjon(modifier: Modifier = Modifier, solData: List<DailyProfile>) {
                         pointSpacing = 10.dp,
                         lineProvider = LineCartesianLayer.LineProvider.series(
                             LineCartesianLayer.rememberLine(
-                                fill = LineCartesianLayer.LineFill.single(fill(lineColor)), // Solid line color
-
+                                fill = LineCartesianLayer.LineFill.single(fill(lineColor)),
                             )
                         ),
                     ),

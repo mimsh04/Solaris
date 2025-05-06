@@ -26,13 +26,17 @@ fun AnbefalteProdukter () {
     val gridState= rememberLazyGridState()
     val context = LocalContext.current
 
-    Column {
+    Column (
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
+    ){
         Text(
             text="Anbefalte Produkter",
             fontWeight = FontWeight.Bold,
             fontSize = 30.sp,
             modifier = Modifier
-                .padding(top = 80.dp,bottom=10.dp)
+                .padding(bottom=10.dp)
                 .fillMaxWidth()
                 .wrapContentWidth(Alignment.Start),
             color = MaterialTheme.colorScheme.primary

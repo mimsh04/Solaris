@@ -24,7 +24,7 @@ fun StromProduksjonLegend(colors: List<Color>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp),
     ) {
         // Use a fixed height constraint for the grid
         LazyVerticalGrid(
@@ -47,7 +47,7 @@ fun StromProduksjonLegend(colors: List<Color>) {
                     Text(
                         text = when ( index ) {
                             0 -> "Potensial produksjon"
-                            1 -> "Produksjon etter tap"
+                            1 -> "Produksjon etter utregnet tap"
                             2 -> "Tap til skydekke"
                             3 -> "Tap til snøfall"
                             else -> "Unknown"

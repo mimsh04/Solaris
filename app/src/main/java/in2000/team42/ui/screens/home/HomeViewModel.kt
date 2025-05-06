@@ -32,7 +32,8 @@ import java.util.Locale
 data class ApiData(
     val sunRadiation: List<DailyProfile> = emptyList(),
     val weatherData: List<DisplayWeather> = emptyList(), // Updated to use DisplayWeather
-    val kwhMonthlyData: List<KwhMonthlyResponse.MonthlyKwhData> = emptyList()
+    val kwhMonthlyData: List<KwhMonthlyResponse.MonthlyKwhData> = emptyList(),
+    val isLoading: Boolean = false,
 )
 
 // Dataklasse for å holde på brukerkonfigurerbar parametere
@@ -159,6 +160,7 @@ class HomeViewModel : ViewModel() {
     }
 
     fun updateAllApi() {
+        _apiData.value = ApiData(isLoading = true)
         launchDataUpdates()
     }
 
@@ -227,6 +229,7 @@ class HomeViewModel : ViewModel() {
                             _apiData.value = _apiData.value.copy(weatherData = emptyList())
                             Log.w(TAG, "Weather data is empty or all values are null")
                         }
+                        _apiData.value = _apiData.value.copy(isLoading = false)
                     }
                     is FrostResult.Failure -> {
                         _apiData.value = _apiData.value.copy(weatherData = emptyList())

@@ -22,8 +22,10 @@ import com.patrykandpatrick.vico.compose.common.fill
 import com.patrykandpatrick.vico.core.cartesian.axis.HorizontalAxis
 import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.core.cartesian.data.columnSeries
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
 import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
+import in2000.team42.data.pgvis.model.DailyProfile
 import in2000.team42.data.pgvis.model.KwhMonthlyResponse
 import in2000.team42.data.produksjonKalkulering.calculateWithCoverage
 import in2000.team42.ui.screens.home.DisplayWeather
@@ -37,7 +39,8 @@ private val monthNames = listOf(
 @Composable
 fun StromProduksjonGraf (
     kwhMonthlyData: List<KwhMonthlyResponse.MonthlyKwhData>,
-    weatherData: List<DisplayWeather>
+    weatherData: List<DisplayWeather>,
+    modifier: Modifier = Modifier
 ) {
     val modelProducer = remember { CartesianChartModelProducer() }
     val lineColor = Color(0xffd4ac3f)
@@ -46,12 +49,14 @@ fun StromProduksjonGraf (
         modelProducer.runTransaction {
             lineSeries {
                 series(
-                    x = solData.indices.map { it.toFloat() },
-                    y = solData.map { it.globalIrradiance ?: 0f }
-                ),
-                series(
-                    x = utregnetData.indices.map { it.toFloat() },
+                    x = utregnetData.map { it.month },
                     y = utregnetData.map { it.kWhEtterUtregning }
+                )
+            }
+            columnSeries {
+                series(
+                    x = utregnetData.map { it.month },
+                    y = utregnetData.map { it.kWhPotential }
                 )
             }
         }
@@ -62,7 +67,7 @@ fun StromProduksjonGraf (
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-            Text("Gjennomsnitlig solstråling hver måned",
+            Text("Produksjon av strøm hver måned med skydekke",
                 style = MaterialTheme.typography.titleMedium
             )
         }
@@ -71,26 +76,21 @@ fun StromProduksjonGraf (
             chart =
                 rememberCartesianChart(
                     rememberLineCartesianLayer(
-                        pointSpacing = 10.dp,
-                        lineProvider = LineCartesianLayer.LineProvider.series(
-                            LineCartesianLayer.rememberLine(
-                                fill = LineCartesianLayer.LineFill.single(fill(lineColor)),
-                            )
-                        ),
+                        pointSpacing = 1.dp,
                     ),
                     startAxis = VerticalAxis.rememberStart(
                         valueFormatter =
                             { _, value, _ ->
-                                "${value.toInt()} kWh/m²"
+                                "${value.toInt()} kWh"
                             }
                     ),
                     bottomAxis = HorizontalAxis.rememberBottom(
                         itemPlacer = remember { HorizontalAxis.ItemPlacer.aligned(
-                            spacing = {12}
+
                         ) },
                         valueFormatter =
                             { _, value, _ ->
-                                formatMonthTime(solData[value.toInt()])
+                                monthNames[value.toInt() - 1]
                             }
                         ,
                     ),

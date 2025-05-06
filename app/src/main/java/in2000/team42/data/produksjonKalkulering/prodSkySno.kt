@@ -1,5 +1,6 @@
 package in2000.team42.data.produksjonKalkulering
 
+import android.util.Log
 import in2000.team42.data.pgvis.model.KwhMonthlyResponse
 import in2000.team42.ui.screens.home.DisplayWeather
 
@@ -42,7 +43,7 @@ private fun calculateCloudImpact(
     kWhPotential: Double, cloudCoveragePercent: Double
 ): Triple<Double, Double, Double> {
     // Constant for loss per 1% cloud coverage
-    val lossCoefficient = 0.008
+    val lossCoefficient = 0.002
 
     // Calculate percentage loss
     val percentageLoss = 0.8 * cloudCoveragePercent
@@ -75,10 +76,10 @@ fun calculateWithCoverage(
     kwhMonthlyData.forEachIndexed() {i,  monthlyData ->
         val (snowPercLoss, snowKwhLoss, snowActual) = calculateSnowImpact(monthlyData.averageMonthly,
             if (sortedWeatherData[i].snow == "Ukjent") 0.0 else
-                sortedWeatherData[i].snow.split(" ").first().toDouble())
+                sortedWeatherData[i].snow.split("m").first().toDouble())
         val (cloudPercLoss, cloudKwhLoss, cloudActual) = calculateCloudImpact(monthlyData.averageMonthly,
             if (sortedWeatherData[i].cloud == "Ukjent") 60.0 else
-                sortedWeatherData[i].cloud.split(" ").first().toDouble())
+                sortedWeatherData[i].cloud.split("%").first().toDouble())
 
         produksjonKalkuleringList.add(ProduksjonKalkulering(
             kWhPotential = monthlyData.averageMonthly,
@@ -88,5 +89,6 @@ fun calculateWithCoverage(
             month = monthlyData.month
         ))
     }
+    Log.d("ProduksjonKalkulering", "ProduksjonKalkuleringList: $produksjonKalkuleringList")
     return produksjonKalkuleringList
 }

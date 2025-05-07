@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import in2000.team42.data.installasjon.model.MonteringData
-import in2000.team42.data.installasjon.model.stegForsteg
+import in2000.team42.data.installasjon.model.installationSteps
 
 @Composable
 fun Montering(){
@@ -33,7 +33,7 @@ fun Montering(){
         LazyColumn(
             modifier=Modifier.fillMaxWidth()
         ) {
-            items(stegForsteg) { steg ->
+            items(installationSteps) { steg ->
                 ExpandableMonteringItem(monteringData = steg)
                 Spacer(modifier = Modifier.height(8.dp))
             }
@@ -62,14 +62,14 @@ fun ExpandableMonteringItem(monteringData: MonteringData){
                 Text(
                     text=monteringData.question,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.weight(1f)
                 )
 
                 Text(
                     text= if (isExpanded) "-" else "+",
                     style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = MaterialTheme.colorScheme.onBackground,
                 )
             }
 

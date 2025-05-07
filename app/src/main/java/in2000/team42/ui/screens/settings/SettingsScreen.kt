@@ -10,12 +10,11 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import androidx.navigation.NavHostController
-import in2000.team42.ui.screens.faq.FaqDialog
-import in2000.team42.ui.screens.settings.komponenter.*
+import in2000.team42.ui.screens.settings.faq.FaqDialog
+import in2000.team42.ui.screens.settings.components.*
 
 @Composable
-fun SettingsScreen (navController: NavHostController,
-                    modifier : Modifier = Modifier) {
+fun SettingsScreen (navController: NavHostController) {
     var showFAQ by remember { mutableStateOf(false) }
 
 
@@ -36,8 +35,8 @@ fun SettingsScreen (navController: NavHostController,
          ) {
                 Text(
                     text = "Innstillinger",
-                    fontWeight = FontWeight.Bold, 
-                    fontSize = 30.sp, 
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .padding(bottom = 16.dp)
@@ -46,11 +45,11 @@ fun SettingsScreen (navController: NavHostController,
                 )
          }
             Box(modifier = Modifier.height(180.dp)) {
-                AnbefalteProdukter()
+                RecommendedProducts()
             }
 
             Box(modifier = Modifier.height(250.dp)) {
-                LurerDuPaaNoe(navController, showFAQ, { showFAQ = it })
+                HelpSection(navController, showFAQ, { showFAQ = it })
             }
         }
 
@@ -59,3 +58,12 @@ fun SettingsScreen (navController: NavHostController,
         }
     }
 }
+
+
+
+
+
+
+
+
+

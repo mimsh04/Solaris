@@ -2,7 +2,7 @@ package in2000.team42.data.installasjon.model
 
 data class MonteringData(val question: String, val answer: String)
 
-val stegForsteg= listOf(
+val installationSteps= listOf(
     MonteringData(" 1. Vurder muligheten for solcelleanlegg","Før du monterer solcellepaneler, sjekk om det er tillatt i kommunen. " +
             "Noen steder krever søknad eller har restriksjoner." +
             " Sørg også for at taket er i god stand og har gode solforhold. " +

@@ -12,18 +12,10 @@ import in2000.team42.ui.screens.home.map.Map
 
 @Composable
 
-fun HomeScreen(navController: NavHostController,
-               modifier: Modifier = Modifier,
-               viewModel: HomeViewModel,
-               projectSharedState: MutableState<SavedProjectEntity?>
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    viewModel: HomeViewModel,
 ) {
-
-    LaunchedEffect(projectSharedState.value) {
-        projectSharedState.value?.let { project ->
-            viewModel.loadProject(project)
-            projectSharedState.value = null
-        }
-    }
-    Map(modifier = modifier, viewModel = viewModel)
+    Map( viewModel = viewModel)
     BottomSheet(modifier = modifier, viewModel = viewModel)
 }

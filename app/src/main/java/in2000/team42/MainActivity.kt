@@ -19,7 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import in2000.team42.theme.IN2000_team42Theme
-import in2000.team42.ui.NavBar
+import in2000.team42.ui.navbar.NavBar
 import in2000.team42.ui.screens.Screen
 import in2000.team42.ui.screens.home.HomeScreen
 import in2000.team42.ui.screens.settings.SettingsScreen
@@ -29,7 +29,7 @@ import androidx.compose.animation.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import in2000.team42.ui.screens.guide.InstallasjonScreen
@@ -38,6 +38,8 @@ import in2000.team42.ui.screens.home.HomeViewModel
 import in2000.team42.ui.screens.saved.SavedScreen
 import in2000.team42.ui.screens.saved.project.ProjectViewModel
 import in2000.team42.utils.NetworkCheck
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
@@ -46,9 +48,9 @@ class MainActivity : ComponentActivity() {
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         val locationGranted = permissions.entries.all { it.value }
-        if (!locationGranted) {
+        //if (!locationGranted) {
             // TODO: Fikse en popup om lokasjon ikke er skrudd på
-        }
+        //}
     }
 
     private fun requestLocationPermissions() {
@@ -68,22 +70,29 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
 
-            // Create shared ViewModels at the activity level
             val homeViewModel: HomeViewModel = viewModel()
             val projectViewModel: ProjectViewModel = viewModel()
 
-            val projectSharedState = remember { mutableStateOf<SavedProjectEntity?>(null) }
-
-            // Sjekker internet-tilkobling og viser snackbar hvis ikke tilkoblet
             val snackbarHostState = remember { SnackbarHostState() }
             val scope = rememberCoroutineScope()
 
-            if (!NetworkCheck.isOnline(this)) {
-                scope.launch {
-                    snackbarHostState.showSnackbar(
-                        message = "Ingen internett-tilkobling",
-                        duration = androidx.compose.material3.SnackbarDuration.Long
-                    )
+            // Observes the network status and launches a snack bar if the user is offline
+            LaunchedEffect(Unit) {
+                NetworkCheck.observeNetworkStatus(this@MainActivity).collectLatest { isOnline ->
+                    if (!isOnline) {
+                        // Double-check network status after a short delay
+                        delay(300)
+                        if (!NetworkCheck.isOnline(this@MainActivity)) {
+                            scope.launch {
+                                snackbarHostState.showSnackbar(
+                                    message = "Ingen internett-tilkobling",
+                                    duration = androidx.compose.material3.SnackbarDuration.Indefinite
+                                )
+                            }
+                        }
+                    } else {
+                        snackbarHostState.currentSnackbarData?.dismiss()
+                    }
                 }
             }
 
@@ -103,23 +112,17 @@ class MainActivity : ComponentActivity() {
                         popExitTransition = { ExitTransition.None }
                     ) {
                         composable(Screen.Home.route){
-                            // Pass the shared ViewModel instead of creating a new one
                             HomeScreen(
-                                navController,
                                 viewModel = homeViewModel,
-                                projectSharedState = projectSharedState,
                                 modifier = Modifier.padding(innerPadding)
                             )
                         }
-                        composable(Screen.Settings.route) { backStackEntry ->
-                            SettingsScreen(navController,
-                                modifier = Modifier.padding(innerPadding))
+                        composable(Screen.Settings.route) {
+                            SettingsScreen(navController)
                         }
 
                         composable(Screen.Saved.route) {
                             SavedScreen(
-                                navController,
-                                modifier = Modifier.padding(innerPadding),
                                 viewModel = projectViewModel,
                                 onProjectClick = { project ->
                                     homeViewModel.loadProject(project)

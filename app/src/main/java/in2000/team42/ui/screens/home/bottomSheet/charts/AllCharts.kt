@@ -56,6 +56,7 @@ fun AllCharts(apiData: ApiData) {
                     SolarRadiationChart(
                         solData = apiData.sunRadiation
                     )
+
                 }
             }
             Spacer(modifier = Modifier.height(20.dp))

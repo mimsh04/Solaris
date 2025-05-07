@@ -41,6 +41,15 @@ fun Production(apiData: ApiData) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
+                    text = "\uD83D\uDCC6 Årlig resulatat",
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontSize = MaterialTheme.typography.titleLarge.fontSize * 1.35f
+                    ),
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.size(6.dp))
+                Text(
                     " ⚡ Produksjon: ${getYearlyProduction(apiData).toInt()} kWh",
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.titleLarge,

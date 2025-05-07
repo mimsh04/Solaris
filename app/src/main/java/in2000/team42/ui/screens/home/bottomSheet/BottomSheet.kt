@@ -18,6 +18,9 @@ import com.composables.core.SheetDetent
 import com.composables.core.rememberBottomSheetState
 import in2000.team42.model.solarPanels.defaultPanels
 import in2000.team42.ui.screens.home.HomeViewModel
+import in2000.team42.ui.screens.home.bottomSheet.grafer.AlleGrafer
+import in2000.team42.ui.screens.home.bottomSheet.grafer.Solradiasjon
+import in2000.team42.ui.screens.home.bottomSheet.grafer.StromProduksjonGraf
 import kotlinx.coroutines.launch
 
 val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
@@ -120,7 +123,11 @@ fun BottomSheet(
                     }
                     item {
                         UpdateApiButton {
+                            viewModel.clearApiData()
                             viewModel.updateAllApi()
+                            scope.launch {
+                                sheetState.animateTo(Peek)
+                            }
                         }
                     }
                     item {
@@ -140,6 +147,10 @@ fun BottomSheet(
                             modifier = Modifier.padding(16.dp)
                         )
                     }
+                    item {
+                        AlleGrafer(apiData.value)
+                    }
+
                 }
             }
         }

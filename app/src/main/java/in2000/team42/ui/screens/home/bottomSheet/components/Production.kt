@@ -1,10 +1,10 @@
 package in2000.team42.ui.screens.home.bottomSheet.components
 
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
@@ -55,7 +55,16 @@ fun Production(apiData: ApiData) {
                 Column  (
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
-                    Text("Årlig produksjon: ${getYearlyProduction(apiData).toInt()} kWh",
+
+                    Text(" ⚡ Produksjon: ${getYearlyProduction(apiData).toInt()} kWh",
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.size(6.dp))
+
+                    Text(
+                        "💰 Anslått besparelse: ${(getYearlyProduction(apiData) * 0.5).toInt()} kr",
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold

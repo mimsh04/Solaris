@@ -29,7 +29,7 @@ fun UpdateApiButton(
         )
     ) {
         Text(
-            text = "Regn ut produksjon",
+            text = "Kalkuler årlig produksjon",
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onPrimary
         )

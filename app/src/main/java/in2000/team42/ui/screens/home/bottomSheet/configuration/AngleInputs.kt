@@ -18,14 +18,14 @@ fun AngleInputs(
     ) {
 
         FloatInputField(
-            "Angle (0-90°)",
+            "Vinkel (0-90°)",
             incline,
             onInclineChange,
             0..90,
         )
 
         FloatInputField(
-            "Direction (-180 - 180°)",
+            "Retning (-180 - 180°)",
             direction,
             onDirectionChange,
             -180..180,

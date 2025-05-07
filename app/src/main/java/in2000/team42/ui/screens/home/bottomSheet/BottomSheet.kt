@@ -127,18 +127,6 @@ fun BottomSheet(
                         )
                     }
                     item {
-                        UpdateApiButton {
-                            viewModel.clearApiData()
-                            viewModel.updateAllApi()
-                            scope.launch {
-                                sheetState.animateTo(Peek)
-                            }
-                        }
-                    }
-                    item {
-                        Production(apiData.value)
-                    }
-                    item {
                         SaveButton(
                             viewModel = viewModel,
                             onShowSnackbar = { message ->
@@ -149,9 +137,23 @@ fun BottomSheet(
                                     )
                                 }
                             },
-                            modifier = Modifier.padding(16.dp)
                         )
                     }
+                    item {
+                        UpdateApiButton (
+                            isEnabled = apiData.value.isLoading.not(),
+                        ){
+                            viewModel.clearApiData()
+                            viewModel.updateAllApi()
+                            scope.launch {
+                                sheetState.animateTo(Peek)
+                            }
+                        }
+                    }
+                    item {
+                        Production(apiData.value)
+                    }
+
                     item {
                         AllCharts(apiData.value)
                     }

@@ -79,6 +79,7 @@ fun Map(
     val mapState = rememberMapState()
 
     val config = viewModel.configFlow.collectAsState()
+    val apiData = viewModel.apiDataFlow.collectAsState()
 
     var startPos = Point.fromLngLat(10.7522, 59.9139)
     var startZoom = 10.0
@@ -162,6 +163,10 @@ fun Map(
 
     fun onMapClicked(point: Point): Boolean {
         clearScreen()
+
+        // Allows loading of new building only when api isnt loading data
+        if (apiData.value.isLoading) return true
+
         val offset = getSheetMapOffset()
 
         loadHouse(point, onComplete = { polygon ->
@@ -203,7 +208,8 @@ fun Map(
             if (config.value.polygon.isNullOrEmpty().not()) {
 
                 PolygonAnnotation(
-                    points = config.value.polygon!!,
+                    // Fixes polygon so map isn's shouting at me in the log
+                    points = addFirstPoint(config.value.polygon!!) ,
 
                 ) {
                     fillColor = Color.Blue
@@ -215,7 +221,7 @@ fun Map(
                         point = point
                     ) {
                         iconImage = pointIcon
-                        iconSize = 1.0
+                        iconSize = 1.4
                         interactionsState.isDraggable = true
                         interactionsState.onDragged {
                             handleDraggedConrner(it.point, index)

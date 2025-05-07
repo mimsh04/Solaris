@@ -33,7 +33,7 @@ fun SaveButton(
         },
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(top = 8.dp),
         colors = if (isSaved) ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.errorContainer,
             contentColor = MaterialTheme.colorScheme.onErrorContainer

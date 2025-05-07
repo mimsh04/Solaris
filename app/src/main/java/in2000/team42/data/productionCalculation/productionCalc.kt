@@ -1,6 +1,5 @@
 package in2000.team42.data.productionCalculation
 
-import android.util.Log
 import in2000.team42.data.pgvis.model.KwhMonthlyResponse
 import in2000.team42.ui.screens.home.DisplayWeather
 
@@ -73,7 +72,7 @@ fun calculateWithCoverage(
 ) : List<ProductionCalculation>{
     val sortedWeatherData = sortWeatherDataByMonth(weatherData)
     val monthlyProductionCalculations = mutableListOf<ProductionCalculation>()
-    kwhMonthlyData.forEachIndexed() {i,  monthlyData ->
+    kwhMonthlyData.forEachIndexed {i,  monthlyData ->
         val (_, snowKwhLoss, _) = calculateSnowImpact(monthlyData.averageMonthly,
             if (sortedWeatherData[i].snow == "Ukjent") 0.0 else
                 sortedWeatherData[i].snow.split("m").first().replace(",", ".").toDouble())

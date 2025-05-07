@@ -92,7 +92,7 @@ fun PowerProductionChart (
         CartesianChartHost(
             chart =
                 rememberCartesianChart(
-
+                    // This is very ugly but for some reason i cant make a list of the lines
                     rememberLineCartesianLayer(
                         lineProvider = LineCartesianLayer.LineProvider.series(
                             LineCartesianLayer.rememberLine(

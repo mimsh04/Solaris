@@ -1,4 +1,4 @@
-package in2000.team42.ui.screens.home.bottomSheet
+package in2000.team42.ui.screens.home.bottomSheet.configuration
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.width

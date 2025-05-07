@@ -1,6 +1,5 @@
-package in2000.team42.ui
+package in2000.team42.ui.navbar
 
-import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -14,8 +13,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import in2000.team42.theme.IN2000_team42Theme
-import in2000.team42.ui.navbar.*
 import in2000.team42.ui.screens.Screen
 
 private fun getNavItems(): List<NavItem> = listOf(

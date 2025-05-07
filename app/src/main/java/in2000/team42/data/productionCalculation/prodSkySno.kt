@@ -1,10 +1,10 @@
-package in2000.team42.data.produksjonKalkulering
+package in2000.team42.data.productionCalculation
 
 import android.util.Log
 import in2000.team42.data.pgvis.model.KwhMonthlyResponse
 import in2000.team42.ui.screens.home.DisplayWeather
 
-data class ProduksjonKalkulering(
+data class ProductionCalculation(
     val kWhPotential: Double,
     val kWhEtterUtregning: Double,
     val snoTap: Double,
@@ -70,18 +70,18 @@ private fun sortWeatherDataByMonth(weatherData: List<DisplayWeather>): List<Disp
 fun calculateWithCoverage(
     kwhMonthlyData: List<KwhMonthlyResponse.MonthlyKwhData>,
     weatherData: List<DisplayWeather>
-) : List<ProduksjonKalkulering>{
+) : List<ProductionCalculation>{
     val sortedWeatherData = sortWeatherDataByMonth(weatherData)
-    val produksjonKalkuleringList = mutableListOf<ProduksjonKalkulering>()
+    val monthlyProductionCalculations = mutableListOf<ProductionCalculation>()
     kwhMonthlyData.forEachIndexed() {i,  monthlyData ->
-        val (snowPercLoss, snowKwhLoss, snowActual) = calculateSnowImpact(monthlyData.averageMonthly,
+        val (_, snowKwhLoss, _) = calculateSnowImpact(monthlyData.averageMonthly,
             if (sortedWeatherData[i].snow == "Ukjent") 0.0 else
                 sortedWeatherData[i].snow.split("m").first().toDouble())
-        val (cloudPercLoss, cloudKwhLoss, cloudActual) = calculateCloudImpact(monthlyData.averageMonthly,
+        val (_, cloudKwhLoss, _) = calculateCloudImpact(monthlyData.averageMonthly,
             if (sortedWeatherData[i].cloud == "Ukjent") 60.0 else
                 sortedWeatherData[i].cloud.split("%").first().toDouble())
 
-        produksjonKalkuleringList.add(ProduksjonKalkulering(
+        monthlyProductionCalculations.add(ProductionCalculation(
             kWhPotential = monthlyData.averageMonthly,
             kWhEtterUtregning = monthlyData.averageMonthly - (snowKwhLoss + cloudKwhLoss),
             snoTap = snowKwhLoss,
@@ -89,6 +89,6 @@ fun calculateWithCoverage(
             month = monthlyData.month
         ))
     }
-    Log.d("ProduksjonKalkulering", "ProduksjonKalkuleringList: $produksjonKalkuleringList")
-    return produksjonKalkuleringList
+    Log.d("ProduksjonKalkulering", "ProduksjonKalkuleringList: $monthlyProductionCalculations")
+    return monthlyProductionCalculations
 }

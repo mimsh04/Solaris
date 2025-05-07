@@ -14,8 +14,8 @@ import in2000.team42.data.pgvis.model.DailyProfile
 import in2000.team42.data.pgvis.PvTech
 import in2000.team42.data.pgvis.model.KwhMonthlyResponse
 import in2000.team42.data.saved.*
-import in2000.team42.model.solarPanels.SolarPanelModel
-import in2000.team42.model.solarPanels.defaultPanels
+import in2000.team42.data.solarPanels.SolarPanelModel
+import in2000.team42.data.solarPanels.defaultPanels
 import in2000.team42.ui.screens.home.map.getAdressOfPoint
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

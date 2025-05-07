@@ -26,7 +26,6 @@ fun StromProduksjonLegend(colors: List<Color>) {
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
     ) {
-        // Use a fixed height constraint for the grid
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             modifier = Modifier

@@ -1,4 +1,4 @@
-package in2000.team42.ui.screens.home.bottomSheet
+package in2000.team42.ui.screens.home.bottomSheet.configuration
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -8,7 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import in2000.team42.model.solarPanels.SolarPanelModel
+import in2000.team42.data.solarPanels.SolarPanelModel
 import java.util.Locale
 
 @Composable

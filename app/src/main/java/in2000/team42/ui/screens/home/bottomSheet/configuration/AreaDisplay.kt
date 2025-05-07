@@ -1,7 +1,7 @@
-package in2000.team42.ui.screens.home.bottomSheet
+package in2000.team42.ui.screens.home.bottomSheet.configuration
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,14 +12,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import in2000.team42.R
 
+@SuppressLint("DefaultLocale")
 @Composable
-fun ArealFelt(areal: Float, modifier: Modifier = Modifier) {
+fun AreaDisplay(areal: Float, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,

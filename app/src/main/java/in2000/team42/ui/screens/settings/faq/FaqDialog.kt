@@ -1,4 +1,4 @@
-package in2000.team42.ui.screens.faq
+package in2000.team42.ui.screens.settings.faq
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,7 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import in2000.team42.model.faq.faqItems
+
+
 
 @Composable
 fun FaqDialog(onDismiss:()->Unit){

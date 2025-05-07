@@ -1,7 +1,6 @@
-package in2000.team42.ui.screens.home.bottomSheet
+package in2000.team42.ui.screens.home.bottomSheet.configuration
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -13,7 +12,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun AdresseFelt(adresse: String, modifier: Modifier = Modifier) {
+fun AddressField(adresse: String, modifier: Modifier = Modifier) {
     Column (modifier = modifier) {
         Column {
             Text(

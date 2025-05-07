@@ -1,4 +1,4 @@
-package in2000.team42.model.strommen
+package in2000.team42.data.strommen.model
 
 import kotlinx.serialization.Serializable
 

@@ -1,16 +1,16 @@
-package in2000.team42.model.solarPanels
+package in2000.team42.data.solarPanels
 
 // effekt ikke ekte foreløpig
 val standardPanel = SolarPanelModel(
     id = "standard",
     name = "Solcelleplater",
-    efficiency = 18f, // 18%
+    efficiency = 19f, // 18%
     pricePerM2 = 2500f
 )
 val premiumPanel = SolarPanelModel(
     id = "solcelletakstein",
     name = "Solcelletakstein",
-    efficiency = 22f, // 22%
+    efficiency = 17.5f, // 22%
     pricePerM2 = 4000f
 )
 

@@ -1,4 +1,4 @@
-package in2000.team42.ui.screens.home.bottomSheet
+package in2000.team42.ui.screens.home.bottomSheet.configuration
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -15,12 +15,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import in2000.team42.model.solarPanels.SolarPanelModel
+import in2000.team42.data.solarPanels.SolarPanelModel
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 
 @Composable
-fun SolcelleDropdown(
+fun SolarPanelDropdown(
     modifier: Modifier = Modifier,
     panelOptions: List<SolarPanelModel>,
     selectedPanel: SolarPanelModel,

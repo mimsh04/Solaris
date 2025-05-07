@@ -24,7 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import in2000.team42.ui.screens.faq.FaqDialog
+import in2000.team42.ui.screens.settings.faq.FaqDialog
 import in2000.team42.ui.screens.settings.komponenter.*
 
 @Composable

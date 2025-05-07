@@ -31,7 +31,7 @@ fun PowerProductionLegend(colors: List<Color>) {
             columns = GridCells.Fixed(2),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(90.dp),
+                .height(100.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {

@@ -18,4 +18,11 @@ val faqItems = listOf(
     FAQ("Kan jeg stole på beregningene i appen?","Appen baserer seg på tilgjengelige data og dokumenterte beregningsmodeller, " +
             "men verdiene kan avvike fra faktiske forhold." +
             "Det anbefales alltid å sammenligne resultatene med flere kilder.")
+    , FAQ("Hva er forskjellen på de ulike panelene?",
+        "Solcelleplater og solcelletakstein er de to vanligste typene solceller i Norge. " +
+                "Solcelleplater monteres oppå eksisterende tak og koster mellom 2.500 og 3.000 kroner per m². " +
+                "De gir noe mer effekt per panel enn solcelletakstein, men dekker ofte en mindre del av takflaten. " +
+                "Solcelletakstein erstatter vanlig takstein og koster mellom 4.000 og 5.000 kroner per m². " +
+                "De er spesielt gunstige ved takrenovering, siden de både fungerer som tak og solcelle, noe som kan gi en total kostnadsbesparelse. " +
+                "De er også kjent for et mer estetisk og diskré uttrykk."),
 )

@@ -2,6 +2,8 @@ package in2000.team42.data.pgvis.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+// Warnings skyldes serializable må ha samme navn som i JSON responsen
+
 @Serializable
 data class RadiationResponse(
     val inputs: Inputs? = null,

@@ -1,5 +1,6 @@
 package in2000.team42.ui.screens.home
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,8 +15,8 @@ import in2000.team42.data.pgvis.model.DailyProfile
 import in2000.team42.data.pgvis.PvTech
 import in2000.team42.data.pgvis.model.KwhMonthlyResponse
 import in2000.team42.data.saved.*
-import in2000.team42.model.solarPanels.SolarPanelModel
-import in2000.team42.model.solarPanels.defaultPanels
+import in2000.team42.data.solarPanels.SolarPanelModel
+import in2000.team42.data.solarPanels.defaultPanels
 import in2000.team42.ui.screens.home.map.getAdressOfPoint
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,7 +29,6 @@ import java.util.Date
 import java.util.Locale
 
 
-// Dataklasse for å holde på API-relatert data
 data class ApiData(
     val sunRadiation: List<DailyProfile> = emptyList(),
     val weatherData: List<DisplayWeather> = emptyList(), // Updated to use DisplayWeather
@@ -36,7 +36,6 @@ data class ApiData(
     val isLoading: Boolean = false,
 )
 
-// Dataklasse for å holde på brukerkonfigurerbar parametere
 data class Config(
     var longitude: Double = 0.0,
     var latitude: Double = 0.0,
@@ -49,7 +48,6 @@ data class Config(
     var selectedPanelModel: SolarPanelModel = defaultPanels[0]
 )
 
-// Display-vennlig dataklasse for vaeret
 data class DisplayWeather(
     val month: String,
     val temp: String,
@@ -64,8 +62,8 @@ class HomeViewModel : ViewModel() {
     private val savedProjectDao = SavedProjectDatabase.getDatabase().savedProjectDao()
 
 
-    private val config = Config() // Instance of the Config class
-    private val apiData = ApiData() // Instance of the ApiData class
+    private val config = Config()
+    private val apiData = ApiData()
 
     private val _apiData = MutableStateFlow(apiData)
     private val _config = MutableStateFlow(config)
@@ -90,7 +88,8 @@ class HomeViewModel : ViewModel() {
 
     fun isCurrentProjectSaved(): Flow<Boolean> {
         return savedProjectDao.getAllProjects().map { projects ->
-            projects.any { it.config.copy(bottomSheetDetent = "") == _config.value.copy(bottomSheetDetent = "") }
+            projects.any { it.config.copy(bottomSheetDetent = "") ==
+                    _config.value.copy(bottomSheetDetent = "") }
         }
     }
 
@@ -136,7 +135,6 @@ class HomeViewModel : ViewModel() {
         _config.value = _config.value.copy(vinkel = vinkel)
     }
 
-    // For aa sette areal of solcelleEffekt
     fun setAreal(areal: Float) {
         _config.value = _config.value.copy(areal = areal)
     }
@@ -201,7 +199,8 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    private fun calculatePeakPower() = _config.value.selectedPanelModel.efficiency / 100 * _config.value.areal
+    private fun calculatePeakPower() =
+        _config.value.selectedPanelModel.efficiency / 100 * _config.value.areal
 
     private fun updateWeatherData() {
         viewModelScope.launch {
@@ -214,14 +213,18 @@ class HomeViewModel : ViewModel() {
                 )
                 when (weather) {
                     is FrostResult.Success -> {
-                        // Sjekker om FrostData inneholder gyldige verdier for hver verdi
                         val isValidData = weather.data.any { data ->
-                            data.temperature != null || data.snow != null || data.cloudAreaFraction != null
+                            data.temperature != null ||
+                            data.snow != null ||
+                            data.cloudAreaFraction != null
                         }
                         if (isValidData) {
                             val displayData = weather.data.mapNotNull { it.toDisplayWeather() }
                             displayData.forEachIndexed { index, displayWeather ->
-                                Log.d(TAG, "DisplayWeather [$index]: month=${displayWeather.month}, temp=${displayWeather.temp}, snow=${displayWeather.snow}, cloud=${displayWeather.cloud}")
+                                Log.d(TAG,
+                                "DisplayWeather [$index]: month=${displayWeather.month}," +
+                                    "temp=${displayWeather.temp}, snow=${displayWeather.snow}, " +
+                                    "cloud=${displayWeather.cloud}")
                             }
                             _apiData.value = _apiData.value.copy(weatherData = displayData)
                             Log.d(TAG, "Weather data updated: $displayData")
@@ -243,9 +246,8 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    // Transformerer FrostData til DisplayData for enklere håndtering
+    @SuppressLint("DefaultLocale")
     private fun FrostData.toDisplayWeather(): DisplayWeather? {
-        // Hopper over data hvis alle verdier er null
         if (temperature == null && snow == null && cloudAreaFraction == null) {
             return null
         }

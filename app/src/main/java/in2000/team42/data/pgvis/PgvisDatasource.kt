@@ -29,7 +29,7 @@ class PgvisDatasource {
     }
 
     /**
-     * Hent daglig gjenosnnitlig radiasjon for hver time av dagen for en gitt måned
+     * Hent daglig gjennomsnittlig radiasjon for hver time av dagen for en gitt måned
      *
      * @param lat Latitude
      * @param lon Longitude

@@ -24,12 +24,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import in2000.team42.ui.screens.faq.FaqDialog
-import in2000.team42.ui.screens.settings.komponenter.*
+import in2000.team42.ui.screens.settings.faq.FaqDialog
+import in2000.team42.ui.screens.settings.components.*
 
 @Composable
-fun SettingsScreen (navController: NavHostController,
-                    modifier : Modifier = Modifier) {
+fun SettingsScreen (navController: NavHostController) {
     var showFAQ by remember { mutableStateOf(false) }
 
 
@@ -53,8 +52,8 @@ fun SettingsScreen (navController: NavHostController,
                     .wrapContentWidth(Alignment.Start)
             )
             Column {
-                AnbefalteProdukter()
-                LurerDuPaaNoe(navController, showFAQ, { showFAQ = it })
+                RecommendedProducts()
+                HelpSection(navController, showFAQ, { showFAQ = it })
             }
         }
     }

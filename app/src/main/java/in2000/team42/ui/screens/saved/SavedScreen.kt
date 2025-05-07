@@ -19,10 +19,8 @@ import in2000.team42.ui.screens.saved.project.ProjectViewModel
 
 @Composable
 fun SavedScreen(
-    navController: NavController,
-    modifier: Modifier = Modifier,
     viewModel: ProjectViewModel,
-    onProjectClick: (SavedProjectEntity) -> Unit // Add this parameter
+    onProjectClick: (SavedProjectEntity) -> Unit
 ) {
     val savedProjects = viewModel.savedProjects.collectAsState(initial = emptyList())
 

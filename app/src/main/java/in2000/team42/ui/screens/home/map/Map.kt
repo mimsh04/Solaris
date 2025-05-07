@@ -6,9 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,7 +39,7 @@ import com.mapbox.maps.plugin.animation.MapAnimationOptions
 import com.mapbox.search.autocomplete.PlaceAutocomplete
 import in2000.team42.R
 import in2000.team42.ui.screens.home.HomeViewModel
-import in2000.team42.ui.screens.home.map.WeatherIcon.WeatherIconButton
+import in2000.team42.ui.screens.home.map.weatherIcon.WeatherIconButton
 import in2000.team42.ui.screens.home.map.search.SearchBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -67,7 +65,6 @@ private suspend fun MapState.queryBuildingCoordinatesAt(point: Point): List<List
 
 @Composable
 fun Map(
-    modifier: Modifier = Modifier,
     viewModel: HomeViewModel
 ) {
     MapboxOptions.accessToken = stringResource(R.string.mapbox_access_token)
@@ -112,7 +109,6 @@ fun Map(
         viewModel.clearApiData()
         couroutineScope.launch {
 
-            //viewModel.setPolygon(null)
             kotlinx.coroutines.delay(delay)
             val newPolygon = mapState.queryBuildingCoordinatesAt(point)
 
@@ -134,7 +130,6 @@ fun Map(
             viewModel.setAreal(
                 areal = calculatePolygonArea(listOf(cleanedPolygon)).toFloat(),
             )
-            //viewModel.updateAllApi()
             onComplete(listOf(cleanedPolygon))
 
         }
@@ -176,12 +171,10 @@ fun Map(
         return true
     }
 
-    fun settNyttPunkt(point: Point) : Boolean{
+    fun setNewPoint(point: Point) : Boolean{
         clearScreen()
-        //viewModel.setGeoAddress(point)
         val offset = getSheetMapOffset()
         mapEaseTo(point, 2000, offset)
-        //loadHouse(point, delay = 2400)
         return true
     }
 
@@ -235,7 +228,7 @@ fun Map(
         Column {
             SearchBar(
                 placeAutocomplete = placeAutoComplete,
-                onLocationSelected = { point -> settNyttPunkt(point) },
+                onLocationSelected = { point -> setNewPoint(point) },
                 modifier = Modifier.padding(top = 26.dp),
                 isMapClicked = mapClicked
             )

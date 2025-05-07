@@ -1,7 +1,7 @@
 package in2000.team42
 
-import in2000.team42.model.solarPanels.SolarPanelModel
-import in2000.team42.model.solarPanels.defaultPanels
+import in2000.team42.data.solarPanels.SolarPanelModel
+import in2000.team42.data.solarPanels.defaultPanels
 import in2000.team42.ui.screens.home.ApiData
 import in2000.team42.ui.screens.home.Config
 import org.junit.Test

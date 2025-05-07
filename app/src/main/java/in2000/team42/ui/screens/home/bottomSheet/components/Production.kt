@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -32,46 +33,29 @@ private fun getYearlyProduction(
 
 @Composable
 fun Production(apiData: ApiData) {
-    Row (modifier = Modifier.fillMaxWidth(),
+    Row (modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ){
-        if (apiData.kwhMonthlyData.isEmpty() and apiData.isLoading.not()) {
-            Text("Trykk på regn ut produksjon knappen",
-                color = MaterialTheme.colorScheme.onBackground)
-        } else {
-            if (apiData.isLoading) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(30.dp),
-                        color = MaterialTheme.colorScheme.primary,
-                        strokeWidth = 4.dp
-                    )
-                }
-            } else {
-                Column  (
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ){
+        if (apiData.isLoading.not() and apiData.weatherData.isNotEmpty()) {
+            Column  (
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    " ⚡ Produksjon: ${getYearlyProduction(apiData).toInt()} kWh",
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.size(6.dp))
 
-                    Text(" ⚡ Produksjon: ${getYearlyProduction(apiData).toInt()} kWh",
-                        color = MaterialTheme.colorScheme.onBackground,
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.size(6.dp))
-
-                    Text(
-                        "💰 Anslått besparelse: ${(getYearlyProduction(apiData) * 0.5).toInt()} kr",
-                        color = MaterialTheme.colorScheme.onBackground,
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                Text(
+                    "💰 Anslått besparelse: ${(getYearlyProduction(apiData) * 0.5).toInt()} kr",
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
-    }
 
+    }
 }

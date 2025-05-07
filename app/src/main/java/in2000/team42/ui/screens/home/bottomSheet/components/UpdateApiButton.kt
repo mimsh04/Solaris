@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun UpdateApiButton(
     modifier: Modifier = Modifier,
+    isEnabled: Boolean = true,
     onClick: () -> Unit
 ) {
     Button(
@@ -25,8 +26,11 @@ fun UpdateApiButton(
         shape = MaterialTheme.shapes.medium,
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary
-        )
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+            disabledContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f),
+            disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+        ),
+        enabled = isEnabled,
     ) {
         Text(
             text = "Kalkuler årlig produksjon",

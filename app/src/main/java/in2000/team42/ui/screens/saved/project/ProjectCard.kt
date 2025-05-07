@@ -1,5 +1,6 @@
 package in2000.team42.ui.screens.saved.project
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -44,6 +45,7 @@ import in2000.team42.data.saved.SavedProjectEntity
  * @param project The project data to display.
  * @param onClick Called when the card is clicked.
  */
+@SuppressLint("DefaultLocale")
 @Composable
 fun ProjectCard(
     project: SavedProjectEntity,
@@ -56,7 +58,7 @@ fun ProjectCard(
         stringResource(R.string.mapbox_access_token),
         300,
         300,
-        18.5f,
+        18.3f,
         project.config.polygon!!,
         if (isSystemInDarkTheme()) Style.DARK else Style.MAPBOX_STREETS
     )
@@ -104,6 +106,7 @@ fun ProjectCard(
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
+
                 Row {
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
@@ -117,7 +120,7 @@ fun ProjectCard(
                         contentDescription = "Polygon preview",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
-                            .padding(end = 8.dp)
+                            .padding(end = 16.dp)
                             .width(160.dp)
                             .height(120.dp)
                             .clip(RoundedCornerShape(8.dp))
@@ -138,7 +141,7 @@ fun ProjectCard(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            text = "Areal: ${project.config.areal}m²",
+                            text = "Areal: ${String.format("%.2f", project.config.areal)} m²",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

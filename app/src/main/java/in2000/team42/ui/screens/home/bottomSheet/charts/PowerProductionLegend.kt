@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -30,30 +31,18 @@ fun PowerProductionLegend(colors: List<Color>) {
             columns = GridCells.Fixed(2),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(80.dp),
+                .height(90.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(4) { index ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(20.dp)
-                            .background(colors[index])
-                    )
-                    Text(
-                        text = when ( index ) {
-                            0 -> "Potensial produksjon"
-                            1 -> "Produksjon etter utregnet tap"
-                            2 -> "Tap til skydekke"
-                            3 -> "Tap til snøfall"
-                            else -> "Unknown"
-                        },
-                        modifier = Modifier.padding(start = 8.dp)
-                    )
-                }
+                LegendItem(when ( index ) {
+                    0 -> "Potensial produksjon"
+                    1 -> "Produksjon etter utregnet tap"
+                    2 -> "Tap til skydekke"
+                    3 -> "Tap til snøfall"
+                    else -> "Unknown"
+                }, colors[index])
             }
         }
     }

@@ -11,18 +11,23 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.mapbox.maps.Style
 import in2000.team42.R
 import in2000.team42.data.mapboxStaticImage.getStaticImage
@@ -40,6 +45,16 @@ fun ProjectCard(
     onClick: () -> Unit = {},
     isInSwipeContext: Boolean
 ) {
+    val mapUrl = getStaticImage(
+        project.config.longitude,
+        project.config.latitude,
+        stringResource(R.string.mapbox_access_token),
+        600,
+        600,
+        19,
+        project.config.polygon!!,
+        if (isSystemInDarkTheme()) Style.DARK else Style.MAPBOX_STREETS
+    )
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -79,10 +94,17 @@ fun ProjectCard(
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
-
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(mapUrl)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = "Polygon preview",
+                )
                 Column(
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
+
                     Text(
                         text = "Angle: ${project.config.incline}",
                         style = MaterialTheme.typography.bodyMedium,
@@ -103,20 +125,7 @@ fun ProjectCard(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    AsyncImage(
-                        model = getStaticImage(
-                            project.config.latitude,
-                            project.config.longitude,
-                            stringResource(R.string.mapbox_access_token),
-                            600,
-                            600,
-                            20,
-                            project.config.polygon!!,
-                            if (isSystemInDarkTheme()) Style.DARK else Style.MAPBOX_STREETS
 
-                        ),
-                        contentDescription = "Polygon preview"
-                    )
 
                 }
 

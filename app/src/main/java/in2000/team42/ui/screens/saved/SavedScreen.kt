@@ -69,7 +69,11 @@ fun SavedScreen(
             }
         } else {
             // Display a scrollable list of saved projects
-            LazyColumn {
+            LazyColumn (
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 60.dp)
+            ) {
                 items(savedProjects.value) { project ->
                     // Each project can be swiped to delete
                     SwipeToDeleteItem(

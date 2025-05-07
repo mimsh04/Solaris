@@ -4,6 +4,12 @@ import com.mapbox.geojson.Point
 import kotlin.math.abs
 import kotlin.math.cos
 
+fun addFirstPoint(polygon: List<List<Point>>): List<List<Point>> {
+    val newPolygon = polygon.first().toMutableList()
+    newPolygon.add(newPolygon.first())
+    return listOf(newPolygon)
+}
+
 fun calculateCentroid(input: List<List<Point>>): Point {
 
     var sumLat = 0.0

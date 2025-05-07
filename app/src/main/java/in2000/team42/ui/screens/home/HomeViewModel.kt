@@ -145,7 +145,6 @@ class HomeViewModel : ViewModel() {
     }
 
     fun setPolygon(polygon: List<List<Point>>?) {
-        Log.d(TAG, "Setting polygon: $polygon")
         _config.value = _config.value.copy(polygon = polygon)
     }
 

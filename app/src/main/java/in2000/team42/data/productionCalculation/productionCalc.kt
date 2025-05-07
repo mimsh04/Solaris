@@ -76,7 +76,7 @@ fun calculateWithCoverage(
     kwhMonthlyData.forEachIndexed() {i,  monthlyData ->
         val (_, snowKwhLoss, _) = calculateSnowImpact(monthlyData.averageMonthly,
             if (sortedWeatherData[i].snow == "Ukjent") 0.0 else
-                sortedWeatherData[i].snow.split("m").first().toDouble())
+                sortedWeatherData[i].snow.split("m").first().replace(",", ".").toDouble())
         val (_, cloudKwhLoss, _) = calculateCloudImpact(monthlyData.averageMonthly,
             if (sortedWeatherData[i].cloud == "Ukjent") 60.0 else
                 sortedWeatherData[i].cloud.split("%").first().toDouble())

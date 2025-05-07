@@ -61,8 +61,6 @@ fun Production(apiData: ApiData) {
                     )
                 }
             }
-
-
         }
     }
 

@@ -107,8 +107,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(Screen.Settings.route) {
-                            SettingsScreen(navController,
-                                modifier = Modifier.padding(innerPadding))
+                            SettingsScreen(navController)
                         }
 
                         composable(Screen.Saved.route) {

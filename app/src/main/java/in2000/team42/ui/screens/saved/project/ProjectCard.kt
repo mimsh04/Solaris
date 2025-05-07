@@ -2,6 +2,7 @@ package in2000.team42.ui.screens.saved.project
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,9 +18,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
+import com.mapbox.maps.Style
+import in2000.team42.R
+import in2000.team42.data.mapboxStaticImage.getStaticImage
 import in2000.team42.data.saved.SavedProjectEntity
 
 /**
@@ -97,7 +103,20 @@ fun ProjectCard(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
+                    AsyncImage(
+                        model = getStaticImage(
+                            project.config.latitude,
+                            project.config.longitude,
+                            stringResource(R.string.mapbox_access_token),
+                            600,
+                            600,
+                            20,
+                            project.config.polygon!!,
+                            if (isSystemInDarkTheme()) Style.DARK else Style.MAPBOX_STREETS
 
+                        ),
+                        contentDescription = "Polygon preview"
+                    )
 
                 }
 

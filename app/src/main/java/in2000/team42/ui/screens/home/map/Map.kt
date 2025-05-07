@@ -215,7 +215,7 @@ fun Map(
                         point = point
                     ) {
                         iconImage = pointIcon
-                        iconSize = 1.0
+                        iconSize = 1.4
                         interactionsState.isDraggable = true
                         interactionsState.onDragged {
                             handleDraggedConrner(it.point, index)

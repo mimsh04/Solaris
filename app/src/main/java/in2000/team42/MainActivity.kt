@@ -19,7 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import in2000.team42.theme.IN2000_team42Theme
-import in2000.team42.ui.NavBar
+import in2000.team42.ui.navbar.NavBar
 import in2000.team42.ui.screens.Screen
 import in2000.team42.ui.screens.home.HomeScreen
 import in2000.team42.ui.screens.settings.SettingsScreen
@@ -102,20 +102,16 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(Screen.Home.route){
                             HomeScreen(
-                                navController,
                                 viewModel = homeViewModel,
                                 modifier = Modifier.padding(innerPadding)
                             )
                         }
                         composable(Screen.Settings.route) {
-                            SettingsScreen(navController,
-                                modifier = Modifier.padding(innerPadding))
+                            SettingsScreen(navController)
                         }
 
                         composable(Screen.Saved.route) {
                             SavedScreen(
-                                navController,
-                                modifier = Modifier.padding(innerPadding),
                                 viewModel = projectViewModel,
                                 onProjectClick = { project ->
                                     homeViewModel.loadProject(project)

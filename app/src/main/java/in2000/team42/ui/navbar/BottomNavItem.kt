@@ -1,16 +1,33 @@
 package in2000.team42.ui.navbar
 
-import androidx.compose.animation.core.*
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.*
-import androidx.compose.ui.draw.*
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 
 /**
@@ -69,7 +86,7 @@ fun BottomNavItem(
                 modifier = Modifier
                     .align(Alignment.CenterVertically)
                     .fillMaxHeight()
-                    .padding(start = 12.dp)
+                    .padding(start = 4.dp)
                     .alpha(animatedAlpha)
                     .size(animatedIconSize),
                 isActive = isSelected,
@@ -87,7 +104,6 @@ fun BottomNavItem(
                 Text(
                     text = navItem.title,
                     color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(start = 8.dp, end = 10.dp),
                     maxLines = 1,
                 )
             }

@@ -1,7 +1,7 @@
 package in2000.team42.data.strommen
 
 import android.util.Log
-import in2000.team42.model.strommen.Strommen
+import in2000.team42.data.strommen.model.Strommen
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO

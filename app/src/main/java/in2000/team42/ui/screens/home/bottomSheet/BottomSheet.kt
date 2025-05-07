@@ -16,22 +16,27 @@ import androidx.compose.ui.unit.sp
 import com.composables.core.DragIndication
 import com.composables.core.SheetDetent
 import com.composables.core.rememberBottomSheetState
-import in2000.team42.model.solarPanels.defaultPanels
+import in2000.team42.data.solarPanels.defaultPanels
 import in2000.team42.ui.screens.home.HomeViewModel
-import in2000.team42.ui.screens.home.bottomSheet.grafer.AlleGrafer
-import in2000.team42.ui.screens.home.bottomSheet.grafer.Solradiasjon
-import in2000.team42.ui.screens.home.bottomSheet.grafer.StromProduksjonGraf
+import in2000.team42.ui.screens.home.bottomSheet.charts.AllCharts
+import in2000.team42.ui.screens.home.bottomSheet.configuration.AddressField
+import in2000.team42.ui.screens.home.bottomSheet.configuration.AreaDisplay
+import in2000.team42.ui.screens.home.bottomSheet.configuration.SolarPanelDropdown
+import in2000.team42.ui.screens.home.bottomSheet.configuration.AngleInputs
+import in2000.team42.ui.screens.home.bottomSheet.components.Production
+import in2000.team42.ui.screens.home.bottomSheet.components.SaveButton
+import in2000.team42.ui.screens.home.bottomSheet.components.UpdateApiButton
 import kotlinx.coroutines.launch
 
-val Peek = SheetDetent("peek") { containerHeight, sheetHeight ->
+val Peek = SheetDetent("peek") { containerHeight, _ ->
     containerHeight * 1f
 }
 
-val Medium = SheetDetent(identifier = "medium") { containerHeight, sheetHeight ->
+val Medium = SheetDetent(identifier = "medium") { containerHeight, _ ->
     containerHeight * 0.6f
 }
 
-val Closed = SheetDetent(identifier = "closed") { containerHeight, sheetHeight ->
+val Closed = SheetDetent(identifier = "closed") { containerHeight, _ ->
     containerHeight * 0.3f
 }
 
@@ -97,8 +102,8 @@ fun BottomSheet(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            AdresseFelt(config.value.adress)
-                            ArealFelt(
+                            AddressField(config.value.adress)
+                            AreaDisplay(
                                 config.value.areal,
                                 modifier = Modifier.padding(top = 8.dp)
                             )
@@ -106,7 +111,7 @@ fun BottomSheet(
                         }
                     }
                     item {
-                        Vinkelinputs(
+                        AngleInputs(
                             incline = config.value.incline,
                             direction = config.value.vinkel,
                             onInclineChange = { viewModel.setIncline(it) },
@@ -115,7 +120,7 @@ fun BottomSheet(
                     }
 
                     item {
-                        SolcelleDropdown(
+                        SolarPanelDropdown(
                             panelOptions = defaultPanels,
                             selectedPanel = config.value.selectedPanelModel,
                             onPanelSelected = { viewModel.setSelectedSolarPanel(it) },
@@ -131,7 +136,7 @@ fun BottomSheet(
                         }
                     }
                     item {
-                        Produksjon(apiData.value)
+                        Production(apiData.value)
                     }
                     item {
                         SaveButton(
@@ -148,7 +153,7 @@ fun BottomSheet(
                         )
                     }
                     item {
-                        AlleGrafer(apiData.value)
+                        AllCharts(apiData.value)
                     }
 
                 }

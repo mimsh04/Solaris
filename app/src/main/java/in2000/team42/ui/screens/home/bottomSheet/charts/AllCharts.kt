@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import in2000.team42.ui.screens.home.ApiData
 
 @Composable
-
 fun AllCharts(apiData: ApiData) {
     if (apiData.isLoading) {
         Box(
@@ -26,12 +25,12 @@ fun AllCharts(apiData: ApiData) {
         ) {
             Row {
                 Text(
-                    text = "Laster inn data...",
+                    text = "Laster inn data og kalkulerer...",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 CircularProgressIndicator(
-                    modifier = Modifier.size(24.dp).padding(start = 8.dp),
+                    modifier = Modifier.size(26.dp).padding(start = 8.dp),
                     color = MaterialTheme.colorScheme.primary,
                     strokeWidth = 2.dp
                 )

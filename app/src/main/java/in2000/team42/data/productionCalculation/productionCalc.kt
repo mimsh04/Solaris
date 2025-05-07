@@ -89,6 +89,5 @@ fun calculateWithCoverage(
             month = monthlyData.month
         ))
     }
-    Log.d("ProduksjonKalkulering", "ProduksjonKalkuleringList: $monthlyProductionCalculations")
     return monthlyProductionCalculations
 }

@@ -36,7 +36,8 @@ fun Production(apiData: ApiData) {
         horizontalArrangement = Arrangement.SpaceEvenly
     ){
         if (apiData.kwhMonthlyData.isEmpty() and apiData.isLoading.not()) {
-            Text("Trykk på regn ut produksjon knappen", color = MaterialTheme.colorScheme.onBackground)
+            Text("Trykk på regn ut produksjon knappen",
+                color = MaterialTheme.colorScheme.onBackground)
         } else {
             if (apiData.isLoading) {
                 Box(

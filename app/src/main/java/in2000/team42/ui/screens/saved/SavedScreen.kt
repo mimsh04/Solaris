@@ -11,6 +11,8 @@ import androidx.compose.ui.unit.*
 import androidx.navigation.NavController
 import in2000.team42.ui.screens.saved.project.SwipeToDeleteItem
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import in2000.team42.R
@@ -46,8 +48,10 @@ fun SavedScreen(
             // Display empty state message
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState()),
                 contentAlignment = Alignment.Center
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -56,15 +60,16 @@ fun SavedScreen(
                         contentDescription = "No saved projects",
                         modifier = Modifier.size(250.dp),
                         colorFilter = ColorFilter.tint(
-                            MaterialTheme.colorScheme.onSurface // Use onSurface color for icon tinting
+                            MaterialTheme.colorScheme.onSurface
                         )
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = "Når du lagrer et prosjekt, vil det vises her.",
                         fontSize = 16.sp,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f) // Use onSurface with reduced opacity
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )
+                    Spacer(modifier = Modifier.height(100.dp))
                 }
             }
         } else {

@@ -81,7 +81,7 @@ class PgvisDatasource {
         val url = "https://re.jrc.ec.europa.eu/api/v5_3/PVcalc?outputformat=json" +
             "&lat=$latitude" +
             "&lon=$longitude" +
-            "&raddatabase=PVGIS-SARAH3" +
+            "&raddatabase=PVGIS-ERA5" +
             "&peakpower=$peakPower" +
             "&loss=14" +
             "&mountingplace=building" +

@@ -1,5 +1,6 @@
 package in2000.team42.ui.screens.home
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -245,6 +246,7 @@ class HomeViewModel : ViewModel() {
         }
     }
 
+    @SuppressLint("DefaultLocale")
     private fun FrostData.toDisplayWeather(): DisplayWeather? {
         if (temperature == null && snow == null && cloudAreaFraction == null) {
             return null

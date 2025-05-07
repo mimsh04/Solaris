@@ -1,4 +1,4 @@
-package in2000.team42.ui.screens.settings.komponenter
+package in2000.team42.ui.screens.settings.components
 
 import android.content.*
 import android.net.Uri
@@ -22,7 +22,7 @@ import in2000.team42.theme.IN2000_team42Theme
 
 
 @Composable
-fun AnbefalteProdukter () {
+fun RecommendedProducts () {
     val gridState= rememberLazyGridState()
     val context = LocalContext.current
 
@@ -115,6 +115,6 @@ fun AnbefalteProdukter () {
 @Preview
 fun AnbefalteProdukterPreview(){
     IN2000_team42Theme {
-        AnbefalteProdukter()
+        RecommendedProducts()
     }
 }

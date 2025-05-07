@@ -12,13 +12,10 @@ import in2000.team42.ui.screens.home.map.Map
 
 @Composable
 
-fun HomeScreen(navController: NavHostController,
-               modifier: Modifier = Modifier,
-               viewModel: HomeViewModel,
-
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    viewModel: HomeViewModel,
 ) {
-
-
-    Map(modifier = modifier, viewModel = viewModel)
+    Map( viewModel = viewModel)
     BottomSheet(modifier = modifier, viewModel = viewModel)
 }

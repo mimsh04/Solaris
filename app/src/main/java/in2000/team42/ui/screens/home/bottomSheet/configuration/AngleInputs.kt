@@ -17,7 +17,6 @@ fun AngleInputs(
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
 
-        // Angle (Incline) Input
         FloatInputField(
             "Angle (0-90°)",
             incline,

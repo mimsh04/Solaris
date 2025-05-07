@@ -1,4 +1,4 @@
-package in2000.team42.ui.screens.home.bottomSheet.grafer
+package in2000.team42.ui.screens.home.bottomSheet.charts
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,7 +10,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
@@ -37,7 +36,7 @@ private fun formatMonthTime (dailyProfile: DailyProfile ) =
 
 
 @Composable
-fun Solradiasjon(modifier: Modifier = Modifier, solData: List<DailyProfile>) {
+fun SolarRadiationChart(modifier: Modifier = Modifier, solData: List<DailyProfile>) {
     val modelProducer = remember { CartesianChartModelProducer() }
     val lineColor = Color(0xffd4ac3f)
     LaunchedEffect(solData) {

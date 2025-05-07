@@ -1,4 +1,4 @@
-package in2000.team42.ui.screens.home.bottomSheet.grafer
+package in2000.team42.ui.screens.home.bottomSheet.charts
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,7 +33,7 @@ private val monthNames = listOf(
 )
 
 @Composable
-fun StromProduksjonGraf (
+fun PowerProductionChart (
     kwhMonthlyData: List<KwhMonthlyResponse.MonthlyKwhData>,
     weatherData: List<DisplayWeather>,
     modifier: Modifier = Modifier
@@ -85,7 +85,7 @@ fun StromProduksjonGraf (
             )
         }
 
-        StromProduksjonLegend(colors)
+        PowerProductionLegend(colors)
         CartesianChartHost(
             chart =
                 rememberCartesianChart(

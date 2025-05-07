@@ -1,4 +1,4 @@
-package in2000.team42.ui.screens.home.map.WeatherIcon
+package in2000.team42.ui.screens.home.map.weatherIcon
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme

@@ -18,11 +18,14 @@ import com.composables.core.SheetDetent
 import com.composables.core.rememberBottomSheetState
 import in2000.team42.data.solarPanels.defaultPanels
 import in2000.team42.ui.screens.home.HomeViewModel
-import in2000.team42.ui.screens.home.bottomSheet.grafer.AlleGrafer
+import in2000.team42.ui.screens.home.bottomSheet.charts.AllCharts
 import in2000.team42.ui.screens.home.bottomSheet.configuration.AddressField
 import in2000.team42.ui.screens.home.bottomSheet.configuration.AreaDisplay
 import in2000.team42.ui.screens.home.bottomSheet.configuration.SolarPanelDropdown
 import in2000.team42.ui.screens.home.bottomSheet.configuration.AngleInputs
+import in2000.team42.ui.screens.home.bottomSheet.components.Production
+import in2000.team42.ui.screens.home.bottomSheet.components.SaveButton
+import in2000.team42.ui.screens.home.bottomSheet.components.UpdateApiButton
 import kotlinx.coroutines.launch
 
 val Peek = SheetDetent("peek") { containerHeight, _ ->
@@ -133,7 +136,7 @@ fun BottomSheet(
                         }
                     }
                     item {
-                        Produksjon(apiData.value)
+                        Production(apiData.value)
                     }
                     item {
                         SaveButton(
@@ -150,7 +153,7 @@ fun BottomSheet(
                         )
                     }
                     item {
-                        AlleGrafer(apiData.value)
+                        AllCharts(apiData.value)
                     }
 
                 }

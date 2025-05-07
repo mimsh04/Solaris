@@ -1,4 +1,4 @@
-package in2000.team42.ui.screens.home.bottomSheet
+package in2000.team42.ui.screens.home.bottomSheet.components
 
 
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import in2000.team42.data.productionCalculation.calculateWithCoverage
 import in2000.team42.ui.screens.home.ApiData
 
-fun getYearlyProduction(
+private fun getYearlyProduction(
     apiData: ApiData
 
 ): Double {
@@ -31,7 +31,7 @@ fun getYearlyProduction(
 }
 
 @Composable
-fun Produksjon(apiData: ApiData) {
+fun Production(apiData: ApiData) {
     Row (modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
     ){

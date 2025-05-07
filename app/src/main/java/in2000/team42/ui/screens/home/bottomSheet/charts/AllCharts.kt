@@ -1,4 +1,4 @@
-package in2000.team42.ui.screens.home.bottomSheet.grafer
+package in2000.team42.ui.screens.home.bottomSheet.charts
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,7 +18,7 @@ import in2000.team42.ui.screens.home.ApiData
 
 @Composable
 
-fun AlleGrafer(apiData: ApiData) {
+fun AllCharts(apiData: ApiData) {
     if (apiData.isLoading) {
         Box(
             modifier = Modifier.fillMaxWidth(),
@@ -41,13 +41,13 @@ fun AlleGrafer(apiData: ApiData) {
     } else {
         Column {
             if (apiData.sunRadiation.isNotEmpty()) {
-                Solradiasjon(
+                SolarRadiationChart(
                     solData = apiData.sunRadiation
                 )
             }
             if (apiData.weatherData.isNotEmpty() and
                 apiData.kwhMonthlyData.isNotEmpty()) {
-                StromProduksjonGraf(
+                PowerProductionChart(
                     kwhMonthlyData = apiData.kwhMonthlyData,
                     weatherData = apiData.weatherData,
                     modifier = Modifier.height(300.dp)

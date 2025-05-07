@@ -1,4 +1,4 @@
-package in2000.team42.ui.screens.home.bottomSheet.grafer
+package in2000.team42.ui.screens.home.bottomSheet.charts
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 
-fun StromProduksjonLegend(colors: List<Color>) {
+fun PowerProductionLegend(colors: List<Color>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()

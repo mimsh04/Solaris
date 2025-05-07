@@ -1,4 +1,4 @@
-package in2000.team42.ui.screens.home.bottomSheet
+package in2000.team42.ui.screens.home.bottomSheet.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height

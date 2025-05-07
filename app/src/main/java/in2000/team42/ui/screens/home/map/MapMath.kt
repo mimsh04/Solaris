@@ -1,6 +1,8 @@
 package in2000.team42.ui.screens.home.map
 
 import com.mapbox.geojson.Point
+import kotlin.math.abs
+import kotlin.math.cos
 
 fun calculateCentroid(input: List<List<Point>>): Point {
 
@@ -51,12 +53,12 @@ fun calculatePolygonArea(mapPolygon: List<List<Point>>): Double {
     area += (lng1 * lat2) - (lng2 * lat1)
 
     // Take absolute value and divide by 2
-    area = Math.abs(area) / 2.0
+    area = abs(area) / 2.0
 
     // Convert to square meters using an approximation
     // This factor varies with latitude, better calculations would use a proper projection
     val latMid = vertices.map { it.latitude() }.average()
-    val lonFactor = Math.cos(Math.toRadians(latMid))
+    val lonFactor = cos(Math.toRadians(latMid))
     val metersPerDegreeLat = 111320.0 // Approximate meters per degree of latitude
     val metersPerDegreeLon = metersPerDegreeLat * lonFactor
 

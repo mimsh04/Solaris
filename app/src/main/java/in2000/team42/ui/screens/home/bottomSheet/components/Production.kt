@@ -1,5 +1,6 @@
 package in2000.team42.ui.screens.home.bottomSheet.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -36,10 +38,20 @@ fun Production(apiData: ApiData) {
     Row (modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ){
-        if (apiData.isLoading.not() and apiData.weatherData.isNotEmpty()) {
+        if (apiData.isLoading.not() and
+            apiData.weatherData.isNotEmpty() and
+            apiData.kwhMonthlyData.isNotEmpty()
+        ) {
             Column  (
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f),
+                    RoundedCornerShape(16.dp)
+                )
             ) {
+                Spacer(modifier = Modifier.size(8.dp))
                 Text(
                     text = "\uD83D\uDCC6 Årlig resulatat",
                     color = MaterialTheme.colorScheme.onBackground,
@@ -63,6 +75,7 @@ fun Production(apiData: ApiData) {
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
+                Spacer(modifier = Modifier.size(8.dp))
             }
         }
 

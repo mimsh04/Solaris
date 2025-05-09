@@ -86,7 +86,7 @@ fun BottomSheet(
                     .width(32.dp)
                     .height(4.dp)
             )
-            if (config.value.adress == "") {
+            if (config.value.address == "") {
                 GreetingContent(modifier = Modifier.padding(top = 40.dp))
             } else {
 
@@ -102,9 +102,9 @@ fun BottomSheet(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            AddressField(config.value.adress)
+                            AddressField(config.value.address)
                             AreaDisplay(
-                                config.value.areal,
+                                config.value.area,
                                 modifier = Modifier.padding(top = 8.dp)
                             )
 
@@ -113,7 +113,7 @@ fun BottomSheet(
                     item {
                         AngleInputs(
                             incline = config.value.incline,
-                            direction = config.value.vinkel,
+                            direction = config.value.direction,
                             onInclineChange = { viewModel.setIncline(it) },
                             onDirectionChange = { viewModel.setVinkel(it) }
                         )
@@ -133,7 +133,8 @@ fun BottomSheet(
                                 scope.launch {
                                     snackbarHostState.showSnackbar(
                                         message = message,
-                                        duration = SnackbarDuration.Short //hvor langt skal melding vises
+                                        // How long should the message be displayed
+                                        duration = SnackbarDuration.Short
                                     )
                                 }
                             },

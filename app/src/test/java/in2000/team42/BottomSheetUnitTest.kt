@@ -109,10 +109,10 @@ class BottomSheetUnitTest {
         // Mock ViewModel og flows
         val viewModel = mockk<HomeViewModel>()
         val configFlow = MutableStateFlow(Config(
-            adress = "123 Main St",
+            address = "123 Main St",
             incline = 30f,
-            vinkel = 180f,
-            areal = 10f,
+            direction = 180f,
+            area = 10f,
             selectedPanelModel = defaultPanels[0]
         ))
         val apiDataFlow = MutableStateFlow(ApiData())
@@ -124,10 +124,10 @@ class BottomSheetUnitTest {
         val config = configFlow.value
 
         // Tester props som blir tildelt child composables
-        assertEquals("123 Main St", config.adress, "Address should match")
+        assertEquals("123 Main St", config.address, "Address should match")
         assertEquals(30f, config.incline, "Incline should match")
-        assertEquals(180f, config.vinkel, "Vinkel should match")
-        assertEquals(10f, config.areal, "Areal should match")
+        assertEquals(180f, config.direction, "Vinkel should match")
+        assertEquals(10f, config.area, "Areal should match")
         assertEquals(defaultPanels[0], config.selectedPanelModel, "Selected panel should match")
     }
 }

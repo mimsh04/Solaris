@@ -58,11 +58,11 @@ fun WeatherIconButton(
         dateFormat.parse(displayWeather.month)?.time ?: Long.MIN_VALUE
     }
 
-    // Parser værdata til riktig format for å sammenligne hvilket ikon som skal vises
+    // Parseses weather data correctly so it can be displayed
     val snowValue = latestWeather?.snow?.replace("mm", "")?.trim()?.toDoubleOrNull() ?: 0.0
     val cloudValue = latestWeather?.cloud?.replace("%", "")?.trim()?.toDoubleOrNull() ?: 0.0
 
-    // Velger vær ikon basert på værdata
+    // Picks icon based on weather data
     val iconResource = when {
         weatherData.isEmpty() -> R.drawable.ic_unknown_weather
         latestWeather == null -> R.drawable.ic_unknown_weather
@@ -83,7 +83,7 @@ fun WeatherIconButton(
         ) {
             Box(
                 modifier = Modifier
-                    .size(backgroundSize) // Størrelse for bakgrunn til ikon
+                    .size(backgroundSize)
                     .background(
                         color = MaterialTheme.colorScheme.background,
                         shape = CircleShape
@@ -94,8 +94,8 @@ fun WeatherIconButton(
                     painter = painterResource(id = iconResource),
                     contentDescription = "Weather",
                     modifier = Modifier
-                        .size(iconSize) // Størrelse for ikon
-                        .padding(4.dp), // Padding gjør at ikon vil alltid være mindre enn bakgrunnen
+                        .size(iconSize)
+                        .padding(4.dp),
                     colorFilter = if (iconResource == R.drawable.ic_unknown_weather) {
                         ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
                     } else {

@@ -40,11 +40,11 @@ data class Config(
     var longitude: Double = 0.0,
     var latitude: Double = 0.0,
     var incline: Float = 35f,
-    var vinkel: Float = 0f,
-    var areal: Float = 1f,
+    var direction: Float = 0f,
+    var area: Float = 1f,
     var polygon: List<List<Point>>? = null,
     var bottomSheetDetent: String = "medium",
-    var adress: String = "",
+    var address: String = "",
     var selectedPanelModel: SolarPanelModel = defaultPanels[0]
 )
 
@@ -76,7 +76,7 @@ class HomeViewModel : ViewModel() {
     }
 
     fun setAddress(address: String) {
-        _config.value = _config.value.copy(adress = address)
+        _config.value = _config.value.copy(address = address)
     }
 
 
@@ -132,11 +132,11 @@ class HomeViewModel : ViewModel() {
     }
 
     fun setVinkel(vinkel: Float) {
-        _config.value = _config.value.copy(vinkel = vinkel)
+        _config.value = _config.value.copy(direction = vinkel)
     }
 
     fun setAreal(areal: Float) {
-        _config.value = _config.value.copy(areal = areal)
+        _config.value = _config.value.copy(area = areal)
     }
 
     fun setSelectedSolarPanel(panel: SolarPanelModel) {
@@ -174,7 +174,7 @@ class HomeViewModel : ViewModel() {
                 _config.value.longitude,
                 0,
                 _config.value.incline,
-                _config.value.vinkel
+                _config.value.direction
             )
             _apiData.value = _apiData.value.copy(sunRadiation = radiationData)
             Log.d(TAG, "Radiation data: $radiationData")
@@ -189,7 +189,7 @@ class HomeViewModel : ViewModel() {
                 _config.value.latitude,
                 _config.value.longitude,
                 _config.value.incline,
-                _config.value.vinkel,
+                _config.value.direction,
                 peakPower,
                 pvTech
             )
@@ -199,7 +199,7 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun calculatePeakPower() =
-        _config.value.selectedPanelModel.efficiency / 100 * _config.value.areal
+        _config.value.selectedPanelModel.efficiency / 100 * _config.value.area
 
     private fun updateWeatherData() {
         viewModelScope.launch {

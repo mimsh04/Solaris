@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
     ) { permissions ->
         val locationGranted = permissions.entries.all { it.value }
         //if (!locationGranted) {
-            // TODO: Fikse en popup om lokasjon ikke er skrudd på
+            // TODO: Create a dialog to inform the user that location permissions are required
         //}
     }
 

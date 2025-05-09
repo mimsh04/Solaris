@@ -97,7 +97,7 @@ fun ProjectCard(
             ) {
 
                 Text(
-                    text = "Adresse: ${project.config.adress}",
+                    text = "Adresse: ${project.config.address}",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.SemiBold,
@@ -136,12 +136,12 @@ fun ProjectCard(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            text = "Direction: ${project.config.vinkel}",
+                            text = "Direction: ${project.config.direction}",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            text = "Areal: ${String.format("%.2f", project.config.areal)} m²",
+                            text = "Areal: ${String.format("%.2f", project.config.area)} m²",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

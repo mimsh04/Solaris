@@ -206,13 +206,15 @@ fun Map(
             },
         ) {
             if (config.value.polygon.isNullOrEmpty().not()) {
-
+                val dark = isSystemInDarkTheme()
                 PolygonAnnotation(
                     // Fixes polygon so map isn's shouting at me in the log
                     points = addFirstPoint(config.value.polygon!!) ,
 
                 ) {
-                    fillColor = Color.Blue
+                    fillColor = Color.Blue.copy(alpha =
+                        if (dark) 0.4f else 0.8f
+                    )
                     fillOpacity = 0.3
 
                 }

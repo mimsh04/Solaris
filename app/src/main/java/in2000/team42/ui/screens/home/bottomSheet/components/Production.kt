@@ -3,7 +3,6 @@ package in2000.team42.ui.screens.home.bottomSheet.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -35,7 +34,6 @@ import in2000.team42.ui.screens.home.ApiData
 
 private fun getYearlyProduction(
     apiData: ApiData
-
 ): Double {
     val calculatedData = calculateWithCoverage(apiData.kwhMonthlyData, apiData.weatherData)
     var tot = 0.0
@@ -49,28 +47,29 @@ private fun getYearlyProduction(
 fun Production(apiData: ApiData) {
     var showInfoDialog by remember { mutableStateOf(false) }
 
-    Row (modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
-    ){
+    ) {
         if (apiData.isLoading.not() and
             apiData.weatherData.isNotEmpty() and
             apiData.kwhMonthlyData.isNotEmpty()
         ) {
-            Column  (
+            Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f),
-                    RoundedCornerShape(16.dp)
-                )
+                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f),
+                        RoundedCornerShape(16.dp)
+                    )
             ) {
                 Spacer(modifier = Modifier.size(8.dp))
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "\uD83D\uDCC6 Årlig resulatat",
+                        text = "\uD83D\uDCC6 Årlig resultat:", // Fixed typo and added colon
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontSize = MaterialTheme.typography.titleLarge.fontSize * 1.35f

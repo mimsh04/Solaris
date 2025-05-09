@@ -5,43 +5,42 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import in2000.team42.theme.IN2000_team42Theme
+import in2000.team42.theme.ThemeManager
 import in2000.team42.ui.navbar.NavBar
 import in2000.team42.ui.screens.Screen
-import in2000.team42.ui.screens.home.HomeScreen
-import in2000.team42.ui.screens.settings.SettingsScreen
-import android.Manifest
-import android.annotation.SuppressLint
-import androidx.compose.animation.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import in2000.team42.ui.screens.guide.InstallasjonScreen
-import in2000.team42.data.saved.*
+import in2000.team42.ui.screens.home.HomeScreen
 import in2000.team42.ui.screens.home.HomeViewModel
 import in2000.team42.ui.screens.saved.SavedScreen
 import in2000.team42.ui.screens.saved.project.ProjectViewModel
+import in2000.team42.ui.screens.settings.SettingsScreen
+import in2000.team42.data.saved.SavedProjectDatabase
 import in2000.team42.utils.NetworkCheck
+import android.Manifest
+import androidx.compose.material3.MaterialTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-
 
 class MainActivity : ComponentActivity() {
     private val requestPermissionLauncher = registerForActivityResult(
@@ -49,7 +48,7 @@ class MainActivity : ComponentActivity() {
     ) { permissions ->
         val locationGranted = permissions.entries.all { it.value }
         //if (!locationGranted) {
-            // TODO: Fikse en popup om lokasjon ikke er skrudd på
+        // TODO: Fikse en popup om lokasjon ikke er skrudd på
         //}
     }
 
@@ -61,7 +60,6 @@ class MainActivity : ComponentActivity() {
         requestPermissionLauncher.launch(permissions)
     }
 
-    @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestLocationPermissions()
@@ -69,12 +67,13 @@ class MainActivity : ComponentActivity() {
         SavedProjectDatabase.initialize(applicationContext)
         setContent {
             val navController = rememberNavController()
-
             val homeViewModel: HomeViewModel = viewModel()
             val projectViewModel: ProjectViewModel = viewModel()
-
             val snackbarHostState = remember { SnackbarHostState() }
             val scope = rememberCoroutineScope()
+            val context = LocalContext.current
+            val themeManager = remember { ThemeManager(context) }
+            val isDarkTheme by themeManager.isDarkTheme()
 
             // Observes the network status and launches a snack bar if the user is offline
             LaunchedEffect(Unit) {
@@ -96,22 +95,22 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            IN2000_team42Theme {
+            IN2000_team42Theme(darkTheme = isDarkTheme, dynamicColor = false) {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = { NavBar(navController) },
                     containerColor = MaterialTheme.colorScheme.background,
-                    snackbarHost = {SnackbarHost(snackbarHostState)}
+                    snackbarHost = { SnackbarHost(snackbarHostState) }
                 ) { innerPadding ->
                     NavHost(
                         navController = navController,
                         startDestination = Screen.Home.route,
-                        enterTransition = { fadeIn()},
+                        enterTransition = { fadeIn() },
                         exitTransition = { fadeOut() },
-                        popEnterTransition = { EnterTransition.None },
-                        popExitTransition = { ExitTransition.None }
+                        popEnterTransition = { androidx.compose.animation.EnterTransition.None },
+                        popExitTransition = { androidx.compose.animation.ExitTransition.None }
                     ) {
-                        composable(Screen.Home.route){
+                        composable(Screen.Home.route) {
                             HomeScreen(
                                 viewModel = homeViewModel,
                                 modifier = Modifier.padding(innerPadding)
@@ -120,7 +119,6 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.Settings.route) {
                             SettingsScreen(navController)
                         }
-
                         composable(Screen.Saved.route) {
                             SavedScreen(
                                 viewModel = projectViewModel,
@@ -130,7 +128,6 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
-
                         composable(Screen.Guide.route) {
                             InstallasjonScreen(navController)
                         }
@@ -145,14 +142,23 @@ class MainActivity : ComponentActivity() {
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
         text = "Hello $name!",
-        modifier = modifier
+        modifier = modifier,
+        color = MaterialTheme.colorScheme.onBackground
     )
 }
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    IN2000_team42Theme {
+    IN2000_team42Theme(darkTheme = false, dynamicColor = false) {
+        Greeting("Android")
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GreetingDarkPreview() {
+    IN2000_team42Theme(darkTheme = true, dynamicColor = false) {
         Greeting("Android")
     }
 }

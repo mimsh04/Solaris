@@ -107,7 +107,6 @@ fun Map(
     }
 
     fun loadHouse(point: Point, delay: Long = 0, onComplete: (List<List<Point>>) -> Unit = {}) {
-        viewModel.clearApiData()
         couroutineScope.launch {
 
             kotlinx.coroutines.delay(delay)
@@ -117,7 +116,7 @@ fun Map(
                 Log.i("HouseClick", "No building found")
                 return@launch
             }
-
+            viewModel.clearApiData()
             val cleanedPolygon = newPolygon[0].toMutableList()
             cleanedPolygon.removeAt(cleanedPolygon.lastIndex)
 

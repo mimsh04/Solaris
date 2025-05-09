@@ -79,13 +79,13 @@ class BottomSheetUnitTest {
         // Mock ViewModel
         val viewModel = mockk<HomeViewModel>()
         coEvery { viewModel.setIncline(any()) } returns Unit
-        coEvery { viewModel.setVinkel(any()) } returns Unit
+        coEvery { viewModel.setDirection(any()) } returns Unit
         coEvery { viewModel.setSelectedSolarPanel(any()) } returns Unit
         coEvery { viewModel.updateAllApi() } returns Unit
 
         // Simulerer Vinkelinputs callback
         val onInclineChange: (Float) -> Unit = { viewModel.setIncline(it) }
-        val onDirectionChange: (Float) -> Unit = { viewModel.setVinkel(it) }
+        val onDirectionChange: (Float) -> Unit = { viewModel.setDirection(it) }
         onInclineChange(45f)
         onDirectionChange(90f)
 
@@ -99,7 +99,7 @@ class BottomSheetUnitTest {
 
         // Verify ViewModel interactions
         coVerify { viewModel.setIncline(45f) }
-        coVerify { viewModel.setVinkel(90f) }
+        coVerify { viewModel.setDirection(90f) }
         coVerify { viewModel.setSelectedSolarPanel(defaultPanels[1]) }
         coVerify { viewModel.updateAllApi() }
     }

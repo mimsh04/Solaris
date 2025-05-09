@@ -143,7 +143,7 @@ fun WeatherIconButton(
                                 modifier = Modifier
                                     .size(32.dp)
                                     .align(Alignment.CenterEnd)
-                                    .offset(x = ((10).dp)) // Offset fra midten til høyre siden
+                                    .offset(x = ((10).dp))
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.Info,

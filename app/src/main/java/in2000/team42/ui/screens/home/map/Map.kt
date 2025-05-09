@@ -128,9 +128,10 @@ fun Map(
                 longitude = centerPoint.longitude(),
                 latitude = centerPoint.latitude()
             )
-            viewModel.setAreal(
-                areal = calculatePolygonArea(listOf(cleanedPolygon)).toFloat(),
+            viewModel.setArea(
+                area = calculatePolygonArea(listOf(cleanedPolygon)).toFloat(),
             )
+            viewModel.updateWeatherData()
             onComplete(listOf(cleanedPolygon))
 
         }
@@ -187,7 +188,7 @@ fun Map(
         val newPolygon = config.value.polygon!![0].toMutableList()
         newPolygon[index] = draggedPoint
         val nyListe = listOf(newPolygon)
-        viewModel.setAreal(calculatePolygonArea(nyListe).toFloat())
+        viewModel.setArea(calculatePolygonArea(nyListe).toFloat())
         viewModel.setPolygon(nyListe)
     }
 

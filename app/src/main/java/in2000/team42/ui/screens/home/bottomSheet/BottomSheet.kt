@@ -115,7 +115,7 @@ fun BottomSheet(
                             incline = config.value.incline,
                             direction = config.value.direction,
                             onInclineChange = { viewModel.setIncline(it) },
-                            onDirectionChange = { viewModel.setVinkel(it) }
+                            onDirectionChange = { viewModel.setDirection(it) }
                         )
                     }
 
@@ -144,8 +144,8 @@ fun BottomSheet(
                         UpdateApiButton (
                             isEnabled = apiData.value.isLoading.not(),
                         ){
-                            viewModel.clearApiData()
-                            viewModel.updateAllApi()
+                            viewModel.clearSolarData()
+                            viewModel.updateAllSolarData()
                             scope.launch {
                                 sheetState.animateTo(Peek)
                             }

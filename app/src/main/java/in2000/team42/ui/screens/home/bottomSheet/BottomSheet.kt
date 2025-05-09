@@ -144,6 +144,7 @@ fun BottomSheet(
                         UpdateApiButton (
                             isEnabled = apiData.value.isLoading.not(),
                         ){
+                            focusManager.clearFocus()
                             viewModel.clearSolarData()
                             viewModel.updateAllSolarData()
                             scope.launch {

@@ -97,7 +97,7 @@ fun ProjectCard(
             ) {
 
                 Text(
-                    text = "Adresse: ${project.config.adress}",
+                    text = stringResource(R.string.label_saved_project_address, project.config.adress),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.SemiBold,

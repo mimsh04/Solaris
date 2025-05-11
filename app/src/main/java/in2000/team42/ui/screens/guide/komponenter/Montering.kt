@@ -18,17 +18,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import in2000.team42.R
 import in2000.team42.data.installasjon.model.MonteringData
 import in2000.team42.data.installasjon.model.installationSteps
 
 @Composable
 fun Montering(){
-
     Column(
-        modifier=Modifier
-            .padding(16.dp)
+        modifier=Modifier.padding(16.dp)
     ){
         LazyColumn(
             modifier=Modifier.fillMaxWidth()
@@ -37,7 +37,6 @@ fun Montering(){
                 ExpandableMonteringItem(monteringData = steg)
                 Spacer(modifier = Modifier.height(8.dp))
             }
-
         }
     }
 }
@@ -51,23 +50,23 @@ fun ExpandableMonteringItem(monteringData: MonteringData){
         fontWeight = FontWeight.Bold
     ){
         Column(
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier
+                .padding(8.dp)
                 .clickable { isExpanded = !isExpanded }
-
         ){
             Row(
                 modifier=Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ){
                 Text(
-                    text=monteringData.question,
+                    text = stringResource(id = monteringData.questionResId),
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.weight(1f)
                 )
 
                 Text(
-                    text= if (isExpanded) "-" else "+",
+                    text = if (isExpanded) "-" else "+",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onBackground,
                 )
@@ -75,16 +74,11 @@ fun ExpandableMonteringItem(monteringData: MonteringData){
 
             if (isExpanded){
                 Text(
-                    text = monteringData.answer,
+                    text = stringResource(id = monteringData.answerResId),
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(top=10.dp),
                 )
             }
-
-
         }
-
-
     }
-
 }

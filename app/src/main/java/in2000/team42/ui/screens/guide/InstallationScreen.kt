@@ -13,10 +13,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import in2000.team42.R
 import in2000.team42.ui.screens.guide.komponenter.ArrowBack
 import in2000.team42.ui.screens.guide.komponenter.CustomRoundedBox
 import in2000.team42.ui.screens.guide.komponenter.Montering
@@ -37,41 +39,33 @@ fun InstallasjonScreen(navController: NavController){
                     ArrowBack(navController)
 
                     Text(
-                        text = "Solcellepanel Guide",
+                        text = stringResource(R.string.installation_guide_title),
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier
                             .padding(start = 20.dp, top = 30.dp)
                     )
-
                 }
-
             }
-            item{Spacer(modifier=Modifier.height(30.dp))}
 
-            item{Subtitle("Kan man montere solcellepaneler selv?")}
+            item { Spacer(modifier=Modifier.height(30.dp)) }
 
-            item{
+            item { Subtitle(stringResource(R.string.installation_subtitle_self_installation)) }
+
+            item {
                 CustomRoundedBox(
-                    text = "Du kan ikke montere solcellepaneler selv, unntatt i visse tilfeller. " +
-                            "Vi oppfordrer på det sterkeste å bruke fagfolk til større solcelleanlegg til boliger og hytter som er tilkoblet strømnettet.\n" +
-                            "\n" +
-                            "Dette sikrer at anlegget blir korrekt installert, " +
-                            "uten brann- og helsefare. Du kan dessuten føle deg trygg på at solcellene fungerer optimalt."
+                    text = stringResource(R.string.installation_self_installation_description)
                 )
-
             }
 
-            item{ Spacer(modifier=Modifier.height(30.dp))
+            item {
+                Spacer(modifier=Modifier.height(30.dp))
 
-                Subtitle("Når kan du montere selv?")
+                Subtitle(stringResource(R.string.installation_subtitle_when_self_install))
 
                 CustomRoundedBox(
-                    text= "1. Det er et frittstående solcelleanlegg\n" +
-                            "2. Du er ikke tilkoblet strømnettet\n" +
-                            "3. Solcelleanlegget er under 50V og 200VA\n" +
-                            "4. Du ønsker ikke å søke om Enova-tilskudd",
+                    text = stringResource(R.string.installation_self_install_conditions),
                     height = 100.dp
                 )
             }
@@ -79,23 +73,20 @@ fun InstallasjonScreen(navController: NavController){
             item {
                 Spacer(modifier = Modifier.height(30.dp))
 
-                Subtitle("Montering- steg for steg")
+                Subtitle(stringResource(R.string.installation_subtitle_mounting_steps))
 
                 CustomRoundedBox(
                     height = 300.dp
                 ) {
-                    Column{
+                    Column {
                         Montering()
                     }
                 }
             }
 
-            item{
+            item {
                 Spacer(modifier = Modifier.height(100.dp))
             }
-
         }
-
     }
-
 }

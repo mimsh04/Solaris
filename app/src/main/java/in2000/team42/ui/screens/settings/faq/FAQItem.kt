@@ -5,44 +5,44 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun FAQItem(faq: FAQ){
+fun FAQItem(faq: FAQ) {
     var expanded by remember { mutableStateOf(false) }
 
-    Column (
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { expanded = !expanded }
             .padding(vertical = 8.dp)
-    ){
-        Row (
+    ) {
+        Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             Text(
-                text = faq.question,
-                style= MaterialTheme.typography.bodyLarge,
+                text = stringResource(faq.questionResId),
+                style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.weight(1f),
                 fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.onSurface
-
             )
             Text(
-                text= if (expanded)"-" else "+",
+                text = if (expanded) "-" else "+",
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(start= 8.dp)
+                modifier = Modifier.padding(start = 8.dp)
             )
         }
 
-        if (expanded){
+        if (expanded) {
             Text(
-                text = faq.answer,
+                text = stringResource(faq.answerResId),
                 style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(top=10.dp),
+                modifier = Modifier.padding(top = 10.dp),
                 color = MaterialTheme.colorScheme.onSurface
             )
         }

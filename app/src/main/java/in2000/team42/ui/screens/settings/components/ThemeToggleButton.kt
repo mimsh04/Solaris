@@ -8,7 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import in2000.team42.R
 
 @Composable
 fun ThemeToggleButton(
@@ -31,7 +33,7 @@ fun ThemeToggleButton(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Mørkt tema",
+                text = stringResource(R.string.setting_dark_theme),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface
             )

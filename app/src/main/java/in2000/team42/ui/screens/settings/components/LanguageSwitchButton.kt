@@ -1,47 +1,98 @@
-package in2000.team42.ui.screens.settings.components
+package in2000.team42.utils
 
-import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import in2000.team42.R
 import java.util.Locale
-import androidx.core.content.edit
 
 @Composable
-fun LanguageSwitchButton(onLanguageChanged: () -> Unit) {
+fun LanguageSwitchButton(currentLanguage: String, onLanguageChanged: (String) -> Unit) {
     val context = LocalContext.current
-    var currentLanguage by remember { mutableStateOf(getCurrentLanguage(context)) }
-
-    Button(
-        onClick = {
-            // Toggle between English and Norwegian (or your second language)
-            val newLanguage = if (currentLanguage == "en") "no" else "en"
-            updateLanguage(context, newLanguage)
-            currentLanguage = newLanguage
-            onLanguageChanged()
-        },
-        modifier = Modifier.padding(16.dp)
+    Row(
+        modifier = Modifier
+            .padding(16.dp)
+            .background(
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = RoundedCornerShape(24.dp)
+            )
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
+                shape = RoundedCornerShape(24.dp)
+            )
+            .clip(RoundedCornerShape(24.dp)),
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            text = if (currentLanguage == "en") {
-                "Switch to norwegian"
-            } else {
-                "Switch to english"
-            },
-            style = MaterialTheme.typography.labelLarge
-        )
+        // English option
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .background(
+                    if (currentLanguage == "no") MaterialTheme.colorScheme.primary //MaterialTheme.colorScheme.primary
+                    else MaterialTheme.colorScheme.surfaceVariant
+                )
+                .clickable {
+                    if (currentLanguage != "no") {
+                        updateLanguage(context, "no")
+                        onLanguageChanged("no")
+                    }
+                }
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = context.getString(R.string.language_english),
+                fontWeight = if (currentLanguage == "en") FontWeight.Bold else FontWeight.Normal,
+                color = if (currentLanguage == "en") MaterialTheme.colorScheme.onPrimary
+                else MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center
+            )
+        }
+
+        // Norwegian option
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .background(
+                    if (currentLanguage == "en") MaterialTheme.colorScheme.primary
+                    else MaterialTheme.colorScheme.surfaceVariant
+                )
+                .clickable {
+                    if (currentLanguage != "en") {
+                        updateLanguage(context, "en")
+                        onLanguageChanged("en")
+                    }
+                }
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = context.getString(R.string.language_norwegian),
+                fontWeight = if (currentLanguage == "no") FontWeight.Bold else FontWeight.Normal,
+                color = if (currentLanguage == "no") MaterialTheme.colorScheme.onPrimary
+                else MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
 
@@ -57,16 +108,22 @@ fun updateLanguage(context: Context, language: String) {
     config.setLocale(locale)
     context.resources.updateConfiguration(config, context.resources.displayMetrics)
     saveLanguagePreference(context, language)
-    // Restart activity to apply locale changes
-    (context as? Activity)?.recreate()
 }
 
 fun saveLanguagePreference(context: Context, language: String) {
     val prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-    prefs.edit() { putString("language", language) }
+    prefs.edit().putString("language", language).apply()
 }
 
 fun loadLanguagePreference(context: Context): String? {
     val prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
     return prefs.getString("language", null)
+}
+
+fun createLocalizedContext(baseContext: Context, language: String): Context {
+    val locale = Locale(language)
+    Locale.setDefault(locale)
+    val config = Configuration(baseContext.resources.configuration)
+    config.setLocale(locale)
+    return baseContext.createConfigurationContext(config)
 }

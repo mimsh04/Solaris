@@ -13,9 +13,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
@@ -36,6 +40,8 @@ import in2000.team42.utils.NetworkCheck
 import android.Manifest
 import androidx.compose.material3.MaterialTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
+import in2000.team42.utils.createLocalizedContext
+import in2000.team42.utils.loadLanguagePreference
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -61,9 +67,13 @@ class MainActivity : ComponentActivity() {
         requestLocationPermissions()
         enableEdgeToEdge()
         SavedProjectDatabase.initialize(applicationContext)
-        // Initialize ThemeManager with application context
         ThemeManager.initialize(applicationContext)
         setContent {
+            // Initialize language state
+            var language by remember { mutableStateOf(loadLanguagePreference(this) ?: "no") }
+            // Create localized context
+            val localizedContext = remember(language) { createLocalizedContext(this, language) }
+
             val navController = rememberNavController()
             val homeViewModel: HomeViewModel = viewModel()
             val projectViewModel: ProjectViewModel = viewModel()
@@ -91,40 +101,48 @@ class MainActivity : ComponentActivity() {
             }
 
             IN2000_team42Theme(darkTheme = isDarkTheme, dynamicColor = false) {
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    bottomBar = { NavBar(navController) },
-                    containerColor = MaterialTheme.colorScheme.background,
-                    snackbarHost = { SnackbarHost(snackbarHostState) }
-                ) { innerPadding ->
-                    NavHost(
-                        navController = navController,
-                        startDestination = Screen.Home.route,
-                        enterTransition = { fadeIn() },
-                        exitTransition = { fadeOut() },
-                        popEnterTransition = { androidx.compose.animation.EnterTransition.None },
-                        popExitTransition = { androidx.compose.animation.ExitTransition.None }
-                    ) {
-                        composable(Screen.Home.route) {
-                            HomeScreen(
-                                viewModel = homeViewModel,
-                                modifier = Modifier.padding(innerPadding)
-                            )
-                        }
-                        composable(Screen.Settings.route) {
-                            SettingsScreen(navController)
-                        }
-                        composable(Screen.Saved.route) {
-                            SavedScreen(
-                                viewModel = projectViewModel,
-                                onProjectClick = { project ->
-                                    homeViewModel.loadProject(project)
-                                    navController.navigate(Screen.Home.route)
-                                }
-                            )
-                        }
-                        composable(Screen.Guide.route) {
-                            InstallasjonScreen(navController)
+                CompositionLocalProvider(LocalContext provides localizedContext) {
+                    Scaffold(
+                        modifier = Modifier.fillMaxSize(),
+                        bottomBar = { NavBar(navController, LocalContext.current) },
+                        containerColor = MaterialTheme.colorScheme.background,
+                        snackbarHost = { SnackbarHost(snackbarHostState) }
+                    ) { innerPadding ->
+                        NavHost(
+                            navController = navController,
+                            startDestination = Screen.Home.route,
+                            enterTransition = { fadeIn() },
+                            exitTransition = { fadeOut() },
+                            popEnterTransition = { androidx.compose.animation.EnterTransition.None },
+                            popExitTransition = { androidx.compose.animation.ExitTransition.None }
+                        ) {
+                            composable(Screen.Home.route) {
+                                HomeScreen(
+                                    viewModel = homeViewModel,
+                                    modifier = Modifier.padding(innerPadding)
+                                )
+                            }
+                            composable(Screen.Settings.route) {
+                                SettingsScreen(
+                                    navController = navController,
+                                    currentLanguage = language,
+                                    onLanguageChanged = { newLanguage ->
+                                        language = newLanguage
+                                    }
+                                )
+                            }
+                            composable(Screen.Saved.route) {
+                                SavedScreen(
+                                    viewModel = projectViewModel,
+                                    onProjectClick = { project ->
+                                        homeViewModel.loadProject(project)
+                                        navController.navigate(Screen.Home.route)
+                                    }
+                                )
+                            }
+                            composable(Screen.Guide.route) {
+                                InstallasjonScreen(navController)
+                            }
                         }
                     }
                 }

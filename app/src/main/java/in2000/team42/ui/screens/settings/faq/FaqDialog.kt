@@ -9,40 +9,43 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-
-
+import in2000.team42.R
 
 @Composable
-fun FaqDialog(onDismiss:()->Unit){
+fun FaqDialog(onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title={
+        title = {
             Text(
-                text= "FAQ",
-                style= MaterialTheme.typography.headlineSmall,
+                text = stringResource(R.string.faq_dialog_title),
+                style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
-            )},
-        text={
+            )
+        },
+        text = {
             Column {
-                LazyColumn (
-                    modifier = Modifier.heightIn(max= 300.dp)
+                LazyColumn(
+                    modifier = Modifier
+                        .heightIn(max = 300.dp)
                         .fillMaxWidth()
-                )
-                {
-                    items(faqItems){ faq->
-                        FAQItem(faq =faq)
-
+                ) {
+                    items(faqItems) { faq ->
+                        FAQItem(faq = faq)
                     }
                 }
-            } },
+            }
+        },
         confirmButton = {
-            Button(onClick = onDismiss){
-                Text("Lukk", color = MaterialTheme.colorScheme.onPrimary)
+            Button(onClick = onDismiss) {
+                Text(
+                    text = stringResource(R.string.faq_dialog_close),
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
             }
         }
     )
-
 }

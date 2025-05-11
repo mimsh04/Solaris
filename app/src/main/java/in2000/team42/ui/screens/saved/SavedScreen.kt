@@ -8,13 +8,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.text.font.*
 import androidx.compose.ui.unit.*
-import androidx.navigation.NavController
 import in2000.team42.ui.screens.saved.project.SwipeToDeleteItem
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import in2000.team42.R
 import in2000.team42.data.saved.SavedProjectEntity
 import in2000.team42.ui.screens.saved.project.ProjectViewModel
@@ -34,7 +34,7 @@ fun SavedScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
-            text = "Lagrede Prosjekter",
+            text = stringResource(R.string.label_saved_projects),
             fontWeight = FontWeight.Bold,
             fontSize = 30.sp,
             color = MaterialTheme.colorScheme.primary, // Use primary color
@@ -65,7 +65,7 @@ fun SavedScreen(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Når du lagrer et prosjekt, vil det vises her.",
+                        text = stringResource(R.string.text_no_saved_projects),
                         fontSize = 16.sp,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )

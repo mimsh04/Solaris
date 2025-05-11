@@ -33,7 +33,7 @@ fun RecommendedProducts () {
             .padding(horizontal = 20.dp)
     ){
         Text(
-            text="Anbefalte Produkter",
+            text= stringResource(R.string.label_recommended_products),
             fontWeight = FontWeight.Bold,
             fontSize = 30.sp,
             modifier = Modifier
@@ -76,7 +76,7 @@ fun RecommendedProducts () {
                     )
 
                     Text(
-                        text = "Otovo",
+                        text = stringResource(R.string.company_name_otovo),
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 16.sp,
                         color = Color.White,

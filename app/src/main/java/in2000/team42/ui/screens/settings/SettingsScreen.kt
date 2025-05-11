@@ -15,12 +15,17 @@ import in2000.team42.R
 import in2000.team42.theme.ThemeManager
 import in2000.team42.ui.screens.settings.faq.FaqDialog
 import in2000.team42.ui.screens.settings.components.*
+import in2000.team42.utils.LanguageSwitchButton
 import kotlinx.coroutines.launch
 
 @Composable
-fun SettingsScreen(navController: NavHostController) {
+fun SettingsScreen(
+    navController: NavHostController,
+    currentLanguage: String,
+    onLanguageChanged: (String) -> Unit
+) {
     var showFAQ by remember { mutableStateOf(false) }
-    val isDarkTheme by ThemeManager.isDarkTheme() // Observe singleton state
+    val isDarkTheme by ThemeManager.isDarkTheme()
     val coroutineScope = rememberCoroutineScope()
 
     Box(
@@ -40,7 +45,7 @@ fun SettingsScreen(navController: NavHostController) {
                     .padding(20.dp)
             ) {
                 Text(
-                    text = "Innstillinger",
+                    text = stringResource(R.string.screen_settings),
                     fontWeight = FontWeight.Bold,
                     fontSize = 30.sp,
                     color = MaterialTheme.colorScheme.primary,
@@ -51,8 +56,8 @@ fun SettingsScreen(navController: NavHostController) {
                 )
             }
 
-            // Button for switching theme
-            Box(modifier = Modifier.height(180.dp)) {
+            //Change to dark or light theme button
+            Column(modifier = Modifier.height(180.dp)) {
                 ThemeToggleButton(
                     isDarkTheme = isDarkTheme,
                     onThemeToggle = {
@@ -61,14 +66,9 @@ fun SettingsScreen(navController: NavHostController) {
                         }
                     }
                 )
-            }
-
-            // Button for switching language
-            Box(modifier = Modifier.height(180.dp)) {
                 LanguageSwitchButton(
-                    onLanguageChanged = {
-                        // No additional logic needed here; LanguageSwitchButton handles recreation
-                    }
+                    currentLanguage = currentLanguage,
+                    onLanguageChanged = onLanguageChanged
                 )
             }
 

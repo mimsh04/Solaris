@@ -1,5 +1,6 @@
 package in2000.team42.ui.navbar
 
+import android.content.Context
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -10,22 +11,39 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import in2000.team42.R
 import in2000.team42.ui.screens.Screen
 
-private fun getNavItems(): List<NavItem> = listOf(
-    NavItem(Screen.Saved, "Lagret", Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder),
-    NavItem(Screen.Home, "Hjem", Icons.Filled.Home, Icons.Outlined.Home),
-    NavItem(Screen.Settings, "Innstillinger", Icons.Filled.Settings, Icons.Outlined.Settings)
+private fun getNavItems(context: Context): List<NavItem> = listOf(
+    NavItem(
+        Screen.Saved,
+        context.getString(R.string.nav_saved),
+        Icons.Filled.Favorite,
+        Icons.Outlined.FavoriteBorder
+    ),
+    NavItem(
+        Screen.Home,
+        context.getString(R.string.nav_home),
+        Icons.Filled.Home,
+        Icons.Outlined.Home
+    ),
+    NavItem(
+        Screen.Settings,
+        context.getString(R.string.nav_settings),
+        Icons.Filled.Settings,
+        Icons.Outlined.Settings
+    )
 )
 
 
 @Composable
-fun NavBar(navController: NavHostController) {
-    val currentScreen = getCurrentScreen(navController, getNavItems())
-    val navItems = getNavItems()
+fun NavBar(navController: NavHostController, context: Context) {
+    val navItems = getNavItems(context)
+    val currentScreen = getCurrentScreen(navController, navItems)
 
     Box(
         modifier = Modifier

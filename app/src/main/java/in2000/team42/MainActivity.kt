@@ -12,14 +12,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -47,9 +45,7 @@ class MainActivity : ComponentActivity() {
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         val locationGranted = permissions.entries.all { it.value }
-        //if (!locationGranted) {
-        // TODO: Fikse en popup om lokasjon ikke er skrudd på
-        //}
+        // Handle permission denial if needed
     }
 
     private fun requestLocationPermissions() {
@@ -65,21 +61,20 @@ class MainActivity : ComponentActivity() {
         requestLocationPermissions()
         enableEdgeToEdge()
         SavedProjectDatabase.initialize(applicationContext)
+        // Initialize ThemeManager with application context
+        ThemeManager.initialize(applicationContext)
         setContent {
             val navController = rememberNavController()
             val homeViewModel: HomeViewModel = viewModel()
             val projectViewModel: ProjectViewModel = viewModel()
             val snackbarHostState = remember { SnackbarHostState() }
             val scope = rememberCoroutineScope()
-            val context = LocalContext.current
-            val themeManager = remember { ThemeManager(context) }
-            val isDarkTheme by themeManager.isDarkTheme()
+            val isDarkTheme = ThemeManager.isDarkTheme().value
 
-            // Observes the network status and launches a snack bar if the user is offline
+            // Network status observation
             LaunchedEffect(Unit) {
                 NetworkCheck.observeNetworkStatus(this@MainActivity).collectLatest { isOnline ->
                     if (!isOnline) {
-                        // Double-check network status after a short delay
                         delay(300)
                         if (!NetworkCheck.isOnline(this@MainActivity)) {
                             scope.launch {
@@ -135,30 +130,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier,
-        color = MaterialTheme.colorScheme.onBackground
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    IN2000_team42Theme(darkTheme = false, dynamicColor = false) {
-        Greeting("Android")
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingDarkPreview() {
-    IN2000_team42Theme(darkTheme = true, dynamicColor = false) {
-        Greeting("Android")
     }
 }

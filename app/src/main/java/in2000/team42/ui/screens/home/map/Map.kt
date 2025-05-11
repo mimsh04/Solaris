@@ -38,6 +38,8 @@ import com.mapbox.maps.interactions.TypedFeaturesetDescriptor
 import com.mapbox.maps.plugin.animation.MapAnimationOptions
 import com.mapbox.search.autocomplete.PlaceAutocomplete
 import in2000.team42.R
+import in2000.team42.theme.ThemeManager
+import in2000.team42.theme.ThemeManager.isDarkTheme
 import in2000.team42.ui.screens.home.HomeViewModel
 import in2000.team42.ui.screens.home.map.weatherIcon.WeatherIconButton
 import in2000.team42.ui.screens.home.map.search.SearchBar
@@ -83,6 +85,8 @@ fun Map(
 
     var startPos = Point.fromLngLat(10.7522, 59.9139)
     var startZoom = 10.0
+
+    val isDarkTheme by ThemeManager.isDarkTheme()
 
     fun getSheetMapOffset():Double =
          if (config.value.bottomSheetDetent == "medium") 0.00031 else 0.00008
@@ -202,13 +206,13 @@ fun Map(
             onMapClickListener = { onMapClicked(it) },
             mapState = mapState,
             style = {
-                MapStyle(style = if (isSystemInDarkTheme()) Style.DARK else Style.MAPBOX_STREETS)
+                MapStyle(style = if (isDarkTheme) Style.DARK else Style.MAPBOX_STREETS)
             },
         ) {
             if (config.value.polygon.isNullOrEmpty().not()) {
 
                 PolygonAnnotation(
-                    // Fixes polygon so map isn's shouting at me in the log
+                    // Fixes polygon so map isn't shouting at me in the log
                     points = addFirstPoint(config.value.polygon!!) ,
 
                 ) {

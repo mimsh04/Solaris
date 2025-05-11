@@ -10,9 +10,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import androidx.navigation.NavController
+import in2000.team42.R
 import in2000.team42.ui.screens.settings.faq.FaqDialog
 
 @Composable
@@ -29,7 +31,7 @@ fun HelpSection(navController: NavController, showFAQ: Boolean, onShowFAQchange:
         fontSize = 30.sp,
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier
-            .padding( bottom = 10.dp)
+            .padding(bottom = 10.dp)
             .fillMaxWidth()
             .wrapContentWidth(Alignment.Start)
     )

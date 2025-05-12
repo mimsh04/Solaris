@@ -46,7 +46,7 @@ fun GreetingContent(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Rask guide
+        // Quick guide
         Text(
             text = "For å starte, søk etter en adresse i feltet over og trykk på bygget som skal ha solcellepaneler.",
             style = MaterialTheme.typography.bodyLarge,
@@ -63,7 +63,7 @@ fun GreetingContent(modifier: Modifier = Modifier) {
                 contentDescription = "App Logo",
                 modifier = Modifier.size(250.dp)
             )
-            // Infoknapp
+            // Info-button for crediting
             IconButton(
                 onClick = { showImageInfo = !showImageInfo },
                 modifier = Modifier
@@ -81,7 +81,7 @@ fun GreetingContent(modifier: Modifier = Modifier) {
 
         if (showImageInfo) {
             Text(
-                text = "Bildet er generert av AI",
+                text = "Bildet er generert av Bing-AI",
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,

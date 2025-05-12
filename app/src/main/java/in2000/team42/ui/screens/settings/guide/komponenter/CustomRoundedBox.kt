@@ -1,4 +1,4 @@
-package in2000.team42.ui.screens.guide.komponenter
+package in2000.team42.ui.screens.settings.guide.komponenter
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

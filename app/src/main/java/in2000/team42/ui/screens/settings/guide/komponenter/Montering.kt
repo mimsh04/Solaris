@@ -1,4 +1,4 @@
-package in2000.team42.ui.screens.guide.komponenter
+package in2000.team42.ui.screens.settings.guide.komponenter
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -20,8 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import in2000.team42.data.installasjon.model.MonteringData
-import in2000.team42.data.installasjon.model.installationSteps
+import in2000.team42.ui.screens.settings.guide.installation.MonteringData
+import in2000.team42.ui.screens.settings.guide.installation.installationSteps
 
 @Composable
 fun Montering(){

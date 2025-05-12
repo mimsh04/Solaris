@@ -107,7 +107,6 @@ fun Map(
     }
 
     fun loadHouse(point: Point, delay: Long = 0, onComplete: (List<List<Point>>) -> Unit = {}) {
-        viewModel.clearApiData()
         couroutineScope.launch {
 
             kotlinx.coroutines.delay(delay)
@@ -117,7 +116,7 @@ fun Map(
                 Log.i("HouseClick", "No building found")
                 return@launch
             }
-
+            viewModel.clearApiData()
             val cleanedPolygon = newPolygon[0].toMutableList()
             cleanedPolygon.removeAt(cleanedPolygon.lastIndex)
 
@@ -128,9 +127,10 @@ fun Map(
                 longitude = centerPoint.longitude(),
                 latitude = centerPoint.latitude()
             )
-            viewModel.setAreal(
-                areal = calculatePolygonArea(listOf(cleanedPolygon)).toFloat(),
+            viewModel.setArea(
+                area = calculatePolygonArea(listOf(cleanedPolygon)).toFloat(),
             )
+            viewModel.updateWeatherData()
             onComplete(listOf(cleanedPolygon))
 
         }
@@ -187,7 +187,7 @@ fun Map(
         val newPolygon = config.value.polygon!![0].toMutableList()
         newPolygon[index] = draggedPoint
         val nyListe = listOf(newPolygon)
-        viewModel.setAreal(calculatePolygonArea(nyListe).toFloat())
+        viewModel.setArea(calculatePolygonArea(nyListe).toFloat())
         viewModel.setPolygon(nyListe)
     }
 
@@ -206,13 +206,15 @@ fun Map(
             },
         ) {
             if (config.value.polygon.isNullOrEmpty().not()) {
-
+                val dark = isSystemInDarkTheme()
                 PolygonAnnotation(
                     // Fixes polygon so map isn's shouting at me in the log
                     points = addFirstPoint(config.value.polygon!!) ,
 
                 ) {
-                    fillColor = Color.Blue
+                    fillColor = Color.Blue.copy(alpha =
+                        if (dark) 0.4f else 0.8f
+                    )
                     fillOpacity = 0.3
 
                 }

@@ -79,13 +79,13 @@ class BottomSheetUnitTest {
         // Mock ViewModel
         val viewModel = mockk<HomeViewModel>()
         coEvery { viewModel.setIncline(any()) } returns Unit
-        coEvery { viewModel.setVinkel(any()) } returns Unit
+        coEvery { viewModel.setDirection(any()) } returns Unit
         coEvery { viewModel.setSelectedSolarPanel(any()) } returns Unit
         coEvery { viewModel.updateAllApi() } returns Unit
 
         // Simulerer Vinkelinputs callback
         val onInclineChange: (Float) -> Unit = { viewModel.setIncline(it) }
-        val onDirectionChange: (Float) -> Unit = { viewModel.setVinkel(it) }
+        val onDirectionChange: (Float) -> Unit = { viewModel.setDirection(it) }
         onInclineChange(45f)
         onDirectionChange(90f)
 
@@ -99,7 +99,7 @@ class BottomSheetUnitTest {
 
         // Verify ViewModel interactions
         coVerify { viewModel.setIncline(45f) }
-        coVerify { viewModel.setVinkel(90f) }
+        coVerify { viewModel.setDirection(90f) }
         coVerify { viewModel.setSelectedSolarPanel(defaultPanels[1]) }
         coVerify { viewModel.updateAllApi() }
     }
@@ -109,10 +109,10 @@ class BottomSheetUnitTest {
         // Mock ViewModel og flows
         val viewModel = mockk<HomeViewModel>()
         val configFlow = MutableStateFlow(Config(
-            adress = "123 Main St",
+            address = "123 Main St",
             incline = 30f,
-            vinkel = 180f,
-            areal = 10f,
+            direction = 180f,
+            area = 10f,
             selectedPanelModel = defaultPanels[0]
         ))
         val apiDataFlow = MutableStateFlow(ApiData())
@@ -124,10 +124,10 @@ class BottomSheetUnitTest {
         val config = configFlow.value
 
         // Tester props som blir tildelt child composables
-        assertEquals("123 Main St", config.adress, "Address should match")
+        assertEquals("123 Main St", config.address, "Address should match")
         assertEquals(30f, config.incline, "Incline should match")
-        assertEquals(180f, config.vinkel, "Vinkel should match")
-        assertEquals(10f, config.areal, "Areal should match")
+        assertEquals(180f, config.direction, "Vinkel should match")
+        assertEquals(10f, config.area, "Areal should match")
         assertEquals(defaultPanels[0], config.selectedPanelModel, "Selected panel should match")
     }
 }

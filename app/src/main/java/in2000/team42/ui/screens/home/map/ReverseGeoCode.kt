@@ -14,7 +14,7 @@ val searchEngine = SearchEngine.createSearchEngineWithBuiltInDataProviders(
     SearchEngineSettings()
 )
 
-fun getAdressOfPoint (point: Point, callback : (adress : String) -> Unit) {
+fun getAddressOfPoint (point: Point, callback : (adress : String) -> Unit) {
     val options = ReverseGeoOptions(
         center = point,
         limit = 1

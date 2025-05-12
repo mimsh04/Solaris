@@ -32,7 +32,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import in2000.team42.ui.screens.guide.InstallasjonScreen
+import in2000.team42.ui.screens.settings.guide.InstallasjonScreen
 import in2000.team42.data.saved.*
 import in2000.team42.ui.screens.home.HomeViewModel
 import in2000.team42.ui.screens.saved.SavedScreen
@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
     ) { permissions ->
         val locationGranted = permissions.entries.all { it.value }
         //if (!locationGranted) {
-            // TODO: Fikse en popup om lokasjon ikke er skrudd på
+            // TODO: Create a dialog to inform the user that location permissions are required
         //}
     }
 

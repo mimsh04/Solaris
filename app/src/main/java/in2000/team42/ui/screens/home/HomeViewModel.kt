@@ -49,10 +49,10 @@ data class Config(
 )
 
 data class DisplayWeather(
-    val month: String? = "ukjent",
-    val temp: String? = "ukjent",
-    val snow: String? = "ukjent",
-    val cloud: String? = "ukjent"
+    val month: String = "ukjent",
+    val temp: String = "ukjent",
+    val snow: String = "ukjent",
+    val cloud: String = "ukjent"
 )
 
 class HomeViewModel : ViewModel() {
@@ -222,6 +222,16 @@ class HomeViewModel : ViewModel() {
     private fun calculatePeakPower() =
         _config.value.selectedPanelModel.efficiency / 100 * _config.value.area
 
+    private fun createDummyWeatherData(): List<DisplayWeather> {
+        if (_apiData.value.kwhMonthlyData.isNotEmpty() and
+            _apiData.value.sunRadiation.isNotEmpty()) {
+            _apiData.value = _apiData.value.copy(isLoading = false)
+        }
+        return (1..12).map {
+            DisplayWeather()
+        }
+    }
+
     fun updateWeatherData() {
         viewModelScope.launch {
             try {
@@ -246,33 +256,22 @@ class HomeViewModel : ViewModel() {
                                     "temp=${displayWeather.temp}, snow=${displayWeather.snow}, " +
                                     "cloud=${displayWeather.cloud}")
                             }
-                            if (_apiData.value.kwhMonthlyData.isNotEmpty() and
-                                _apiData.value.sunRadiation.isNotEmpty()) {
-                                _apiData.value = _apiData.value.copy(isLoading = false)
-                            }
+                            createDummyWeatherData()
                             _apiData.value = _apiData.value.copy(weatherData = displayData)
                             Log.d(TAG, "Weather data updated: $displayData")
                         } else {
-                            _apiData.value = _apiData.value.copy(weatherData = emptyList())
+                            _apiData.value = _apiData.value.copy(weatherData = createDummyWeatherData())
                             Log.w(TAG, "Weather data is empty or all values are null")
                         }
 
                     }
                     is FrostResult.Failure -> {
-                        _apiData.value = _apiData.value.copy(weatherData =
-                            (1..12).map {
-                                DisplayWeather()
-                            }
-                        )
+                        _apiData.value = _apiData.value.copy(weatherData = createDummyWeatherData())
                         Log.e(TAG, "Failed to fetch weather data: ${weather.message}")
                     }
                 }
             } catch (e: Exception) {
-                _apiData.value = _apiData.value.copy(weatherData =
-                    (1..12).map {
-                        DisplayWeather()
-                    }
-                )
+                _apiData.value = _apiData.value.copy(weatherData = createDummyWeatherData())
                 Log.e(TAG, "Exception fetching weather data: ${e.message}", e)
             }
         }

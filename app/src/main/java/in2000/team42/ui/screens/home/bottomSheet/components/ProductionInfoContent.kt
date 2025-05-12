@@ -12,7 +12,7 @@ fun ProductionInfoContent(yearlyKwh: Int) {
 
         // The warnings are about the yearlyKwh being zero. That's the point
         yearlyKwh == 0 -> """
-            $yearlyKwh kWh/år (ca. ${(yearlyKwh / 365.0).toInt()} kWh/dag)
+            0 kWh/år (ca. 0. kWh/dag)
             
             - Ingen energi produsert
                         

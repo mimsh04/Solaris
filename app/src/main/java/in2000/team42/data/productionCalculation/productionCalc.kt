@@ -80,16 +80,14 @@ fun calculateWithCoverage(
     val monthlyProductionCalculations = mutableListOf<ProductionCalculation>()
     kwhMonthlyData.forEachIndexed {i,  monthlyData ->
         val (_, snowKwhLoss, _) = calculateSnowImpact(monthlyData.averageMonthly,
-                if (sortedWeatherData[i].snow.isNullOrBlank() ||
-                    sortedWeatherData[i].snow == "ukjent")
+                if (sortedWeatherData[i].snow == "ukjent")
                 0.0 else
-                parseSnowFromMm(sortedWeatherData[i].snow!!)
+                parseSnowFromMm(sortedWeatherData[i].snow)
         )
         val (_, cloudKwhLoss, _) = calculateCloudImpact(monthlyData.averageMonthly,
-                if (sortedWeatherData[i].cloud.isNullOrBlank() ||
-                    sortedWeatherData[i].cloud == "ukjent")
+                if (sortedWeatherData[i].cloud == "ukjent")
                 60.0 else
-                parseCloudFromPercent(sortedWeatherData[i].cloud!!)
+                parseCloudFromPercent(sortedWeatherData[i].cloud)
         )
         monthlyProductionCalculations.add(ProductionCalculation(
             kWhPotential = monthlyData.averageMonthly,

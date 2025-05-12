@@ -56,7 +56,7 @@ fun WeatherIconButton(
 
     val dateFormat = SimpleDateFormat("MMM yyyy", Locale.getDefault())
     val latestWeather: DisplayWeather? = weatherData.maxByOrNull { displayWeather ->
-        if (displayWeather.month == "ukjent" || displayWeather.month.isNullOrBlank()) {
+        if (displayWeather.month == "ukjent") {
             Long.MIN_VALUE
         } else {
             dateFormat.parse(displayWeather.month)?.time ?: Long.MIN_VALUE

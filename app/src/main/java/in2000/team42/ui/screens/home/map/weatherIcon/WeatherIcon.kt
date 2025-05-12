@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import com.composables.core.Icon
 import in2000.team42.R
+import in2000.team42.ui.screens.home.DisplayWeather
 import in2000.team42.ui.screens.home.HomeViewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -54,8 +55,12 @@ fun WeatherIconButton(
     val weatherData = apiData.weatherData
 
     val dateFormat = SimpleDateFormat("MMM yyyy", Locale.getDefault())
-    val latestWeather = weatherData.maxByOrNull { displayWeather ->
-        dateFormat.parse(displayWeather.month)?.time ?: Long.MIN_VALUE
+    val latestWeather: DisplayWeather? = weatherData.maxByOrNull { displayWeather ->
+        if (displayWeather.month == "ukjent" || displayWeather.month.isNullOrBlank()) {
+            Long.MIN_VALUE
+        } else {
+            dateFormat.parse(displayWeather.month)?.time ?: Long.MIN_VALUE
+        }
     }
 
     // Parseses weather data correctly so it can be displayed

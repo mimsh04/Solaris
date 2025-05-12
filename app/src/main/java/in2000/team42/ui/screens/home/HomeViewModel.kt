@@ -259,7 +259,11 @@ class HomeViewModel : ViewModel() {
 
                     }
                     is FrostResult.Failure -> {
-                        _apiData.value = _apiData.value.copy(weatherData = emptyList())
+                        _apiData.value = _apiData.value.copy(weatherData =
+                            (1..12).map {
+                                DisplayWeather()
+                            }
+                        )
                         Log.e(TAG, "Failed to fetch weather data: ${weather.message}")
                     }
                 }

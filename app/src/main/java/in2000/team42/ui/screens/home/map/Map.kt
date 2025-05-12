@@ -180,6 +180,10 @@ fun Map(
         clearScreen()
         val offset = getSheetMapOffset()
         mapEaseTo(point, 2000, offset)
+        loadHouse(point, delay = 2400, onComplete = { polygon ->
+            mapEaseTo(calculateCentroid(polygon), 1000, offset)
+            viewModel.setGeoAddress(point)
+        })
         return true
     }
 

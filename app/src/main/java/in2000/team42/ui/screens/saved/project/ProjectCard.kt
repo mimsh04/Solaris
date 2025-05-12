@@ -70,7 +70,7 @@ fun ProjectCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(180.dp)
+            //.height(180.dp)
             .padding(if (isInSwipeContext) 0.dp else 8.dp)
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(16.dp),

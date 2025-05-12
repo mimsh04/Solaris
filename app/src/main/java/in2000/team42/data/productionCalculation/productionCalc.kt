@@ -59,6 +59,12 @@ private fun calculateCloudImpact(
     return Triple(percentageLoss, kWhLost, kWhActual)
 }
 
+private fun parseSnowFromMm(snow: String) =
+    snow.split("m").first().replace(",", ".").toDouble()
+
+private fun parseCloudFromPercent(cloud: String) =
+    cloud.split("%").first().replace(",", ".").toDouble()
+
 private fun sortWeatherDataByMonth(weatherData: List<DisplayWeather>): List<DisplayWeather> {
     return weatherData.sortedBy { displayWeather ->
         val monthStr = displayWeather.month?.split(" ")?.firstOrNull()
@@ -74,12 +80,17 @@ fun calculateWithCoverage(
     val monthlyProductionCalculations = mutableListOf<ProductionCalculation>()
     kwhMonthlyData.forEachIndexed {i,  monthlyData ->
         val (_, snowKwhLoss, _) = calculateSnowImpact(monthlyData.averageMonthly,
-            if (sortedWeatherData[i].snow == "Ukjent" || sortedWeatherData[i].snow.isNullOrBlank()) 0.0 else
-                sortedWeatherData[i].snow?.split("m")?.first()!!.replace(",", ".").toDouble())
+            if (sortedWeatherData[i].snow == "Ukjent" ||
+                sortedWeatherData[i].snow.isNullOrBlank())
+                0.0 else
+                parseSnowFromMm(sortedWeatherData[i].snow!!)
+        )
         val (_, cloudKwhLoss, _) = calculateCloudImpact(monthlyData.averageMonthly,
-            if (sortedWeatherData[i].cloud == "Ukjent" || sortedWeatherData[i].cloud.isNullOrBlank()) 60.0 else
-                sortedWeatherData[i].cloud?.split("%")?.first()!!.toDouble())
-
+            if (sortedWeatherData[i].cloud == "Ukjent" ||
+                sortedWeatherData[i].cloud.isNullOrBlank())
+                60.0 else
+                parseCloudFromPercent(sortedWeatherData[i].cloud!!)
+        )
         monthlyProductionCalculations.add(ProductionCalculation(
             kWhPotential = monthlyData.averageMonthly,
             kWhEtterUtregning = monthlyData.averageMonthly - (snowKwhLoss + cloudKwhLoss),

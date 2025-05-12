@@ -49,10 +49,10 @@ data class Config(
 )
 
 data class DisplayWeather(
-    val month: String,
-    val temp: String,
-    val snow: String,
-    val cloud: String
+    val month: String? = "ukjent",
+    val temp: String? = "ukjent",
+    val snow: String? = "ukjent",
+    val cloud: String? = "ukjent"
 )
 
 class HomeViewModel : ViewModel() {

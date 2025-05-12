@@ -264,7 +264,11 @@ class HomeViewModel : ViewModel() {
                     }
                 }
             } catch (e: Exception) {
-                _apiData.value = _apiData.value.copy(weatherData = emptyList())
+                _apiData.value = _apiData.value.copy(weatherData =
+                    (1..12).map {
+                        DisplayWeather()
+                    }
+                )
                 Log.e(TAG, "Exception fetching weather data: ${e.message}", e)
             }
         }

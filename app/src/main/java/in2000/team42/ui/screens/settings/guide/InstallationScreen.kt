@@ -1,4 +1,4 @@
-package in2000.team42.ui.screens.guide
+package in2000.team42.ui.screens.settings.guide
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -17,10 +17,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import in2000.team42.ui.screens.guide.komponenter.ArrowBack
-import in2000.team42.ui.screens.guide.komponenter.CustomRoundedBox
-import in2000.team42.ui.screens.guide.komponenter.Montering
-import in2000.team42.ui.screens.guide.komponenter.Subtitle
+import in2000.team42.ui.screens.settings.guide.komponenter.ArrowBack
+import in2000.team42.ui.screens.settings.guide.komponenter.CustomRoundedBox
+import in2000.team42.ui.screens.settings.guide.komponenter.Montering
+import in2000.team42.ui.screens.settings.guide.komponenter.Subtitle
 
 @Composable
 fun InstallasjonScreen(navController: NavController){
@@ -50,7 +50,7 @@ fun InstallasjonScreen(navController: NavController){
             }
             item{Spacer(modifier=Modifier.height(30.dp))}
 
-            item{Subtitle("Kan man montere solcellepaneler selv?")}
+            item{ Subtitle("Kan man montere solcellepaneler selv?") }
 
             item{
                 CustomRoundedBox(

@@ -8,9 +8,9 @@ data class FAQ(
 )
 
 val faqItems = listOf(
-    FAQ(R.string.faq_1_question, R.string.faq_1_answer),
-    FAQ(R.string.faq_2_question, R.string.faq_2_answer),
-    FAQ(R.string.faq_3_question, R.string.faq_3_answer),
-    FAQ(R.string.faq_4_question, R.string.faq_4_answer),
-    FAQ(R.string.faq_5_question, R.string.faq_5_answer)
+    FAQ(R.string.faq1_question, R.string.faq1_answer),
+    FAQ(R.string.faq2_question, R.string.faq2_answer),
+    FAQ(R.string.faq3_question, R.string.faq3_answer),
+    FAQ(R.string.faq4_question, R.string.faq4_answer),
+    FAQ(R.string.faq5_question, R.string.faq5_answer)
 )

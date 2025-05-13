@@ -39,7 +39,7 @@ fun InstallasjonScreen(navController: NavController){
                     ArrowBack(navController)
 
                     Text(
-                        text = stringResource(R.string.installationGuideTitle),
+                        text = stringResource(R.string.installation_guide_title),
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground,
@@ -67,7 +67,7 @@ fun InstallasjonScreen(navController: NavController){
                 Subtitle(stringResource(R.string.installation_subtitle_when_self_install))
 
                 CustomRoundedBox(
-                    text = stringResource(R.string.installationSelfInstallConditions),
+                    text = stringResource(R.string.installation_self_install_conditions),
                     height = 100.dp
                 )
             }

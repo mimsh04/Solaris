@@ -33,7 +33,7 @@ fun ThemeToggleButton(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = stringResource(R.string.settingDarkTheme),
+                text = stringResource(R.string.setting_dark_theme),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface
             )

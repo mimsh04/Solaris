@@ -10,8 +10,8 @@ data class MonteringData(
 )
 
 val installationSteps = listOf(
-    MonteringData(R.string.installationStep1Title, R.string.installation_step_1_description),
-    MonteringData(R.string.installation_step_2_title, R.string.installation_step_2_description),
-    MonteringData(R.string.installation_step_3_title, R.string.installation_step_3_description),
-    MonteringData(R.string.installation_step_4_title, R.string.installation_step_4_description)
+    MonteringData(R.string.installation_step1_title, R.string.installation_step1_description),
+    MonteringData(R.string.installation_step2_title, R.string.installation_step2_description),
+    MonteringData(R.string.installation_step3_title, R.string.installation_step3_description),
+    MonteringData(R.string.installation_step4_title, R.string.installation_step4_description)
 )

@@ -76,7 +76,7 @@ fun RecommendedProducts () {
                     )
 
                     Text(
-                        text = stringResource(R.string.companyNameOtovo),
+                        text = stringResource(R.string.company_name_otovo),
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 16.sp,
                         color = Color.White,

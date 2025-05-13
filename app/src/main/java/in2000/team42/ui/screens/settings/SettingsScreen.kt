@@ -28,11 +28,11 @@ fun SettingsScreen (navController: NavHostController) {
                 .verticalScroll(rememberScrollState())
         ){
             Spacer(modifier = Modifier.height(20.dp))
-         Box(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(20.dp)
-         ) {
+            ) {
                 Text(
                     text = "Innstillinger",
                     fontWeight = FontWeight.Bold,
@@ -43,7 +43,7 @@ fun SettingsScreen (navController: NavHostController) {
                         .fillMaxWidth()
                         .wrapContentWidth(Alignment.Start)
                 )
-         }
+            }
             Box(modifier = Modifier.height(180.dp)) {
                 RecommendedProducts()
             }

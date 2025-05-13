@@ -55,10 +55,9 @@ class FrostDatasource {
     }
 
     /**
-     * Henter nærmeste stasjoner basert på koordinater som input. Funksjonen vil finne de nærmeste stasjonene som har målinger for elements
-     * og finner de 3 nærmeste stasjonene for hvert elements. Dvs at funksjonen gjor 3 API kall
-     * */
-
+     * Retrieves the nearest stations based on input coordinates. The function will find the nearest stations that have measurements for elements
+     * and find the 3 closest stations for each element. This means the function makes 3 API calls.
+     */
     suspend fun getNearestStation(latitude: Double, longitude: Double, referenceTime: String): Map<String, List<String>>? = withContext(Dispatchers.IO) {
         val url = "$baseUrl/sources/v0.jsonld"
         Log.d(TAG, "Searching for nearest stations at coordinates: ($latitude, $longitude)")
@@ -103,19 +102,19 @@ class FrostDatasource {
     }
 
     /**
-     * Henter månedlig temperatur, snø og årlig skydekke for hele 2024 når funksjonen blir kalt.
+     * Retrieves monthly temperature, snow, and annual cloud cover for the entire year 2024 when the function is called.
      *
-     * Det kan hende noen stasjoner ikke har de nødvendige målingene og du vil få en error i logcat.
-     * Skulle dette skje, gå til frost.met.no og finn API refrence. Der kan du sette inn parametere så vil API-et
-     * gi en tilbakemelding på hva som gikk galt.
+     * Some stations may not have the necessary measurements, and you may see an error in Logcat.
+     * If this happens, visit frost.met.no and find the API reference. There, you can input parameters, and the API
+     * will provide feedback on what went wrong.
      *
-     * Kan hende en stasjon ikke måler hver time eller ikke har utstyret for å målet en type data.
-     * Altså kan det hende du ikke får noe værdata på noen adresser.
+     * It may be that a station does not measure every hour or lacks the equipment to measure a specific type of data.
+     * This means you may not get weather data for some locations.
      *
-     * @param stationMap Nærmeste stasjoner som har målinger på elementene eks på mapping: best_estimate_mean(air_temperature P1M) : SN18700, SN18701, SN18702
-     * @param referenceTime Hvilken tid du skal ha data fra. Skrive i format AA-MM-DD/AA-MM-DD, Der start er på venstre siden av /-tegnet
+     * @param stationMap Nearest stations that have measurements for the elements, e.g., mapping: best_estimate_mean(air_temperature P1M) : SN18700, SN18701, SN18702
+     * @param referenceTime The time period for which you want data. Written in the format YYYY-MM-DD/YYYY-MM-DD, where the start is on the left side of the slash
      *
-     * @return Flere klasser med temperatur, skydekke og snø dekke)
+     * @return Multiple classes with temperature, cloud cover, and snow cover
      */
     suspend fun getWeatherData(
         stationMap: Map<String, List<String>>,
@@ -179,13 +178,14 @@ class FrostDatasource {
     }
 
     private fun processWeatherData(responses: List<FrostResponse>): List<FrostData> {
+        // Collects all reference times from all responses
         val allRefTimes = responses.flatMap { response ->
             response.data.map { it.referenceTime }
         }.distinct().sorted()
 
         val dataByTime = mutableMapOf<String, FrostData>()
 
-
+        // Initializes data with reference times
         allRefTimes.forEach { refTime ->
             dataByTime[refTime] = FrostData(
                 stationId = null,
@@ -196,7 +196,7 @@ class FrostDatasource {
             )
         }
 
-
+        // Fills in data from the responses
         for (response in responses) {
             response.data.forEach { observation ->
                 val refTime = observation.referenceTime

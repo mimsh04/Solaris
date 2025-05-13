@@ -17,7 +17,7 @@ sealed class FrostResult {
     data class Failure(val message: String) : FrostResult()
 }
 
-// Hjelper klasser for deserialization
+// Helper class for deserialization
 @Serializable
 data class FrostResponse(
     val data: List<FrostObservation>

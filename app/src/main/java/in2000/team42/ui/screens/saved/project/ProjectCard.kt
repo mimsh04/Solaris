@@ -70,7 +70,7 @@ fun ProjectCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(180.dp)
+            //.height(180.dp)
             .padding(if (isInSwipeContext) 0.dp else 8.dp)
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(16.dp),
@@ -136,12 +136,12 @@ fun ProjectCard(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            text = "Direction: ${project.config.vinkel}",
+                            text = "Direction: ${project.config.direction}",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            text = "Areal: ${String.format("%.2f", project.config.areal)} m²",
+                            text = "Areal: ${String.format("%.2f", project.config.area)} m²",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

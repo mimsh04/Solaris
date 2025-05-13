@@ -49,7 +49,7 @@ fun GreetingContent(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Rask guide
+        // Quick guide
         Text(
             text = stringResource(R.string.start_screen_intro),
             style = MaterialTheme.typography.bodyLarge,
@@ -66,7 +66,7 @@ fun GreetingContent(modifier: Modifier = Modifier) {
                 contentDescription = "App Logo",
                 modifier = Modifier.size(250.dp)
             )
-            // Infoknapp
+            // Info-button for crediting
             IconButton(
                 onClick = { showImageInfo = !showImageInfo },
                 modifier = Modifier
@@ -84,7 +84,7 @@ fun GreetingContent(modifier: Modifier = Modifier) {
 
         if (showImageInfo) {
             Text(
-                text = "Bildet er generert av AI",
+                text = "Bildet er generert av Bing-AI",
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,

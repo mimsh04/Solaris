@@ -22,8 +22,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import in2000.team42.R
-import in2000.team42.data.installasjon.model.MonteringData
-import in2000.team42.data.installasjon.model.installationSteps
+import in2000.team42.ui.screens.settings.guide.installation.MonteringData
+import in2000.team42.ui.screens.settings.guide.installation.installationSteps
+import in2000.team42.ui.screens.settings.guide.komponenter.CustomRoundedBox
 
 @Composable
 fun Montering(){
@@ -50,8 +51,7 @@ fun ExpandableMonteringItem(monteringData: MonteringData){
         fontWeight = FontWeight.Bold
     ){
         Column(
-            modifier = Modifier
-                .padding(8.dp)
+            modifier = Modifier.padding(8.dp)
                 .clickable { isExpanded = !isExpanded }
         ){
             Row(
@@ -66,7 +66,7 @@ fun ExpandableMonteringItem(monteringData: MonteringData){
                 )
 
                 Text(
-                    text = if (isExpanded) "-" else "+",
+                    text= if (isExpanded) "-" else "+",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onBackground,
                 )

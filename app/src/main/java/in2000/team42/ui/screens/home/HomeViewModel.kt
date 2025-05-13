@@ -17,7 +17,7 @@ import in2000.team42.data.pgvis.model.KwhMonthlyResponse
 import in2000.team42.data.saved.*
 import in2000.team42.data.solarPanels.SolarPanelModel
 import in2000.team42.data.solarPanels.defaultPanels
-import in2000.team42.ui.screens.home.map.getAdressOfPoint
+import in2000.team42.ui.screens.home.map.getAddressOfPoint
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -40,19 +40,19 @@ data class Config(
     var longitude: Double = 0.0,
     var latitude: Double = 0.0,
     var incline: Float = 35f,
-    var vinkel: Float = 0f,
-    var areal: Float = 1f,
+    var direction: Float = 0f,
+    var area: Float = 1f,
     var polygon: List<List<Point>>? = null,
     var bottomSheetDetent: String = "medium",
-    var adress: String = "",
+    var address: String = "",
     var selectedPanelModel: SolarPanelModel = defaultPanels[0]
 )
 
 data class DisplayWeather(
-    val month: String,
-    val temp: String,
-    val snow: String,
-    val cloud: String
+    val month: String? = "ukjent",
+    val temp: String? = "ukjent",
+    val snow: String? = "ukjent",
+    val cloud: String? = "ukjent"
 )
 
 class HomeViewModel : ViewModel() {
@@ -76,12 +76,12 @@ class HomeViewModel : ViewModel() {
     }
 
     fun setAddress(address: String) {
-        _config.value = _config.value.copy(adress = address)
+        _config.value = _config.value.copy(address = address)
     }
 
 
     fun setGeoAddress(point: Point) {
-        getAdressOfPoint(point) {
+        getAddressOfPoint(point) {
             setAddress(it)
         }
     }
@@ -91,6 +91,19 @@ class HomeViewModel : ViewModel() {
             projects.any { it.config.copy(bottomSheetDetent = "") ==
                     _config.value.copy(bottomSheetDetent = "") }
         }
+    }
+
+    fun clearSolarData() {
+        _apiData.value = _apiData.value.copy(
+            sunRadiation = emptyList(),
+            kwhMonthlyData = emptyList(),
+        )
+    }
+
+    fun updateAllSolarData() {
+        _apiData.value = _apiData.value.copy(isLoading = true)
+        updateSolarRadiation()
+        updateKwhMonthly()
     }
 
 
@@ -131,12 +144,12 @@ class HomeViewModel : ViewModel() {
         _config.value = _config.value.copy(incline = incline)
     }
 
-    fun setVinkel(vinkel: Float) {
-        _config.value = _config.value.copy(vinkel = vinkel)
+    fun setDirection(directionAngle: Float) {
+        _config.value = _config.value.copy(direction = directionAngle)
     }
 
-    fun setAreal(areal: Float) {
-        _config.value = _config.value.copy(areal = areal)
+    fun setArea(area: Float) {
+        _config.value = _config.value.copy(area = area)
     }
 
     fun setSelectedSolarPanel(panel: SolarPanelModel) {
@@ -174,8 +187,12 @@ class HomeViewModel : ViewModel() {
                 _config.value.longitude,
                 0,
                 _config.value.incline,
-                _config.value.vinkel
+                _config.value.direction
             )
+            if (_apiData.value.kwhMonthlyData.isNotEmpty() and
+                _apiData.value.weatherData.isNotEmpty()) {
+                _apiData.value = _apiData.value.copy(isLoading = false)
+            }
             _apiData.value = _apiData.value.copy(sunRadiation = radiationData)
             Log.d(TAG, "Radiation data: $radiationData")
         }
@@ -189,19 +206,23 @@ class HomeViewModel : ViewModel() {
                 _config.value.latitude,
                 _config.value.longitude,
                 _config.value.incline,
-                _config.value.vinkel,
+                _config.value.direction,
                 peakPower,
                 pvTech
             )
+            if (_apiData.value.sunRadiation.isNotEmpty() and
+                _apiData.value.weatherData.isNotEmpty()) {
+                _apiData.value = _apiData.value.copy(isLoading = false)
+            }
             _apiData.value = _apiData.value.copy(kwhMonthlyData = monthlyKwhData)
             Log.d(TAG, "Monthly kwh data: $monthlyKwhData")
         }
     }
 
     private fun calculatePeakPower() =
-        _config.value.selectedPanelModel.efficiency / 100 * _config.value.areal
+        _config.value.selectedPanelModel.efficiency / 100 * _config.value.area
 
-    private fun updateWeatherData() {
+    fun updateWeatherData() {
         viewModelScope.launch {
             try {
                 val referenceTime = frostRepository.get1YearReferenceTime()
@@ -225,13 +246,17 @@ class HomeViewModel : ViewModel() {
                                     "temp=${displayWeather.temp}, snow=${displayWeather.snow}, " +
                                     "cloud=${displayWeather.cloud}")
                             }
+                            if (_apiData.value.kwhMonthlyData.isNotEmpty() and
+                                _apiData.value.sunRadiation.isNotEmpty()) {
+                                _apiData.value = _apiData.value.copy(isLoading = false)
+                            }
                             _apiData.value = _apiData.value.copy(weatherData = displayData)
                             Log.d(TAG, "Weather data updated: $displayData")
                         } else {
                             _apiData.value = _apiData.value.copy(weatherData = emptyList())
                             Log.w(TAG, "Weather data is empty or all values are null")
                         }
-                        _apiData.value = _apiData.value.copy(isLoading = false)
+
                     }
                     is FrostResult.Failure -> {
                         _apiData.value = _apiData.value.copy(weatherData = emptyList())

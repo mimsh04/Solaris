@@ -29,16 +29,23 @@ import in2000.team42.theme.IN2000_team42Theme
 import in2000.team42.theme.ThemeManager
 import in2000.team42.ui.navbar.NavBar
 import in2000.team42.ui.screens.Screen
-import in2000.team42.ui.screens.guide.InstallasjonScreen
 import in2000.team42.ui.screens.home.HomeScreen
+import in2000.team42.ui.screens.settings.SettingsScreen
+import android.Manifest
+import android.annotation.SuppressLint
+import androidx.compose.animation.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import in2000.team42.ui.screens.settings.guide.InstallasjonScreen
+import in2000.team42.data.saved.*
 import in2000.team42.ui.screens.home.HomeViewModel
 import in2000.team42.ui.screens.saved.SavedScreen
 import in2000.team42.ui.screens.saved.project.ProjectViewModel
-import in2000.team42.ui.screens.settings.SettingsScreen
 import in2000.team42.data.saved.SavedProjectDatabase
 import in2000.team42.utils.NetworkCheck
-import android.Manifest
-import androidx.compose.material3.MaterialTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
 import in2000.team42.utils.createLocalizedContext
 import in2000.team42.utils.loadLanguagePreference
@@ -46,12 +53,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+
 class MainActivity : ComponentActivity() {
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         val locationGranted = permissions.entries.all { it.value }
-        // Handle permission denial if needed
+        //if (!locationGranted) {
+            // TODO: Create a dialog to inform the user that location permissions are required
+        //}
     }
 
     private fun requestLocationPermissions() {
@@ -62,6 +72,7 @@ class MainActivity : ComponentActivity() {
         requestPermissionLauncher.launch(permissions)
     }
 
+    @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestLocationPermissions()
@@ -75,16 +86,19 @@ class MainActivity : ComponentActivity() {
             val localizedContext = remember(language) { createLocalizedContext(this, language) }
 
             val navController = rememberNavController()
+
             val homeViewModel: HomeViewModel = viewModel()
             val projectViewModel: ProjectViewModel = viewModel()
+
             val snackbarHostState = remember { SnackbarHostState() }
             val scope = rememberCoroutineScope()
             val isDarkTheme = ThemeManager.isDarkTheme().value
 
-            // Network status observation
+            // Observes the network status and launches a snack bar if the user is offline
             LaunchedEffect(Unit) {
                 NetworkCheck.observeNetworkStatus(this@MainActivity).collectLatest { isOnline ->
                     if (!isOnline) {
+                        // Double-check network status after a short delay
                         delay(300)
                         if (!NetworkCheck.isOnline(this@MainActivity)) {
                             scope.launch {

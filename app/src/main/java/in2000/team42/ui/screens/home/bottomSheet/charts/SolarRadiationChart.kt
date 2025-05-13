@@ -57,7 +57,7 @@ fun SolarRadiationChart(modifier: Modifier = Modifier, solData: List<DailyProfil
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-            Text("Gjennomsnitlig solstråling hver måned",
+            Text("Gjennomsnittlig solstråling hver måned",
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(top = 12.dp)
             )

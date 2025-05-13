@@ -1,4 +1,4 @@
-package in2000.team42.data.installasjon.model
+package in2000.team42.ui.screens.settings.guide.installation
 
 import androidx.annotation.StringRes
 import androidx.compose.ui.res.stringResource

@@ -122,7 +122,11 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.Settings.route) {
                             BackHandler {
                                 navController.navigate(Screen.Home.route) {
-                                    popUpTo(Screen.Home.route) { inclusive = true }
+                                    popUpTo(Screen.Home.route) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
                             }
                             SettingsScreen(navController)
@@ -131,7 +135,11 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.Saved.route) {
                             BackHandler {
                                 navController.navigate(Screen.Home.route) {
-                                    popUpTo(Screen.Home.route) { inclusive = true }
+                                    popUpTo(Screen.Home.route) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
                             }
                             SavedScreen(

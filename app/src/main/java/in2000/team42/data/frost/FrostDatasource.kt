@@ -27,7 +27,7 @@ import kotlinx.coroutines.awaitAll
 
 class FrostDatasource {
     private val TAG = "FrostDatasource" // LogCat tag for denne klassen
-    private val CLIENTID = "5fa50311-61ee-4aa0-8f29-2262c21212e5"
+    private val CLIENTID = "0791feb2-20aa-4805-9e4d-22765c3a9ff6"
 
     private val temp = "best_estimate_mean(air_temperature P1M)" // Opplevde problemer med å velge noe annet enn P1M
     private val snow = "mean(snow_coverage_type P1M)"

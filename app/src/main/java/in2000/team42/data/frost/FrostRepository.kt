@@ -17,7 +17,7 @@ class FrostRepository(private val dataSource: FrostDatasource) {
         calendar.add(Calendar.YEAR, -1)
         val startTime = calendar.time
 
-        // Formatterer data med gitt format og tidzone
+        // Formats data with the specified format and timezone
         val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
         formatter.timeZone = TimeZone.getTimeZone("Europe/Oslo")
 
@@ -28,11 +28,11 @@ class FrostRepository(private val dataSource: FrostDatasource) {
     }
 
     /**
-     * Henter værdata basert på koordinater og beholder null-verdier for manglende data.
+     * Retrieves weather data based on coordinates and retains null values for missing data.
      * @param latitude Latitude of the location
      * @param longitude Longitude of the location
-     * @param referenceTime Tidintervall for data (e.g., "2024-01-01/2024-12-31")
-     * @return FrostResult med en liste av FrostData-objekter, der manglende data beholdes som null
+     * @param referenceTime Time interval for data (e.g., "2024-01-01/2024-12-31")
+     * @return FrostResult with a list of FrostData objects, where missing data is retained as null
      * @see FrostDatasource.getWeatherData
      */
     suspend fun getWeatherByCoordinates(latitude: Double, longitude: Double, referenceTime: String): FrostResult {

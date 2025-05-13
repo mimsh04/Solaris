@@ -24,10 +24,10 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 class FrostDatasource {
-    private val TAG = "FrostDatasource" // LogCat tag for denne klassen
+    private val TAG = "FrostDatasource"
     private val CLIENTID = "5fa50311-61ee-4aa0-8f29-2262c21212e5"
 
-    private val temp = "best_estimate_mean(air_temperature P1M)" // Opplevde problemer med å velge noe annet enn P1M
+    private val temp = "best_estimate_mean(air_temperature P1M)"
     private val snow = "mean(snow_coverage_type P1M)"
     private val cloudAreaFraction = "mean(cloud_area_fraction P1M)"
     private val elements = listOf(
@@ -53,19 +53,12 @@ class FrostDatasource {
     }
 
     /**
-     * Henter nærmeste stasjoner basert på koordinater som input. Funksjonen vil finne de nærmeste stasjonene som har målinger for elements
-     * og finner de 3 nærmeste stasjonene for hvert elements. Dvs at funksjonen gjor 3 API kall
-     * */
-
+     * Retrieves the nearest stations based on input coordinates. The function will find the nearest stations that have measurements for elements
+     * and find the 3 closest stations for each element. This means the function makes 3 API calls.
+     */
     suspend fun getNearestStation(latitude: Double, longitude: Double, referenceTime: String): Map<String, List<String>>? = withContext(Dispatchers.IO) {
         val url = "$baseUrl/sources/v0.jsonld"
         Log.d(TAG, "Searching for nearest stations at coordinates: ($latitude, $longitude)")
-
-        /*val elements = listOf(
-            temp,
-            snow,
-            cloudAreaFraction
-        )*/
 
         val stationMap = mutableMapOf<String, MutableList<String>>()
 
@@ -74,7 +67,7 @@ class FrostDatasource {
                 val response: String = client.get(url) {
                     parameter("geometry", "nearest(POINT($longitude $latitude))")
                     parameter("validtime", referenceTime)
-                    parameter("nearestmaxcount", 2) // Henter de x antall naermeste stasjonene if (element == cloudAreaFraction) 1 else 3
+                    parameter("nearestmaxcount", 3)
                     parameter("elements", element)
                 }.body()
 
@@ -98,19 +91,19 @@ class FrostDatasource {
     }
 
     /**
-     * Henter månedlig temperatur, snø og årlig skydekke for hele 2024 når funksjonen blir kalt.
+     * Retrieves monthly temperature, snow, and annual cloud cover for the entire year 2024 when the function is called.
      *
-     * Det kan hende noen stasjoner ikke har de nødvendige målingene og du vil få en error i logcat.
-     * Skulle dette skje, gå til frost.met.no og finn API refrence. Der kan du sette inn parametere så vil API-et
-     * gi en tilbakemelding på hva som gikk galt.
+     * Some stations may not have the necessary measurements, and you may see an error in Logcat.
+     * If this happens, visit frost.met.no and find the API reference. There, you can input parameters, and the API
+     * will provide feedback on what went wrong.
      *
-     * Kan hende en stasjon ikke måler hver time eller ikke har utstyret for å målet en type data.
-     * Altså kan det hende du ikke får noe værdata på noen adresser.
+     * It may be that a station does not measure every hour or lacks the equipment to measure a specific type of data.
+     * This means you may not get weather data for some locations.
      *
-     * @param stationMap Nærmeste stasjoner som har målinger på elementene eks på mapping: best_estimate_mean(air_temperature P1M) : SN18700, SN18701, SN18702
-     * @param referenceTime Hvilken tid du skal ha data fra. Skrive i format AA-MM-DD/AA-MM-DD, Der start er på venstre siden av /-tegnet
+     * @param stationMap Nearest stations that have measurements for the elements, e.g., mapping: best_estimate_mean(air_temperature P1M) : SN18700, SN18701, SN18702
+     * @param referenceTime The time period for which you want data. Written in the format YYYY-MM-DD/YYYY-MM-DD, where the start is on the left side of the slash
      *
-     * @return Flere klasser med temperatur, skydekke og snø dekke)
+     * @return Multiple classes with temperature, cloud cover, and snow cover
      */
     suspend fun getWeatherData(
         stationMap: Map<String, List<String>>,
@@ -163,14 +156,14 @@ class FrostDatasource {
     }
 
     private fun processWeatherData(responses: List<FrostResponse>): List<FrostData> {
-        // Samler alle reference times fra alle responsene
+        // Collects all reference times from all responses
         val allRefTimes = responses.flatMap { response ->
             response.data.map { it.referenceTime }
         }.distinct().sorted()
 
         val dataByTime = mutableMapOf<String, FrostData>()
 
-        // Initialiserer data med reference times
+        // Initializes data with reference times
         allRefTimes.forEach { refTime ->
             dataByTime[refTime] = FrostData(
                 stationId = null,
@@ -181,7 +174,7 @@ class FrostDatasource {
             )
         }
 
-        // Fyller inn data fra responsene
+        // Fills in data from the responses
         for (response in responses) {
             response.data.forEach { observation ->
                 val refTime = observation.referenceTime

@@ -70,7 +70,7 @@ class FrostDatasource {
                     val response: String = client.get(url) {
                         parameter("geometry", "nearest(POINT($longitude $latitude))")
                         parameter("validtime", referenceTime)
-                        parameter("nearestmaxcount", 2) // Henter de x antall naermeste stasjonene
+                        parameter("nearestmaxcount", 2)
                         parameter("elements", element)
                     }.body()
 

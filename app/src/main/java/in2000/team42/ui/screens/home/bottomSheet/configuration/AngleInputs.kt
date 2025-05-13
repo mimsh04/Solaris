@@ -20,14 +20,14 @@ fun AngleInputs(
     ) {
 
         FloatInputField(
-            stringResource(R.string.homescreen_angle_input),
+            stringResource(R.string.home_angle_input),
             incline,
             onInclineChange,
             0..90,
         )
 
         FloatInputField(
-            stringResource(R.string.homescreen_direction_input),
+            stringResource(R.string.home_direction_input),
             direction,
             onDirectionChange,
             -180..180,

@@ -30,7 +30,7 @@ fun DropdownItem(
                 Text(
                     text = String.format(
                         Locale.getDefault(),
-                        stringResource(R.string.homescreen_effect_and_price),
+                        stringResource(R.string.home_effect_and_price),
                         panelInfo.efficiency,
                         panelInfo.pricePerM2
                     ),

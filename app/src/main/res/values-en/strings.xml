@@ -62,7 +62,7 @@
     <string name="installation_step3_title">3. Mounting the panels</string>
     <string name="installation_step3_description">The installer first mounts suitable fixtures on the roof, adapted to the material and slope. Then the solar panels are securely fastened, so they can withstand both strong wind and heavy snow.</string>
     <string name="installation_step4_title">4. Safety and connection</string>
-    <string name="installation_step4_description">The inverter makes the solar energy from your panels usable in your home's electrical outlets. The installer places the inverter in a suitable location and pulls cables from the panels, which are then connected to the inverter.</string>
+    <string name="installation_step4_description">The inverter makes the solar energy from your panels usable in your home\'s electrical outlets. The installer places the inverter in a suitable location and pulls cables from the panels, which are then connected to the inverter.</string>
 
     <!-- FAQs -->
     <string name="faqs_label">FAQs</string>

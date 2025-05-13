@@ -60,7 +60,7 @@ fun SolarRadiationChart(modifier: Modifier = Modifier, solData: List<DailyProfil
             contentAlignment = Alignment.Center
         ) {
             Text(
-                stringResource(R.string.HomeScreen_avg_sunradiation),
+                stringResource(R.string.home_average_sun_radiation),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(top = 12.dp)
             )

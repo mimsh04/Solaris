@@ -45,7 +45,7 @@ fun SettingsScreen(
                     .padding(20.dp)
             ) {
                 Text(
-                    text = stringResource(R.string.screen_settings),
+                    text = stringResource(R.string.settings_screen_title),
                     fontWeight = FontWeight.Bold,
                     fontSize = 30.sp,
                     color = MaterialTheme.colorScheme.primary,

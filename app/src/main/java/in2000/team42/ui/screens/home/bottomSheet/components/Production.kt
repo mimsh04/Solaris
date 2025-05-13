@@ -74,7 +74,7 @@ fun Production(apiData: ApiData) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "\uD83D\uDCC6" + stringResource(R.string.Home_Screen_resultat_produksjon), // Fixed typo and added colon
+                        text = "\uD83D\uDCC6" + stringResource(R.string.home_result_annual_production), // Fixed typo and added colon
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontSize = MaterialTheme.typography.titleLarge.fontSize * 1.35f
@@ -102,14 +102,14 @@ fun Production(apiData: ApiData) {
                 }
                 Spacer(modifier = Modifier.size(6.dp))
                 Text(
-                    " ⚡" + stringResource(R.string.Home_screen_production) + " ${getYearlyProduction(apiData).toInt()} kWh",
+                    " ⚡" + stringResource(R.string.home_label_production) + " ${getYearlyProduction(apiData).toInt()} kWh",
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.size(6.dp))
                 Text(
-                    "💰 "+ stringResource(R.string.Home_screen_estimated_savings) + " ${(getYearlyProduction(apiData) * 0.5).toInt()} NOK",
+                    "💰 "+ stringResource(R.string.home_estimated_savings) + " ${(getYearlyProduction(apiData) * 0.5).toInt()} NOK",
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
@@ -141,7 +141,7 @@ fun Production(apiData: ApiData) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = stringResource(R.string.HomeScreen_expected_operation),
+                        text = stringResource(R.string.home_expected_operation_off_grid),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground,
@@ -153,7 +153,7 @@ fun Production(apiData: ApiData) {
                         onClick = { showInfoDialog = false },
                         modifier = Modifier.align(Alignment.End)
                     ) {
-                        Text(stringResource(R.string.HomeScreen_Production_close))
+                        Text(stringResource(R.string.home_production_close_button))
                     }
                 }
             }

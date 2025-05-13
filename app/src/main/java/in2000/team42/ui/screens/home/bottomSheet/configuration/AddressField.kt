@@ -18,7 +18,7 @@ fun AddressField(adresse: String, modifier: Modifier = Modifier) {
     Column (modifier = modifier) {
         Column {
             Text(
-                text = stringResource(R.string.homescreen_chosen_address),
+                text = stringResource(R.string.home_chosen_address),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onBackground
             )

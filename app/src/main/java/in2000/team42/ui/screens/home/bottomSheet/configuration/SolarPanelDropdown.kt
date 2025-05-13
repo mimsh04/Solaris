@@ -27,7 +27,7 @@ fun SolarPanelDropdown(
     panelOptions: List<SolarPanelModel>,
     selectedPanel: SolarPanelModel,
     onPanelSelected: (SolarPanelModel) -> Unit,
-    label: String = stringResource(R.string.homescreen_choose_solar_panel)
+    label: String = stringResource(R.string.home_choose_solar_panel)
 ) {
     var expanded by remember { mutableStateOf(false) }
     val interactionSource = remember { MutableInteractionSource() }

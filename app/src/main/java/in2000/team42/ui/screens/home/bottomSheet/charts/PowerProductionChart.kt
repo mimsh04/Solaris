@@ -85,7 +85,7 @@ fun PowerProductionChart (
             contentAlignment = Alignment.Center
         ) {
             Text(
-                stringResource(R.string.HomeScreen_production_with_weatherdata),
+                stringResource(R.string.home_production_with_weather_data),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(top = 12.dp)
             )

@@ -34,7 +34,7 @@ fun SavedScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
-            text = stringResource(R.string.label_saved_projects),
+            text = stringResource(R.string.saved_projects_label),
             fontWeight = FontWeight.Bold,
             fontSize = 30.sp,
             color = MaterialTheme.colorScheme.primary, // Use primary color
@@ -65,7 +65,7 @@ fun SavedScreen(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = stringResource(R.string.text_no_saved_projects),
+                        text = stringResource(R.string.saved_projects_empty_message),
                         fontSize = 16.sp,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )

@@ -42,7 +42,7 @@ fun FaqDialog(onDismiss: () -> Unit) {
         confirmButton = {
             Button(onClick = onDismiss) {
                 Text(
-                    text = stringResource(R.string.faq_dialog_close),
+                    text = stringResource(R.string.faq_dialog_close_button),
                     color = MaterialTheme.colorScheme.onPrimary
                 )
             }

@@ -33,7 +33,7 @@ fun RecommendedProducts () {
             .padding(horizontal = 20.dp)
     ){
         Text(
-            text= stringResource(R.string.label_recommended_products),
+            text= stringResource(R.string.recommended_products_label),
             fontWeight = FontWeight.Bold,
             fontSize = 30.sp,
             modifier = Modifier

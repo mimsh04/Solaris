@@ -32,11 +32,11 @@ fun PowerProductionLegend(colors: List<Color>) {
         ) {
             items(4) { index ->
                 LegendItem(when ( index ) {
-                    0 -> stringResource(R.string.HomeScreen_potential_production)
-                    1 -> stringResource(R.string.HomeScreen_production_after_estimated_loss)
-                    2 -> stringResource(R.string.homescreen_production_loss_to_cloud_coverage)
-                    3 -> stringResource(R.string.homescreen_production_loss_to_snow)
-                    else -> stringResource(R.string.homescreen_production_unknown)
+                    0 -> stringResource(R.string.home_potential_production)
+                    1 -> stringResource(R.string.home_production_after_loss)
+                    2 -> stringResource(R.string.home_loss_cloud_coverage)
+                    3 -> stringResource(R.string.home_loss_snowfall)
+                    else -> stringResource(R.string.home_production_unknown)
                 }, colors[index])
             }
         }

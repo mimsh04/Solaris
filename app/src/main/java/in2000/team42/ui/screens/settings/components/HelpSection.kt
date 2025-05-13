@@ -26,7 +26,7 @@ fun HelpSection(navController: NavController, showFAQ: Boolean, onShowFAQchange:
             .fillMaxWidth()
             .padding(horizontal = 20.dp)
     ){Text(
-        text = stringResource(R.string.text_have_a_question),
+        text = stringResource(R.string.faq_have_question_text),
         fontWeight = FontWeight.Bold,
         fontSize = 30.sp,
         color = MaterialTheme.colorScheme.primary,
@@ -44,8 +44,8 @@ fun HelpSection(navController: NavController, showFAQ: Boolean, onShowFAQchange:
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(2) { index ->
-            val text = if (index == 0) stringResource(R.string.label_installation_guide)
-            else stringResource(R.string.label_faqs)
+            val text = if (index == 0) stringResource(R.string.installation_label_guide)
+            else stringResource(R.string.faqs_label)
 
             val icon = when (index) {
                 0 -> Icons.Default.Build

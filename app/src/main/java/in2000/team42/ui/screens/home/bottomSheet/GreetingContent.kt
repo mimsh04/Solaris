@@ -40,7 +40,7 @@ fun GreetingContent(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = stringResource(R.string.start_screen_welcome),
+            text = stringResource(R.string.home_welcome_message),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
@@ -51,7 +51,7 @@ fun GreetingContent(modifier: Modifier = Modifier) {
 
         // Quick guide
         Text(
-            text = stringResource(R.string.start_screen_intro),
+            text = stringResource(R.string.home_start_intro),
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onBackground

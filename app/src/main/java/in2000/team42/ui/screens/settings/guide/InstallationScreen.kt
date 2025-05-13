@@ -52,11 +52,11 @@ fun InstallasjonScreen(navController: NavController){
             }
             item{Spacer(modifier=Modifier.height(30.dp))}
 
-            item { Subtitle(stringResource(R.string.installation_subtitle_self_installation)) }
+            item { Subtitle(stringResource(R.string.installation_when_self_install_subtitle)) }
 
             item{
                 CustomRoundedBox(
-                    text = stringResource(R.string.installation_self_installation_description)
+                    text = stringResource(R.string.installation_self_install_description)
                 )
 
             }
@@ -64,7 +64,7 @@ fun InstallasjonScreen(navController: NavController){
             item {
                 Spacer(modifier=Modifier.height(30.dp))
 
-                Subtitle(stringResource(R.string.installation_subtitle_when_self_install))
+                Subtitle(stringResource(R.string.installation_when_self_install_subtitle))
 
                 CustomRoundedBox(
                     text = stringResource(R.string.installation_self_install_conditions),
@@ -75,7 +75,7 @@ fun InstallasjonScreen(navController: NavController){
             item {
                 Spacer(modifier = Modifier.height(30.dp))
 
-                Subtitle(stringResource(R.string.installation_subtitle_mounting_steps))
+                Subtitle(stringResource(R.string.installation_mounting_steps_subtitle))
 
                 CustomRoundedBox(
                     height = 300.dp

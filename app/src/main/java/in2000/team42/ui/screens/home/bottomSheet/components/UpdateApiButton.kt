@@ -35,7 +35,7 @@ fun UpdateApiButton(
         enabled = isEnabled,
     ) {
         Text(
-            text = stringResource(R.string.Home_screen_button_calculate_production),
+            text = stringResource(R.string.home_button_calculate_production),
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onPrimary
         )

@@ -48,4 +48,5 @@
 
     <string name="installation_step_4_title">4. Sikring og tilkobling</string>
     <string name="installation_step_4_description">Inverteren gjør solenergien fra panelene dine brukbar i hjemmets stikkontakter. Installatøren plasserer inverteren på et passende sted og trekker kabler fra panelene, som deretter kobles til inverteren.</string>
+    <string name="Home_screen_button_calculate_production">Kalkuler årlig produksjon</string>
 </resources>

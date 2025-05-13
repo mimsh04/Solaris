@@ -19,9 +19,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import in2000.team42.R
+import in2000.team42.ui.screens.guide.komponenter.Montering
 import in2000.team42.ui.screens.settings.guide.komponenter.ArrowBack
 import in2000.team42.ui.screens.settings.guide.komponenter.CustomRoundedBox
-import in2000.team42.ui.screens.settings.guide.komponenter.Montering
 import in2000.team42.ui.screens.settings.guide.komponenter.Subtitle
 
 @Composable

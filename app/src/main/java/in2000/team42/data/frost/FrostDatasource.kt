@@ -25,11 +25,11 @@ import kotlinx.serialization.json.Json
 
 class FrostDatasource {
     private val TAG = "FrostDatasource"
-    private val CLIENTID = "5fa50311-61ee-4aa0-8f29-2262c21212e5"
+    private val CLIENTID = "dd40e873-78e6-4699-a07a-2683ed669d26"
 
-    private val temp = "best_estimate_mean(air_temperature P1M)"
-    private val snow = "mean(snow_coverage_type P1M)"
-    private val cloudAreaFraction = "mean(cloud_area_fraction P1M)"
+    private val temp = "best_estimate_mean%28air_temperature+P1M%29"
+    private val snow = "mean%28snow_coverage_type+P1M%29"
+    private val cloudAreaFraction = "mean%28cloud_area_fraction+P1M%29"
     private val elements = listOf(
         temp,
         snow,
@@ -117,9 +117,13 @@ class FrostDatasource {
                 try {
                     val response: HttpResponse = client.get("$baseUrl/observations/v0.jsonld") {
                         parameter("sources", supportingStations.joinToString(","))
-                        parameter("elements", element)
+                        Log.i(TAG, "sources parameter: ${supportingStations.joinToString(",")}")
                         parameter("referencetime", referenceTime)
+                        Log.i(TAG, "refrencetime parameter: $referenceTime")
+                        parameter("elements", element)
+                        Log.i(TAG, "elements parameter: $element")
                     }
+                    Log.d(TAG, "Response status: ${response.status}")
                     if (response.status.isSuccess()) {
                         val body = response.body<FrostResponse>()
                         responses.add(body)
@@ -130,7 +134,7 @@ class FrostDatasource {
                             Log.d(TAG, "    Station ID: ${observation.sourceId}")
                             Log.d(TAG, "    Reference Time: ${observation.referenceTime}")
                             observation.observations.forEach { obs ->
-                                Log.d(TAG, "    Element: ${obs.elementId}, Value: ${obs.value}")
+                                Log.d(TAG, "Element: ${obs.elementId}, Value: ${obs.value}")
                             }
                         }
                     } else {

@@ -223,10 +223,8 @@ class HomeViewModel : ViewModel() {
         _config.value.selectedPanelModel.efficiency / 100 * _config.value.area
 
     private fun createDummyWeatherData(): List<DisplayWeather> {
-        Log.d("HomeViewModel", "Creating dummy weather data")
         if (_apiData.value.kwhMonthlyData.isNotEmpty() and
             _apiData.value.sunRadiation.isNotEmpty()) {
-            Log.d("HomeViewModel", "Loading done")
             _apiData.value = _apiData.value.copy(isLoading = false)
         }
         return (0..12).map {
@@ -262,18 +260,21 @@ class HomeViewModel : ViewModel() {
                             _apiData.value = _apiData.value.copy(weatherData = displayData)
                             Log.d(TAG, "Weather data updated: $displayData")
                         } else {
-                            _apiData.value = _apiData.value.copy(weatherData = createDummyWeatherData())
+                            val dummyData = createDummyWeatherData()
+                            _apiData.value = _apiData.value.copy(weatherData = dummyData)
                             Log.w(TAG, "Weather data is empty or all values are null")
                         }
 
                     }
                     is FrostResult.Failure -> {
-                        _apiData.value = _apiData.value.copy(weatherData = createDummyWeatherData())
+                        val dummyData = createDummyWeatherData()
+                        _apiData.value = _apiData.value.copy(weatherData = dummyData)
                         Log.e(TAG, "Failed to fetch weather data: ${weather.message}")
                     }
                 }
             } catch (e: Exception) {
-                _apiData.value = _apiData.value.copy(weatherData = createDummyWeatherData())
+                val dummyData = createDummyWeatherData()
+                _apiData.value = _apiData.value.copy(weatherData = dummyData)
                 Log.e(TAG, "Exception fetching weather data: ${e.message}", e)
             }
         }

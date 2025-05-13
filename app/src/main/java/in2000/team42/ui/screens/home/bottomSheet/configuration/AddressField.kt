@@ -8,15 +8,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import in2000.team42.R
 
 @Composable
 fun AddressField(adresse: String, modifier: Modifier = Modifier) {
     Column (modifier = modifier) {
         Column {
             Text(
-                text = "Valgt adresse:",
+                text = stringResource(R.string.homescreen_chosen_address),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onBackground
             )

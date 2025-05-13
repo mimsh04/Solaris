@@ -1,55 +1,164 @@
 <resources>
+    <!-- App Metadata -->
     <string name="app_name">IN2000_team42</string>
-    <string name="action_remove_project">Remove Project</string>
-    <string name="action_save_project">Save Project</string>
-    <string name="language_norwegian">Norwegian</string>
-    <string name="language_english">English</string>
-    <string name="company_name_otovo">Otovo</string>
-    <string name="label_installation_guide">Installation\nGuide</string>
-    <string name="label_faqs">FAQs</string>
-    <string name="setting_dark_theme">Dark Theme</string>
-    <string name="screen_settings">Settings</string>
-    <string name="start_screen_intro">To get started, search for an address in the field above and tap on the building that will be installed with solar panels.</string>
-    <string name="start_screen_welcome">Welcome!</string>
-    <string name="label_saved_project_address">Address: %1$s</string>
-    <string name="label_saved_projects">Saved Projects</string>
-    <string name="text_no_saved_projects">When you save a project, it will appear here.</string>
-    <string name="label_recommended_products">Recommended Products</string>
-    <string name="text_have_a_question">Any questions?</string>
-    <string name="nav_saved">Saved</string>
-    <string name="nav_home">Home</string>
-    <string name="nav_settings">Settings</string>
-    <string name="faq_1_question">Why is this app being developed?</string>
-    <string name="faq_1_answer">The app helps users calculate the expected electricity production from solar panels based on local climate data, roof conditions, and solar panel efficiency.</string>
-    <string name="faq_2_question">How can solar cells work effectively in Norway?</string>
-    <string name="faq_2_answer">Although one might think solar cells work best in warm climates, they are most effective at around -5°C and perform poorly at temperatures above 25°C. In Southern Norway, solar cells can actually produce more energy than in Africa, as long as there is no snow cover.</string>
-    <string name="faq_3_question">Can I get support for solar panel installation?</string>
-    <string name="faq_3_answer">Enova offers support of up to 32,500 Norwegian kroner for electricity production that can be fed back to the power grid. It is also possible to get support for holiday homes.</string>
-    <string name="faq_4_question">Can I trust the calculations in the app?</string>
-    <string name="faq_4_answer">The app is based on available data and documented calculation models, but values may deviate from actual conditions. It is always recommended to compare the results with multiple sources.</string>
-    <string name="faq_5_question">What is the difference between the various panels?</string>
-    <string name="faq_5_answer">Solar panels and solar roof tiles are the two most common types of solar cells in Norway. Solar panels are mounted on existing roofs and cost between 2,500 and 3,000 kroner per m². They provide slightly more effect per panel than solar roof tiles but often cover a smaller part of the roof surface. Solar roof tiles replace regular roof tiles and cost between 4,000 and 5,000 kroner per m². They are especially beneficial during roof renovation, as they function both as a roof and a solar cell, which can provide a total cost savings. They are also known for a more aesthetic and discreet expression.</string>
+
+    <!-- Actions -->
+
+    <!-- Language Options -->
+
+    <!-- Navigation Labels -->
+
+    <!-- Home Screen -->
+    <string name="homeStartIntro">For å starte, søk etter en adresse i feltet over og trykk på bygget som skal ha solcellepaneler.</string>
+    <string name="homeButtonCalculateProduction">Kalkuler årlig produksjon</string>
+    <string name="homeResultAnnualProduction">Årlig resultat:</string>
+    <string name="homeLabelProduction">Produksjon:</string>
+    <string name="homeEstimatedSavings">Anslått besparelse:</string>
+    <string name="homeExpectedOperationOffGrid">Hva kan du drive med forventet produksjon på hytte ikke tilkoblet strømnettet?</string>
+    <string name="homeProductionCloseButton">Lukk</string>
+    <string name="homeAverageSunRadiation">Gjennomsnittlig solstråling hver måned</string>
+    <string name="homeProductionWithWeatherData">Produksjon med værdata</string>
+    <string name="homePotentialProduction">Potensiell produksjon</string>
+    <string name="homeProductionAfterLoss">Produksjon etter utregnet tap</string>
+    <string name="homeLossCloudCoverage">Tap til skydekke</string>
+    <string name="homeLossSnowfall">Tap til snøfall</string>
+    <string name="homeProductionUnknown">Ukjent</string>
+    <string name="homeChooseSolarPanel">Velg solcellepanel</string>
+    <string name="homeChosenAddress">Valgt adresse:</string>
+    <string name="homeAngleInput">Vinkel (0-90°)</string>
+    <string name="homeDirectionInput">Retning (-180–180°)</string>
+    <string name="homeEffectAndPrice">Effektivitet: %.1f%%, Pris: %.2f kr/m²</string>
+
+
+    <!-- Saved Projects -->
+    <string name="savedProjectsLabel">Lagrede prosjekter</string>
+    <string name="savedProjectAddressLabel">Adresse: %1$s</string>
+    <string name="savedProjectsEmptyMessage">Når du lagrer et prosjekt, vil det vises her.</string>
+
+    <!-- Settings -->
+    <string name="settingsScreenTitle">Innstillinger</string>
+    <string name="settingDarkTheme">Mørkt tema</string>
+
+    <!-- Installation Guide -->
+    <string name="installationGuideTitle">Solcellepanel guide</string>
+    <string name="installationLabelGuide">Installasjons\nguide</string>
+    <string name="installationSelfInstallSubtitle">Kan man montere solcellepaneler selv?</string>
+    <string name="installationSelfInstallDescription">Du kan ikke montere solcellepaneler selv, unntatt i visse tilfeller. Vi oppfordrer på det sterkeste å bruke fagfolk til større solcelleanlegg til boliger og hytter som er tilkoblet strømnettet.\n\nDette sikrer at anlegget blir korrekt installert, uten brann- og helsefare. Du kan dessuten føle deg trygg på at solcellene fungerer optimalt.</string>
+    <string name="installationWhenSelfInstallSubtitle">Når kan du montere selv?</string>
+    <string name="installationSelfInstallConditions">1. Det er et frittstående solcelleanlegg\n2. Du er ikke tilkoblet strømnettet\n3. Solcelleanlegget er under 50V og 200VA\n4. Du ønsker ikke å søke om Enova-tilskudd</string>
+    <string name="installationMountingStepsSubtitle">Montering – steg for steg</string>
+    <string name="installationStep1Title">1. Vurder muligheten for solcelleanlegg</string>
+    <string name="installation_step_1_description">Før du monterer solcellepaneler, sjekk om det er tillatt i kommunen. Noen steder krever søknad eller har restriksjoner. Sørg også for at taket er i god stand og har gode solforhold. En solcelleforhandler kan hjelpe deg med vurderingen.</string>
+    <string name="installation_step_2_title">2. Velg forhandler og installatør</string>
+    <string name="installation_step_2_description">Velg en forhandler og installatør som samarbeider for en smidig prosess. Forhandleren vil hjelpe deg med å finne riktig solcelleanlegg, og de fleste jobber med sertifiserte installatører. Dette reduserer risikoen for misforståelser og konflikter.</string>
+    <string name="installation_step_3_title">3. Montering av paneler</string>
+    <string name="installation_step_3_description">Installatøren monterer først passende fester på taket, tilpasset materiale og helning. Deretter festes solcellepanelene sikkert, slik at de tåler både kraftig vind og tung snø.</string>
+    <string name="installation_step_4_title">4. Sikring og tilkobling</string>
+    <string name="installation_step_4_description">Inverteren gjør solenergien fra panelene dine brukbar i hjemmets stikkontakter. Installatøren plasserer inverteren på et passende sted og trekker kabler fra panelene, som deretter kobles til inverteren.</string>
+
+    <!-- FAQs -->
+    <string name="faqs_label">FAQs</string>
     <string name="faq_dialog_title">FAQ</string>
-    <string name="faq_dialog_close">Close</string>
-    <string name="installation_guide_title">Solar Panel Guide</string>
+    <string name="faq_dialog_close_button">Lukk</string>
+    <string name="faq_have_question_text">Lurer du på noe?</string>
+    <string name="faq_1_question">Hvorfor utvikles denne appen?</string>
+    <string name="faq_1_answer">Appen skal hjelpe brukere med å beregne den forventede strømproduksjonen fra solcellepaneler basert på lokale klimadata, takforhold og solcellevirkningsgrad.</string>
+    <string name="faq_2_question">Hvordan kan solceller fungere effektivt i Norge?</string>
+    <string name="faq_2_answer">Selv om man kanskje tror solceller fungerer best i varme klima, er de mest effektive ved ca. -5°C og presterer dårlig ved temperaturer over 25°C. I Sør-Norge kan solceller faktisk produsere mer energi enn i Afrika, så lenge det ikke er snødekke.</string>
+    <string name="faq_3_question">Kan jeg få støtte til solcelleinstallasjon?</string>
+    <string name="faq_3_answer">Enova tilbyr støtte på opptil 32.500 kroner for strømproduksjon som kan tilbakeføres til strømnettet. Det er også mulig å få støtte for fritidsboliger.</string>
+    <string name="faq_4_question">Kan jeg stole på beregningene i appen?</string>
+    <string name="faq_4_answer">Appen baserer seg på tilgjengelige data og dokumenterte beregningsmodeller, men verdiene kan avvike fra faktiske forhold. Det anbefales alltid å sammenligne resultatene med flere kilder.</string>
+    <string name="faq_5_question">Hva er forskjellen på de ulike panelene?</string>
 
-    <string name="installation_subtitle_self_installation">Can you install solar panels yourself?</string>
-    <string name="installation_self_installation_description">You cannot install solar panels yourself, except in certain cases. We strongly recommend using professionals for larger solar panel systems for homes and cabins connected to the power grid.\n\nThis ensures that the system is correctly installed, without fire and health risks. You can also be confident that the solar cells will function optimally.</string>
 
-    <string name="installation_subtitle_when_self_install">When can you install by yourself?</string>
-    <string name="installation_self_install_conditions">1. It is a standalone solar panel system\n2. You are not connected to the power grid\n3. The solar panel system is under 50V and 200VA\n4. You do not want to apply for Enova support</string>
 
-    <string name="installation_subtitle_mounting_steps">Installation - Step by Step</string>
-    <string name="installation_step_1_title">1. Assess the possibility of a solar cell system</string>
-    <string name="installation_step_1_description">Before installing solar panels, check if it is permitted in your municipality. Some places require an application or have restrictions. Also, ensure that the roof is in good condition and has good sun exposure. A solar cell dealer can help you with the assessment.</string>
 
-    <string name="installation_step_2_title">2. Choose a dealer and installer</string>
-    <string name="installation_step_2_description">Choose a dealer and installer who work together for a smooth process. The dealer will help you find the right solar cell system, and most work with certified installers. This reduces the risk of misunderstandings and conflicts.</string>
 
-    <string name="installation_step_3_title">3. Panel installation</string>
-    <string name="installation_step_3_description">The installer first mounts suitable fixtures on the roof, adapted to the material and slope. Then, the solar panels are securely fastened to withstand both strong winds and heavy snow.</string>
 
-    <string name="installation_step_4_title">4. Securing and connection</string>
-    <string name="installation_step_4_description">The inverter makes the solar energy from your panels usable in your home\'s electrical outlets. The installer places the inverter in a suitable location and draws cables from the panels, which are then connected to the inverter.</string>
-    <string name="Home_screen_button_calculate_production">Calculate yearly production</string>
+
+
+    <!-- App Metadata -->
+    <string name="appName">IN2000_team42</string>
+    <string name="companyNameOtovo">Otovo</string>
+
+    <!-- Actions -->
+    <string name="actionRemoveProject">Fjern prosjekt</string>
+    <string name="actionSaveProject">Lagre prosjekt</string>
+
+    <!-- Language Options -->
+    <string name="languageNorwegian">Norwegian</string>
+    <string name="languageEnglish">English</string>
+
+    <!-- Navigation Labels -->
+    <string name="navHome">Hjem</string>
+    <string name="navSaved">Lagret</string>
+    <string name="navSettings">Innstillinger</string>
+
+    <!-- Home Screen -->
+    <string name="homeWelcomeMessage">Velkommen!</string>
+    <string name="homeStartIntro">For å starte, søk etter en adresse i feltet over og trykk på bygget som skal ha solcellepaneler.</string>
+    <string name="homeButtonCalculateProduction">Kalkuler årlig produksjon</string>
+    <string name="homeResultAnnualProduction">Årlig resultat:</string>
+    <string name="homeLabelProduction">Produksjon:</string>
+    <string name="homeEstimatedSavings">Anslått besparelse:</string>
+    <string name="homeExpectedOperationOffGrid">Hva kan du drive med forventet produksjon på hytte ikke tilkoblet strømnettet?</string>
+    <string name="homeProductionCloseButton">Lukk</string>
+    <string name="homeAverageSunRadiation">Gjennomsnittlig solstråling hver måned</string>
+    <string name="homeProductionWithWeatherData">Produksjon med værdata</string>
+    <string name="homePotentialProduction">Potensiell produksjon</string>
+    <string name="homeProductionAfterLoss">Produksjon etter utregnet tap</string>
+    <string name="homeLossCloudCoverage">Tap til skydekke</string>
+    <string name="homeLossSnowfall">Tap til snøfall</string>
+    <string name="homeProductionUnknown">Ukjent</string>
+    <string name="homeChooseSolarPanel">Velg solcellepanel</string>
+    <string name="homeChosenAddress">Valgt adresse:</string>
+    <string name="homeAngleInput">Vinkel (0-90°)</string>
+    <string name="homeDirectionInput">Retning (-180–180°)</string>
+    <string name="homeEffectAndPrice">Effektivitet: %.1f%%, Pris: %.2f kr/m²</string>
+
+    <!-- Saved Projects -->
+    <string name="savedProjectsLabel">Lagrede prosjekter</string>
+    <string name="savedProjectAddressLabel">Adresse: %1$s</string>
+    <string name="savedProjectsEmptyMessage">Når du lagrer et prosjekt, vil det vises her.</string>
+
+    <!-- Settings -->
+    <string name="settingsScreenTitle">Innstillinger</string>
+    <string name="settingDarkTheme">Mørkt tema</string>
+
+    <!-- Installation Guide -->
+    <string name="installationGuideTitle">Solcellepanel guide</string>
+    <string name="installationLabelGuide">Installasjons\nguide</string>
+    <string name="installationSelfInstallSubtitle">Kan man montere solcellepaneler selv?</string>
+    <string name="installationSelfInstallDescription">Du kan ikke montere solcellepaneler selv, unntatt i visse tilfeller. Vi oppfordrer på det sterkeste å bruke fagfolk til større solcelleanlegg til boliger og hytter som er tilkoblet strømnettet.\n\nDette sikrer at anlegget blir korrekt installert, uten brann- og helsefare. Du kan dessuten føle deg trygg på at solcellene fungerer optimalt.</string>
+    <string name="installationWhenSelfInstallSubtitle">Når kan du montere selv?</string>
+    <string name="installationSelfInstallConditions">1. Det er et frittstående solcelleanlegg\n2. Du er ikke tilkoblet strømnettet\n3. Solcelleanlegget er under 50V og 200VA\n4. Du ønsker ikke å søke om Enova-tilskudd</string>
+    <string name="installationMountingStepsSubtitle">Montering – steg for steg</string>
+    <string name="installationStep1Title">1. Vurder muligheten for solcelleanlegg</string>
+    <string name="installationStep1Description">Før du monterer solcellepaneler, sjekk om det er tillatt i kommunen. Noen steder krever søknad eller har restriksjoner. Sørg også for at taket er i god stand og har gode solforhold. En solcelleforhandler kan hjelpe deg med vurderingen.</string>
+    <string name="installationStep2Title">2. Velg forhandler og installatør</string>
+    <string name="installationStep2Description">Velg en forhandler og installatør som samarbeider for en smidig prosess. Forhandleren vil hjelpe deg med å finne riktig solcelleanlegg, og de fleste jobber med sertifiserte installatører. Dette reduserer risikoen for misforståelser og konflikter.</string>
+    <string name="installationStep3Title">3. Montering av paneler</string>
+    <string name="installationStep3Description">Installatøren monterer først passende fester på taket, tilpasset materiale og helning. Deretter festes solcellepanelene sikkert, slik at de tåler både kraftig vind og tung snø.</string>
+    <string name="installationStep4Title">4. Sikring og tilkobling</string>
+    <string name="installationStep4Description">Inverteren gjør solenergien fra panelene dine brukbar i hjemmets stikkontakter. Installatøren plasserer inverteren på et passende sted og trekker kabler fra panelene, som deretter kobles til inverteren.</string>
+
+    <!-- FAQs -->
+    <string name="faqsLabel">FAQs</string>
+    <string name="faqDialogTitle">FAQ</string>
+    <string name="faqDialogCloseButton">Lukk</string>
+    <string name="faqHaveQuestionText">Lurer du på noe?</string>
+    <string name="faq1Question">Hvorfor utvikles denne appen?</string>
+    <string name="faq1Answer">Appen skal hjelpe brukere med å beregne den forventede strømproduksjonen fra solcellepaneler basert på lokale klimadata, takforhold og solcellevirkningsgrad.</string>
+    <string name="faq2Question">Hvordan kan solceller fungere effektivt i Norge?</string>
+    <string name="faq2Answer">Selv om man kanskje tror solceller fungerer best i varme klima, er de mest effektive ved ca. -5°C og presterer dårlig ved temperaturer over 25°C. I Sør-Norge kan solceller faktisk produsere mer energi enn i Afrika, så lenge det ikke er snødekke.</string>
+    <string name="faq3Question">Kan jeg få støtte til solcelleinstallasjon?</string>
+    <string name="faq3Answer">Enova tilbyr støtte på opptil 32.500 kroner for strømproduksjon som kan tilbakeføres til strømnettet. Det er også mulig å få støtte for fritidsboliger.</string>
+    <string name="faq4Question">Kan jeg stole på beregningene i appen?</string>
+    <string name="faq4Answer">Appen baserer seg på tilgjengelige data og dokumenterte beregningsmodeller, men verdiene kan avvike fra faktiske forhold. Det anbefales alltid å sammenligne resultatene med flere kilder.</string>
+    <string name="faq5Question">Hva er forskjellen på de ulike panelene?</string>
+    <string name="faq5Answer">Solcelleplater og solcelletakstein er de to vanligste typene solceller i Norge. Solcelleplater monteres oppå eksisterende tak og koster mellom 2.500 og 3.000 kroner per m². De gir noe mer effekt per panel enn solcelletakstein, men dekker ofte en mindre del av takflaten. Solcelletakstein erstatter vanlig takstein og koster mellom 4.000 og 5.000 kroner per m². De er spesielt gunstige ved takrenovering, siden de både fungerer som tak og solcelle, noe som kan gi en total kostnadsbesparelse. De er også kjent for et mer estetisk og diskré uttrykk.</string>
+
+    <!-- Miscellaneous -->
+    <string name="recommendedProductsLabel">Anbefalte produkter</string>
 </resources>

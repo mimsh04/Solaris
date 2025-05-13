@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
@@ -25,6 +26,7 @@ import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
 import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
+import in2000.team42.R
 import in2000.team42.data.pgvis.model.KwhMonthlyResponse
 import in2000.team42.data.productionCalculation.calculateWithCoverage
 import in2000.team42.ui.screens.home.DisplayWeather
@@ -82,7 +84,8 @@ fun PowerProductionChart (
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-            Text("Produksjon med værdata",
+            Text(
+                stringResource(R.string.HomeScreen_production_with_weatherdata),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(top = 12.dp)
             )

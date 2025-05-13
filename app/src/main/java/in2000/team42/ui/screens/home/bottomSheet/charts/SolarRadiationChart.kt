@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
@@ -26,6 +27,7 @@ import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
 import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
+import in2000.team42.R
 import in2000.team42.data.pgvis.model.DailyProfile
 
 private val monthNames = listOf(
@@ -57,7 +59,8 @@ fun SolarRadiationChart(modifier: Modifier = Modifier, solData: List<DailyProfil
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-            Text("Gjennomsnittlig solstråling hver måned",
+            Text(
+                stringResource(R.string.HomeScreen_avg_sunradiation),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(top = 12.dp)
             )

@@ -60,7 +60,7 @@ fun LanguageSwitchButton(currentLanguage: String, onLanguageChanged: (String) ->
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = context.getString(R.string.language_english),
+                text = context.getString(R.string.languageEnglish),
                 fontWeight = if (currentLanguage == "en") FontWeight.Bold else FontWeight.Normal,
                 color = if (currentLanguage == "en") MaterialTheme.colorScheme.onPrimary
                 else MaterialTheme.colorScheme.onSurface,
@@ -86,7 +86,7 @@ fun LanguageSwitchButton(currentLanguage: String, onLanguageChanged: (String) ->
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = context.getString(R.string.language_norwegian),
+                text = context.getString(R.string.languageNorwegian),
                 fontWeight = if (currentLanguage == "no") FontWeight.Bold else FontWeight.Normal,
                 color = if (currentLanguage == "no") MaterialTheme.colorScheme.onPrimary
                 else MaterialTheme.colorScheme.onSurface,

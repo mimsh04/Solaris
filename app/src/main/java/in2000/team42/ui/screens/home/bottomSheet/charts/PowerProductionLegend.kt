@@ -10,7 +10,9 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import in2000.team42.R
 
 @Composable
 
@@ -30,11 +32,11 @@ fun PowerProductionLegend(colors: List<Color>) {
         ) {
             items(4) { index ->
                 LegendItem(when ( index ) {
-                    0 -> "Potensial produksjon"
-                    1 -> "Produksjon etter utregnet tap"
-                    2 -> "Tap til skydekke"
-                    3 -> "Tap til snøfall"
-                    else -> "Unknown"
+                    0 -> stringResource(R.string.HomeScreen_potential_production)
+                    1 -> stringResource(R.string.HomeScreen_production_after_estimated_loss)
+                    2 -> stringResource(R.string.homescreen_production_loss_to_cloud_coverage)
+                    3 -> stringResource(R.string.homescreen_production_loss_to_snow)
+                    else -> stringResource(R.string.homescreen_production_unknown)
                 }, colors[index])
             }
         }

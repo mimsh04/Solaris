@@ -21,19 +21,19 @@ import in2000.team42.ui.screens.Screen
 private fun getNavItems(context: Context): List<NavItem> = listOf(
     NavItem(
         Screen.Saved,
-        context.getString(R.string.nav_saved),
+        context.getString(R.string.navSaved),
         Icons.Filled.Favorite,
         Icons.Outlined.FavoriteBorder
     ),
     NavItem(
         Screen.Home,
-        context.getString(R.string.nav_home),
+        context.getString(R.string.navHome),
         Icons.Filled.Home,
         Icons.Outlined.Home
     ),
     NavItem(
         Screen.Settings,
-        context.getString(R.string.nav_settings),
+        context.getString(R.string.navSettings),
         Icons.Filled.Settings,
         Icons.Outlined.Settings
     )

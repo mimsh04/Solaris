@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import in2000.team42.R
 
 @Composable
 fun AngleInputs(
@@ -18,14 +20,14 @@ fun AngleInputs(
     ) {
 
         FloatInputField(
-            "Vinkel (0-90°)",
+            stringResource(R.string.homescreen_angle_input),
             incline,
             onInclineChange,
             0..90,
         )
 
         FloatInputField(
-            "Retning (-180 - 180°)",
+            stringResource(R.string.homescreen_direction_input),
             direction,
             onDirectionChange,
             -180..180,

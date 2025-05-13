@@ -22,14 +22,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 
 class FrostDatasource {
-    private val TAG = "FrostDatasource"
-    private val CLIENTID = "dd40e873-78e6-4699-a07a-2683ed669d26"
+    private val TAG = "FrostDatasource" // LogCat tag for denne klassen
+    private val CLIENTID = "0791feb2-20aa-4805-9e4d-22765c3a9ff6"
 
-    private val temp = "best_estimate_mean%28air_temperature+P1M%29"
-    private val snow = "mean%28snow_coverage_type+P1M%29"
-    private val cloudAreaFraction = "mean%28cloud_area_fraction+P1M%29"
+    private val temp = "best_estimate_mean(air_temperature P1M)" // Opplevde problemer med å velge noe annet enn P1M
+    private val snow = "mean(snow_coverage_type P1M)"
+    private val cloudAreaFraction = "mean(cloud_area_fraction P1M)"
     private val elements = listOf(
         temp,
         snow,
@@ -62,23 +64,32 @@ class FrostDatasource {
 
         val stationMap = mutableMapOf<String, MutableList<String>>()
 
-        for (element in elements) {
-            try {
-                val response: String = client.get(url) {
-                    parameter("geometry", "nearest(POINT($longitude $latitude))")
-                    parameter("validtime", referenceTime)
-                    parameter("nearestmaxcount", 3)
-                    parameter("elements", element)
-                }.body()
+        val deferredResults = elements.map { element ->
+            async {
+                try {
+                    val response: String = client.get(url) {
+                        parameter("geometry", "nearest(POINT($longitude $latitude))")
+                        parameter("validtime", referenceTime)
+                        parameter("nearestmaxcount", 2)
+                        parameter("elements", element)
+                    }.body()
 
-                val json = Json { ignoreUnknownKeys = true }
-                val data = json.decodeFromString<SourceResponse>(response)
-                val stationIds = data.data.map { it.id }
+                    val json = Json { ignoreUnknownKeys = true }
+                    val data = json.decodeFromString<SourceResponse>(response)
+                    val stationIds = data.data.map { it.id }
+                    Log.i(TAG, "Found nearest station IDs for $element: $stationIds")
+                    element to stationIds
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error finding stations for $element: ${e.message}", e)
+                    element to emptyList()
+                }
+            }
+        }
+
+        // Wait for all requests
+        deferredResults.awaitAll().forEach { (element, stationIds) ->
+            if (stationIds.isNotEmpty()) {
                 stationMap[element] = stationIds.toMutableList()
-                Log.i(TAG, "Found nearest station IDs for $element: $stationIds")
-            } catch (e: Exception) {
-                Log.e(TAG, "Error finding stations for $element: ${e.message}", e)
-                // Funksjonen vil fortsette med andre elementer hvis et element skulle ha feilet.
             }
         }
 
@@ -111,22 +122,23 @@ class FrostDatasource {
     ): FrostResult = withContext(Dispatchers.IO) {
         val responses = mutableListOf<FrostResponse>()
 
-        for (element in elements) {
-            val supportingStations = stationMap[element]?.filter { it.isNotEmpty() } ?: continue
-            if (supportingStations.isNotEmpty()) {
+        val deferredResults = elements.map { element ->
+            async {
+                val supportingStations = stationMap[element]?.filter { it.isNotEmpty() } ?: return@async null
+                if (supportingStations.isEmpty()) {
+                    Log.w(TAG, "No stations support $element")
+                    return@async null
+                }
+
                 try {
                     val response: HttpResponse = client.get("$baseUrl/observations/v0.jsonld") {
                         parameter("sources", supportingStations.joinToString(","))
-                        Log.i(TAG, "sources parameter: ${supportingStations.joinToString(",")}")
-                        parameter("referencetime", referenceTime)
-                        Log.i(TAG, "refrencetime parameter: $referenceTime")
                         parameter("elements", element)
-                        Log.i(TAG, "elements parameter: $element")
+                        parameter("referencetime", referenceTime)
                     }
-                    Log.d(TAG, "Response status: ${response.status}")
+
                     if (response.status.isSuccess()) {
                         val body = response.body<FrostResponse>()
-                        responses.add(body)
                         Log.d(TAG, "Fetched data for $element from stations $supportingStations")
                         Log.d(TAG, "Raw FrostResponse for $element:")
                         body.data.forEachIndexed { index, observation ->
@@ -134,19 +146,25 @@ class FrostDatasource {
                             Log.d(TAG, "    Station ID: ${observation.sourceId}")
                             Log.d(TAG, "    Reference Time: ${observation.referenceTime}")
                             observation.observations.forEach { obs ->
-                                Log.d(TAG, "Element: ${obs.elementId}, Value: ${obs.value}")
+                                Log.d(TAG, "    Element: ${obs.elementId}, Value: ${obs.value}")
                             }
                         }
+                        return@async body
                     } else {
                         val errorBody = response.body<FrostErrorResponse>()
                         Log.e(TAG, "Error fetching $element: ${errorBody.error.reason}")
+                        return@async null
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Error fetching $element: ${e.message}", e)
+                    return@async null
                 }
-            } else {
-                Log.w(TAG, "No stations support $element")
             }
+        }
+
+        // Wait for all requests to complete
+        deferredResults.awaitAll().filterNotNull().forEach { response ->
+            responses.add(response)
         }
 
         if (responses.isEmpty()) {

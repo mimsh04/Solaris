@@ -31,7 +31,7 @@ fun FloatInputField(
         showedVal = verdi.toInt().toString()
     }
 
-    @Composable // Måtte legge til Composable for å kunne bruke MaterialTheme.colorScheme.error
+    @Composable // Had to add @Composable here to use MaterialTheme.colorScheme.error
     fun getOutlineColor(showedText: String): androidx.compose.ui.graphics.Color {
         return if (showedText.isEmpty()) MaterialTheme.colorScheme.error
         else if (showedText.toIntOrNull() in range) MaterialTheme.colorScheme.primary

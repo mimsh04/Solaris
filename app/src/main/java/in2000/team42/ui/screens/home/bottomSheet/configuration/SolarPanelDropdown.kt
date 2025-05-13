@@ -18,6 +18,8 @@ import androidx.compose.ui.draw.rotate
 import in2000.team42.data.solarPanels.SolarPanelModel
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.ui.res.stringResource
+import in2000.team42.R
 
 @Composable
 fun SolarPanelDropdown(
@@ -25,7 +27,7 @@ fun SolarPanelDropdown(
     panelOptions: List<SolarPanelModel>,
     selectedPanel: SolarPanelModel,
     onPanelSelected: (SolarPanelModel) -> Unit,
-    label: String = "Velg Solcellepanel"
+    label: String = stringResource(R.string.homescreen_choose_solar_panel)
 ) {
     var expanded by remember { mutableStateOf(false) }
     val interactionSource = remember { MutableInteractionSource() }

@@ -223,11 +223,13 @@ class HomeViewModel : ViewModel() {
         _config.value.selectedPanelModel.efficiency / 100 * _config.value.area
 
     private fun createDummyWeatherData(): List<DisplayWeather> {
+        Log.d("HomeViewModel", "Creating dummy weather data")
         if (_apiData.value.kwhMonthlyData.isNotEmpty() and
             _apiData.value.sunRadiation.isNotEmpty()) {
+            Log.d("HomeViewModel", "Stopping loading")
             _apiData.value = _apiData.value.copy(isLoading = false)
         }
-        return (1..12).map {
+        return (0..12).map {
             DisplayWeather()
         }
     }
@@ -287,9 +289,9 @@ class HomeViewModel : ViewModel() {
         val date = inputFormat.parse(referenceTime) ?: Date()
         return DisplayWeather(
             month = dateFormat.format(date),
-            temp = temperature?.let { String.format("%.1f°C", it) } ?: "Ukjent",
-            snow = snow?.let { String.format("%.1fmm", it) } ?: "Ukjent",
-            cloud = cloudAreaFraction?.let { String.format("%.1f%%", it) } ?: "Ukjent"
+            temp = temperature?.let { String.format("%.1f°C", it) } ?: "ukjent",
+            snow = snow?.let { String.format("%.1fmm", it) } ?: "ukjent",
+            cloud = cloudAreaFraction?.let { String.format("%.1f%%", it) } ?: "ukjent"
         )
     }
 }

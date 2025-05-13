@@ -25,6 +25,7 @@ import in2000.team42.ui.screens.home.HomeScreen
 import in2000.team42.ui.screens.settings.SettingsScreen
 import android.Manifest
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHost
@@ -112,16 +113,29 @@ class MainActivity : ComponentActivity() {
                         popExitTransition = { ExitTransition.None }
                     ) {
                         composable(Screen.Home.route){
+                            BackHandler {
+                                // Do nothing when back is pressed on home screen
+                            }
                             HomeScreen(
                                 viewModel = homeViewModel,
                                 modifier = Modifier.padding(innerPadding)
                             )
                         }
                         composable(Screen.Settings.route) {
+                            BackHandler {
+                                navController.navigate(Screen.Home.route) {
+                                    popUpTo(Screen.Home.route) { inclusive = true }
+                                }
+                            }
                             SettingsScreen(navController)
                         }
 
                         composable(Screen.Saved.route) {
+                            BackHandler {
+                                navController.navigate(Screen.Home.route) {
+                                    popUpTo(Screen.Home.route) { inclusive = true }
+                                }
+                            }
                             SavedScreen(
                                 viewModel = projectViewModel,
                                 onProjectClick = { project ->

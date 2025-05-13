@@ -1,5 +1,6 @@
 package in2000.team42.ui.screens.settings.faq
 
+import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -9,18 +10,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import in2000.team42.R
 
 @Composable
-fun FaqDialog(onDismiss: () -> Unit) {
+fun FaqDialog(context: Context, onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
-                text = stringResource(R.string.faq_dialog_title),
+                text = context.getString(R.string.faq_dialog_title),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
@@ -34,7 +34,7 @@ fun FaqDialog(onDismiss: () -> Unit) {
                         .fillMaxWidth()
                 ) {
                     items(faqItems) { faq ->
-                        FAQItem(faq = faq)
+                        FAQItem(context = context, faq = faq)
                     }
                 }
             }
@@ -42,7 +42,7 @@ fun FaqDialog(onDismiss: () -> Unit) {
         confirmButton = {
             Button(onClick = onDismiss) {
                 Text(
-                    text = stringResource(R.string.faq_dialog_close_button),
+                    text = context.getString(R.string.faq_dialog_close_button),
                     color = MaterialTheme.colorScheme.onPrimary
                 )
             }

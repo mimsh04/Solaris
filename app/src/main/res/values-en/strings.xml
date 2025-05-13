@@ -34,7 +34,7 @@
     <string name="home_production_unknown">Unknown</string>
     <string name="home_choose_solar_panel">Choose solar panel</string>
     <string name="home_chosen_address">Selected address:</string>
-    <string name="home_angle_input">Angle (0-90°)</string>
+    <string name="home_angle_input">Angle (0–90°)</string>
     <string name="home_direction_input">Direction (-180–180°)</string>
     <string name="home_effect_and_price">Efficiency: %.1f%%, Price: %.2f kr/m²</string>
 
@@ -83,5 +83,21 @@
     <!-- Miscellaneous -->
     <string name="recommended_products_label">Recommended products</string>
 
+    <!-- Weather -->
+    <string name="weather_data_unavailable_description">Weather data unknown.\n\nCould not retrieve weather data for this area.\n\nTry selecting a different address.</string>
+    <string name="temperature_label">Temperature: %1$s</string>
+    <string name="snow_label">Snow: %1$s</string>
+    <string name="cloud_coverage_label">Cloud Coverage: %1$s</string>
+    <string name="weather_label_close">Close</string>
+    <string name="monthly_weather_average_description">Average weather for the month</string>
+    <string name="credits_label">Credits</string>
+    <string name="snow_cloud_icon_attribution">Snow cloud icon by Freepik from Flaticon (www.flaticon.com)</string>
+    <string name="unknown_weather_icon_attribution">Unknown weather icon by Vecteezy (www.vecteezy.com)</string>
+    <string name="cloud_icon_attribution">Cloud icon from CleanPNG (www.cleanpng.com)</string>
+    <string name="sun_icon_attribution">Sun icon by Freepik from Flaticon (www.flaticon.com)</string>
 
+    <!-- Charts -->
+    <string name="loading_data_message">Loading data and calculating…</string>
+    <string name="standard_solar_panel_type">Solcelleplater</string>
+    <string name="premium_solar_panel_type">Solcelletakstein</string>
 </resources>

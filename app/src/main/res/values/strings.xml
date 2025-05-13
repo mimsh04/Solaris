@@ -34,7 +34,7 @@
     <string name="home_production_unknown">Ukjent</string>
     <string name="home_choose_solar_panel">Velg solcellepanel</string>
     <string name="home_chosen_address">Valgt adresse:</string>
-    <string name="home_angle_input">Vinkel (0-90°)</string>
+    <string name="home_angle_input">Vinkel (0–90°)</string>
     <string name="home_direction_input">Retning (-180–180°)</string>
     <string name="home_effect_and_price">Effektivitet: %.1f%%, Pris: %.2f kr/m²</string>
 
@@ -82,4 +82,20 @@
 
     <!-- Miscellaneous -->
     <string name="recommended_products_label">Anbefalte produkter</string>
+
+    <!-- Weather -->
+    <string name="weather_data_unavailable_description">Værdata ukjent.\n\nKunne ikke hente værdata fra dette området.\n\nPrøv å velge en annen adresse.</string>
+    <string name="temperature_label">Temperatur: %1$s</string>
+    <string name="snow_label">Snø: %1$s</string>
+    <string name="cloud_coverage_label">Skydekke: %1$s</string>
+    <string name="weather_label_close">Lukk</string>
+    <string name="monthly_weather_average_description">Gjennomsnittlig vær for måneden</string>
+    <string name="credits_label">Krediteringer</string>
+    <string name="snow_cloud_icon_attribution">Snø sky ikon av Freepik fra Flaticon (www.flaticon.com)</string>
+    <string name="unknown_weather_icon_attribution">Ukjent vær ikon av Vecteezy (www.vecteezy.com)</string>
+    <string name="cloud_icon_attribution">sky ikon fra CleanPNG (www.cleanpng.com)</string>
+    <string name="sun_icon_attribution">sol ikon av Freepik fra Flaticon (www.flaticon.com)</string>
+    <string name="loading_data_message">Laster inn data og kalkulerer…</string>
+    <string name="standard_solar_panel_type">Solcelleplater</string>
+    <string name="premium_solar_panel_type">Solcelletakstein</string>
 </resources>

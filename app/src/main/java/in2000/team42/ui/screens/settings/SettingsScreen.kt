@@ -7,14 +7,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import androidx.navigation.NavHostController
 import in2000.team42.R
 import in2000.team42.theme.ThemeManager
-import in2000.team42.ui.screens.settings.faq.FaqDialog
 import in2000.team42.ui.screens.settings.components.*
+import in2000.team42.ui.screens.settings.faq.FaqDialog
 import in2000.team42.utils.LanguageSwitchButton
 import kotlinx.coroutines.launch
 
@@ -27,6 +28,7 @@ fun SettingsScreen(
     var showFAQ by remember { mutableStateOf(false) }
     val isDarkTheme by ThemeManager.isDarkTheme()
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current // Localized context from MainActivity
 
     Box(
         modifier = Modifier
@@ -56,7 +58,6 @@ fun SettingsScreen(
                 )
             }
 
-            //Change to dark or light theme button
             Column(modifier = Modifier.height(180.dp)) {
                 ThemeToggleButton(
                     isDarkTheme = isDarkTheme,
@@ -77,12 +78,14 @@ fun SettingsScreen(
             }
 
             Box(modifier = Modifier.height(250.dp)) {
-                HelpSection(navController, showFAQ, { showFAQ = it })
+                HelpSection(navController, { showFAQ = it })
             }
         }
 
         if (showFAQ) {
-            FaqDialog(onDismiss = { showFAQ = false })
+            key(currentLanguage) {
+                FaqDialog(context = context, onDismiss = { showFAQ = false })
+            }
         }
     }
 }

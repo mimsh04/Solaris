@@ -15,6 +15,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -44,6 +45,7 @@ import in2000.team42.ui.screens.home.HomeViewModel
 import in2000.team42.ui.screens.home.map.weatherIcon.WeatherIconButton
 import in2000.team42.ui.screens.home.map.search.SearchBar
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -86,7 +88,9 @@ fun Map(
     var startPos = Point.fromLngLat(10.7522, 59.9139)
     var startZoom = 10.0
 
-    val isDarkTheme by ThemeManager.isDarkTheme()
+    val isDarkTheme by isDarkTheme()
+
+    val context = LocalContext.current
 
     fun getSheetMapOffset():Double =
          if (config.value.bottomSheetDetent == "medium") 0.00031 else 0.00008
@@ -113,7 +117,7 @@ fun Map(
     fun loadHouse(point: Point, delay: Long = 0, onComplete: (List<List<Point>>) -> Unit = {}) {
         couroutineScope.launch {
 
-            kotlinx.coroutines.delay(delay)
+            delay(delay)
             val newPolygon = mapState.queryBuildingCoordinatesAt(point)
 
             if (newPolygon.isNullOrEmpty()) {
@@ -160,7 +164,7 @@ fun Map(
             mapClicked = true
             focusManager.clearFocus()
 
-            kotlinx.coroutines.delay(100)
+            delay(100)
             mapClicked = false
         }
     }
@@ -250,7 +254,8 @@ fun Map(
             )
             WeatherIconButton(
                 modifier = Modifier.padding(top = 26.dp),
-                viewModel = viewModel
+                viewModel = viewModel,
+                context = context
             )
         }
     }

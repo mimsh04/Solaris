@@ -1,16 +1,16 @@
 package in2000.team42.ui.screens.settings.faq
 
+import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun FAQItem(faq: FAQ) {
+fun FAQItem(context: Context, faq: FAQ) {
     var expanded by remember { mutableStateOf(false) }
 
     Column(
@@ -24,7 +24,7 @@ fun FAQItem(faq: FAQ) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = stringResource(faq.questionResId),
+                text = context.getString(faq.questionResId),
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.weight(1f),
                 fontWeight = FontWeight.ExtraBold,
@@ -40,7 +40,7 @@ fun FAQItem(faq: FAQ) {
 
         if (expanded) {
             Text(
-                text = stringResource(faq.answerResId),
+                text = context.getString(faq.answerResId),
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(top = 10.dp),
                 color = MaterialTheme.colorScheme.onSurface

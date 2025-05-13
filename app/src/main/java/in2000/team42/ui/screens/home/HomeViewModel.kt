@@ -226,7 +226,7 @@ class HomeViewModel : ViewModel() {
         Log.d("HomeViewModel", "Creating dummy weather data")
         if (_apiData.value.kwhMonthlyData.isNotEmpty() and
             _apiData.value.sunRadiation.isNotEmpty()) {
-            Log.d("HomeViewModel", "Stopping loading")
+            Log.d("HomeViewModel", "Loading done")
             _apiData.value = _apiData.value.copy(isLoading = false)
         }
         return (0..12).map {

@@ -116,6 +116,10 @@ dependencies {
     testImplementation (libs.mapbox.sdk.geojson)
     testImplementation(kotlin("test"))
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation (libs.mockito.inline)
+    testImplementation (libs.slf4j.api)
+    testImplementation (libs.slf4j.simple)
 
     implementation(libs.coil.compose)
     implementation(libs.coil.network.ktor3)

@@ -98,4 +98,10 @@
     <string name="loading_data_message">Laster inn data og kalkulerer…</string>
     <string name="standard_solar_panel_type">Solcelleplater</string>
     <string name="premium_solar_panel_type">Solcelletakstein</string>
+
+    <!-- ProductionInfoContent -->
+    <string name="production_info_zero">0 kWh/år (ca. 0 kWh/dag)\n\n- Ingen energi produsert\n\n→ Ingen elektrisk hyttebruk</string>
+    <string name="production_info_high">%1$d kWh/år (ca. %2$d kWh/dag)\n\n- Større kjøleskap/fryser\n- Liten oppvaskmaskin\n- Varmtvannstank (liten)\n- Vaskemaskin/tørketrommel\n- Elbillading (lett bruk)\n- Større strømverktøy\n- Elektrisk oppvarming (delvis)\n- Lade mobiltelefoner og nettbrett\n- Fullt utstyrt husholdning\n\n→ Fullt elektrisk hytte, med fornuftig energibruk</string>
+    <string name="production_info_medium">%1$d kWh/år (ca. %2$d kWh/dag)\n\n- Større kjøleskap/fryser\n- Kaffetrakter, mikrobølgeovn, vannkoker\n- Liten oppvaskmaskin\n- Strømverktøy\n- Vaskemaskin/tørketrommel (planlagt bruk)\n- Lade mobiltelefoner og nettbrett\n\n→ Nær helårsbruk, men ikke full frihet</string>
+    <string name="production_info_low">%1$d kWh/år (ca. %2$d kWh/dag)\n\n- Mindre kjøleskap/fryser\n- Kaffetrakter, mikrobølgeovn, vannkoker\n- Liten oppvaskmaskin\n- Strømverktøy (kortvarig)\n- Lade mobiltelefoner og nettbrett\n\n→ Komfortabel hyttebruk, men fortsatt begrenset</string>
 </resources>

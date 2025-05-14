@@ -100,4 +100,10 @@
     <string name="loading_data_message">Loading data and calculating…</string>
     <string name="standard_solar_panel_type">Solcelleplater</string>
     <string name="premium_solar_panel_type">Solcelletakstein</string>
+
+    <!-- ProductionInfoContent -->
+    <string name="production_info_zero">0 kWh/year (approx. 0 kWh/day)\n\n- No energy produced\n\n→ No electrical cabin usage</string>
+    <string name="production_info_high">%1$d kWh/year (approx. %2$d kWh/day)\n\n- Larger refrigerator/freezer\n- Small dishwasher\n- Small water heater\n- Washing machine/dryer\n- Electric vehicle charging (light use)\n- Larger power tools\n- Electric heating (partial)\n- Charging mobile phones and tablets\n- Fully equipped household\n\n→ Fully electric cabin with sensible energy use</string>
+    <string name="production_info_medium">%1$d kWh/year (approx. %2$d kWh/day)\n\n- Larger refrigerator/freezer\n- Coffee maker, microwave, kettle\n- Small dishwasher\n- Power tools\n- Washing machine/dryer (planned use)\n- Charging mobile phones and tablets\n\n→ Near year-round use, but not full freedom</string>
+    <string name="production_info_low">%1$d kWh/year (approx. %2$d kWh/day)\n\n- Smaller refrigerator/freezer\n- Coffee maker, microwave, kettle\n- Small dishwasher\n- Power tools (short-term use)\n- Charging mobile phones and tablets\n\n→ Comfortable cabin use, but still limited</string>
 </resources>

@@ -47,9 +47,6 @@ class MainActivity : ComponentActivity() {
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         val locationGranted = permissions.entries.all { it.value }
-        //if (!locationGranted) {
-            // TODO: Create a dialog to inform the user that location permissions are required
-        //}
     }
 
     private fun requestLocationPermissions() {

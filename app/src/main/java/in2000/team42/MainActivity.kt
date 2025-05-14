@@ -39,13 +39,11 @@ import in2000.team42.ui.screens.home.HomeViewModel
 import in2000.team42.ui.screens.saved.SavedScreen
 import in2000.team42.ui.screens.saved.project.ProjectViewModel
 import in2000.team42.ui.screens.settings.guide.InstallationScreen
+import in2000.team42.utils.LocalizationManager
 import in2000.team42.utils.NetworkCheck
-import in2000.team42.ui.screens.settings.components.createLocalizedContext
-import in2000.team42.ui.screens.settings.components.loadLanguagePreference
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-
 
 class MainActivity : ComponentActivity() {
     private val requestPermissionLauncher = registerForActivityResult(
@@ -70,10 +68,10 @@ class MainActivity : ComponentActivity() {
         ThemeManager.initialize(applicationContext)
         setContent {
             val navController = rememberNavController()
-            // Initialize language state
-            var language by remember { mutableStateOf(loadLanguagePreference(this) ?: "no") }
-            // Create localized context
-            val localizedContext = remember(language) { createLocalizedContext(this, language) }
+            // Initialize language state using LocalizationManager
+            var language by remember { mutableStateOf(LocalizationManager.getSelectedLanguage(this)) }
+            // Create localized context using LocalizationManager
+            val localizedContext = remember(language) { LocalizationManager.setLocale(this, language) }
 
             val homeViewModel: HomeViewModel = viewModel()
             val projectViewModel: ProjectViewModel = viewModel()

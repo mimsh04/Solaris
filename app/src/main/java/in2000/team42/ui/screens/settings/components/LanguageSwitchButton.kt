@@ -1,7 +1,5 @@
 package in2000.team42.ui.screens.settings.components
 
-import android.content.Context
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -21,10 +19,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import in2000.team42.R
-import java.util.Locale
+import in2000.team42.utils.LocalizationManager
 
 @Composable
-fun LanguageSwitchButton(currentLanguage: String, onLanguageChanged: (String) -> Unit) {
+fun LanguageSwitchButton(
+    currentLanguage: String,
+    onLanguageChanged: (String) -> Unit
+) {
     val context = LocalContext.current
     Row(
         modifier = Modifier
@@ -49,11 +50,10 @@ fun LanguageSwitchButton(currentLanguage: String, onLanguageChanged: (String) ->
                     if (currentLanguage == "no") MaterialTheme.colorScheme.primary
                     else MaterialTheme.colorScheme.surfaceVariant
                 )
-                .clickable {
-                    if (currentLanguage != "no") {
-                        updateLanguage(context, "no")
-                        onLanguageChanged("no")
-                    }
+                .clickable(enabled = currentLanguage != "no") {
+                    LocalizationManager.setLocale(context, "no")
+                    LocalizationManager.saveLanguagePreference(context, "no")
+                    onLanguageChanged("no")
                 }
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             contentAlignment = Alignment.Center
@@ -72,14 +72,13 @@ fun LanguageSwitchButton(currentLanguage: String, onLanguageChanged: (String) ->
             modifier = Modifier
                 .weight(1f)
                 .background(
-                    if (currentLanguage == "en") MaterialTheme.colorScheme.primary //MaterialTheme.colorScheme.primary
+                    if (currentLanguage == "en") MaterialTheme.colorScheme.primary
                     else MaterialTheme.colorScheme.surfaceVariant
                 )
-                .clickable {
-                    if (currentLanguage != "en") {
-                        updateLanguage(context, "en")
-                        onLanguageChanged("en")
-                    }
+                .clickable(enabled = currentLanguage != "en") {
+                    LocalizationManager.setLocale(context, "en")
+                    LocalizationManager.saveLanguagePreference(context, "en")
+                    onLanguageChanged("en")
                 }
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             contentAlignment = Alignment.Center
@@ -93,36 +92,4 @@ fun LanguageSwitchButton(currentLanguage: String, onLanguageChanged: (String) ->
             )
         }
     }
-}
-
-fun getCurrentLanguage(context: Context): String {
-    val locale = context.resources.configuration.locales[0]
-    return locale.language
-}
-
-fun updateLanguage(context: Context, language: String) {
-    val locale = Locale(language)
-    Locale.setDefault(locale)
-    val config = Configuration(context.resources.configuration)
-    config.setLocale(locale)
-    context.resources.updateConfiguration(config, context.resources.displayMetrics)
-    saveLanguagePreference(context, language)
-}
-
-fun saveLanguagePreference(context: Context, language: String) {
-    val prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-    prefs.edit().putString("language", language).apply()
-}
-
-fun loadLanguagePreference(context: Context): String? {
-    val prefs = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-    return prefs.getString("language", null)
-}
-
-fun createLocalizedContext(baseContext: Context, language: String): Context {
-    val locale = Locale(language)
-    Locale.setDefault(locale)
-    val config = Configuration(baseContext.resources.configuration)
-    config.setLocale(locale)
-    return baseContext.createConfigurationContext(config)
 }

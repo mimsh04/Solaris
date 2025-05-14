@@ -1,7 +1,6 @@
 package in2000.team42
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
@@ -47,8 +46,6 @@ class MainActivity : ComponentActivity() {
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         val locationGranted = permissions.entries.all { it.value }
-        //if (!locationGranted) {
-        //}
     }
 
     private fun requestLocationPermissions() {
@@ -59,7 +56,6 @@ class MainActivity : ComponentActivity() {
         requestPermissionLauncher.launch(permissions)
     }
 
-    @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestLocationPermissions()

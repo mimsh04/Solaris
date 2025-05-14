@@ -7,12 +7,12 @@ import in2000.team42.data.strommen.model.Strommen
 class StrommenRepo {
     private val dataSource = StrommenDataSource()
     /**
-     * Henter strømprisene for en spesifikk dato og et spesifikt område.
-     * @param year Året for forespørselen
-     * @param month Måneden (01-12)
-     * @param day Dagen (01-31)
-     * @param area Strømprisområde (f.eks. NO1, NO2)
-     * @return Resultat med en liste over strømpriser, eller en feil hvis henting mislykkes
+     * Fetches price for a specific date and specific area.
+     * @param year Year for request
+     * @param month Month (01-12)
+     * @param day Day (01-31)
+     * @param area Area (f.eks. NO1, NO2)
+     * @return Result with a list of prices, or error if the request fails
      */
     suspend fun getStromPriser(year: Int, month: Int, day: Int, area: String): Result<List<Strommen>> {
         return try {

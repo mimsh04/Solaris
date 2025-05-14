@@ -1,4 +1,4 @@
-package in2000.team42.ui.screens.settings.guide.komponenter
+package in2000.team42.ui.screens.settings.guide.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding

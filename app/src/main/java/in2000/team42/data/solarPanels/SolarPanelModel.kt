@@ -1,6 +1,5 @@
 package in2000.team42.data.solarPanels
 
-// effekt ikke ekte foreløpig
 val standardPanel = SolarPanelModel(
     id = "standard",
     name = "Solcelleplater",

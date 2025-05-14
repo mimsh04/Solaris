@@ -69,8 +69,9 @@ fun RecommendedProducts () {
                         contentDescription = "OTOVO solcellepaneler",
                         modifier = Modifier
                             .fillMaxSize()
+                            .background(Color(0xff1e2439))
                             .clip(RoundedCornerShape(10.dp)),
-                        contentScale = ContentScale.FillBounds
+                        contentScale = ContentScale.Fit
 
                     )
 
@@ -105,9 +106,9 @@ fun RecommendedProducts () {
                         contentDescription = "Fjordkraft solcelle",
                         modifier = Modifier
                             .fillMaxSize()
+                            .background(Color(0xffff531f))
                             .clip(RoundedCornerShape(10.dp)),
-                        contentScale = ContentScale.FillBounds
-
+                        contentScale = ContentScale.Fit
                     )
                 }
             }

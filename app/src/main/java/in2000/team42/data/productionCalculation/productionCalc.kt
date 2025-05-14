@@ -1,15 +1,10 @@
 package in2000.team42.data.productionCalculation
 
 import in2000.team42.data.pgvis.model.KwhMonthlyResponse
+import in2000.team42.data.productionCalculation.model.ProductionCalculation
 import in2000.team42.ui.screens.home.DisplayWeather
 
-data class ProductionCalculation(
-    val kWhPotential: Double,
-    val kWhEtterUtregning: Double,
-    val snoTap: Double,
-    val skyTap: Double,
-    val month: Int,
-)
+
 
 private val monthNameMap = mapOf(
     "Jan" to 1, "Feb" to 2, "Mar" to 3, "Apr" to 4, "May" to 5, "Jun" to 6,

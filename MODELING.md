@@ -75,7 +75,7 @@ Hovedflyt:
 2.Systemet henter koordinater og bygningsdata for det valgte punktet.
 3.Systemet viser et polygon over bygget og beregner arealet.
 
-Use Case 3:
+Use Case 3:SøkeMedHeleAdressen
 ![sekvensdiagram-3](Sequence-SøkeMedHeleAdressen.drawio.png)
 
 Beskrivelse: Brukeren søker med en fullstendig adresse, og systemet henter adresse-og værdata for området.

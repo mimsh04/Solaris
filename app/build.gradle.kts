@@ -41,7 +41,7 @@ android {
         compose = true
     }
 }
-val ktor_version: String by project
+val ktorVersion: String by project
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -78,16 +78,16 @@ dependencies {
     // JSON serialization library, works with the Kotlin serialization plugin
     implementation(libs.kotlinx.serialization.json)
 
-    implementation("com.mapbox.maps:android:11.10.2")
-    implementation("com.mapbox.extension:maps-compose:11.10.2")
+    implementation(libs.android)
+    implementation(libs.maps.compose)
 
-    implementation("io.ktor:ktor-client-core:$ktor_version")
-    implementation("io.ktor:ktor-client-cio:$ktor_version")
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio)
 
-    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
+    implementation(libs.ktor.serialization.kotlinx.json)
 
-    implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
-    implementation("io.ktor:ktor-client-auth:$ktor_version")
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.client.auth)
     implementation(libs.ktor.client.logging)
 
     implementation(libs.kotlinx.coroutines.core)
@@ -96,19 +96,19 @@ dependencies {
     implementation(libs.vico.compose)
     implementation(libs.vico.compose.m3)
 
-    implementation("com.mapbox.search:autofill:2.8.0-rc.1")
-    implementation("com.mapbox.search:discover:2.8.0-rc.1")
-    implementation("com.mapbox.search:place-autocomplete:2.8.0-rc.1")
-    implementation("com.mapbox.search:offline:2.8.0-rc.1")
-    implementation("com.mapbox.search:mapbox-search-android:2.8.0-rc.1")
-    implementation("com.mapbox.search:mapbox-search-android-ui:2.8.0-rc.1")
+    implementation(libs.autofill)
+    implementation(libs.discover)
+    implementation(libs.place.autocomplete)
+    implementation(libs.offline)
+    implementation(libs.mapbox.search.android)
+    implementation(libs.mapbox.search.android.ui)
     //Database
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
     //BottomSheet
-    implementation("com.composables:core:1.20.1")
-    implementation("androidx.compose.material:material-icons-core:1.6.7")
+    implementation(libs.core)
+    implementation(libs.androidx.material.icons.core)
 
     // Unit tests
     androidTestImplementation(libs.mockwebserver.v4120)
@@ -116,8 +116,8 @@ dependencies {
     testImplementation (libs.mockk)
     testImplementation (libs.mapbox.sdk.geojson)
     testImplementation(kotlin("test"))
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation(libs.kotlinx.coroutines.test)
 
-    implementation("io.coil-kt.coil3:coil-compose:3.1.0")
-    implementation("io.coil-kt.coil3:coil-network-ktor3:3.1.0")
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.ktor3)
 }

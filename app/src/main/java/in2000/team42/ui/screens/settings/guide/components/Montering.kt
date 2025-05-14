@@ -1,4 +1,4 @@
-package in2000.team42.ui.screens.guide.komponenter
+package in2000.team42.ui.screens.settings.guide.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -24,17 +24,17 @@ import androidx.compose.ui.unit.dp
 import in2000.team42.R
 import in2000.team42.ui.screens.settings.guide.installation.MonteringData
 import in2000.team42.ui.screens.settings.guide.installation.installationSteps
-import in2000.team42.ui.screens.settings.guide.komponenter.CustomRoundedBox
 
 @Composable
 fun Montering(){
+
     Column(
         modifier=Modifier.padding(16.dp)
     ){
-        LazyColumn(
+        Column(
             modifier=Modifier.fillMaxWidth()
         ) {
-            items(installationSteps) { steg ->
+            installationSteps.forEach { steg ->
                 ExpandableMonteringItem(monteringData = steg)
                 Spacer(modifier = Modifier.height(8.dp))
             }
@@ -46,39 +46,34 @@ fun Montering(){
 fun ExpandableMonteringItem(monteringData: MonteringData){
     var isExpanded by remember { mutableStateOf(false) }
 
-    CustomRoundedBox(
-        height = if (isExpanded) 200.dp else 45.dp,
-        fontWeight = FontWeight.Bold
+    Column(
+        modifier = Modifier.padding(8.dp)
+            .clickable { isExpanded = !isExpanded }
     ){
-        Column(
-            modifier = Modifier.padding(8.dp)
-                .clickable { isExpanded = !isExpanded }
+        Row(
+            modifier=Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ){
-            Row(
-                modifier=Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Text(
-                    text = stringResource(id = monteringData.questionResId),
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.weight(1f)
-                )
+            Text(
+                text = stringResource(id = monteringData.questionResId),
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.weight(1f)
+            )
 
-                Text(
-                    text= if (isExpanded) "-" else "+",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onBackground,
-                )
-            }
+            Text(
+                text= if (isExpanded) "-" else "+",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
+        }
 
-            if (isExpanded){
-                Text(
-                    text = stringResource(id = monteringData.answerResId),
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(top=10.dp),
-                )
-            }
+        if (isExpanded){
+            Text(
+                text = stringResource(id = monteringData.answerResId),
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(top=10.dp),
+            )
         }
     }
 }

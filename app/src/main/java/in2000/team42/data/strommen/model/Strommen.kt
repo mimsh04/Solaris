@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data class Strommen(
     val NOK_per_kWh:Double,
     val EUR_per_kWh:Double,
-    val EXR:Double,  //valutakurs for NOK til EUR
-    val time_start:String, // Start- og end tidspunkt for prisen (ISO 8601-format)
+    val EXR:Double,  //Exchange rate for NOK to EUR
+    val time_start:String, // Start- and end time for price (ISO 8601-format)
     val time_end:String,
 )

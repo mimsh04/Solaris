@@ -58,7 +58,7 @@ data class DisplayWeather(
 class HomeViewModel : ViewModel() {
     private val radiationRepository = PgvisRepository(PgvisDatasource())
     private val frostRepository = FrostRepository(FrostDatasource())
-    private val TAG = "HomeViewModel"
+    private val tag = "HomeViewModel"
     private val savedProjectDao = SavedProjectDatabase.getDatabase().savedProjectDao()
 
 
@@ -153,7 +153,7 @@ class HomeViewModel : ViewModel() {
     }
 
     fun setSelectedSolarPanel(panel: SolarPanelModel) {
-        Log.d(TAG, "Panel selected: ${panel.name}")
+        Log.d(tag, "Panel selected: ${panel.name}")
         _config.value = _config.value.copy(selectedPanelModel = panel)
     }
 
@@ -194,7 +194,7 @@ class HomeViewModel : ViewModel() {
                 _apiData.value = _apiData.value.copy(isLoading = false)
             }
             _apiData.value = _apiData.value.copy(sunRadiation = radiationData)
-            Log.d(TAG, "Radiation data: $radiationData")
+            Log.d(tag, "Radiation data: $radiationData")
         }
 
     }
@@ -215,7 +215,7 @@ class HomeViewModel : ViewModel() {
                 _apiData.value = _apiData.value.copy(isLoading = false)
             }
             _apiData.value = _apiData.value.copy(kwhMonthlyData = monthlyKwhData)
-            Log.d(TAG, "Monthly kwh data: $monthlyKwhData")
+            Log.d(tag, "Monthly kwh data: $monthlyKwhData")
         }
     }
 
@@ -251,31 +251,31 @@ class HomeViewModel : ViewModel() {
                         if (isValidData) {
                             val displayData = weather.data.mapNotNull { it.toDisplayWeather() }
                             displayData.forEachIndexed { index, displayWeather ->
-                                Log.d(TAG,
+                                Log.d(tag,
                                 "DisplayWeather [$index]: month=${displayWeather.month}," +
                                     "temp=${displayWeather.temp}, snow=${displayWeather.snow}, " +
                                     "cloud=${displayWeather.cloud}")
                             }
                             createDummyWeatherData()
                             _apiData.value = _apiData.value.copy(weatherData = displayData)
-                            Log.d(TAG, "Weather data updated: $displayData")
+                            Log.d(tag, "Weather data updated: $displayData")
                         } else {
                             val dummyData = createDummyWeatherData()
                             _apiData.value = _apiData.value.copy(weatherData = dummyData)
-                            Log.w(TAG, "Weather data is empty or all values are null")
+                            Log.w(tag, "Weather data is empty or all values are null")
                         }
 
                     }
                     is FrostResult.Failure -> {
                         val dummyData = createDummyWeatherData()
                         _apiData.value = _apiData.value.copy(weatherData = dummyData)
-                        Log.e(TAG, "Failed to fetch weather data: ${weather.message}")
+                        Log.e(tag, "Failed to fetch weather data: ${weather.message}")
                     }
                 }
             } catch (e: Exception) {
                 val dummyData = createDummyWeatherData()
                 _apiData.value = _apiData.value.copy(weatherData = dummyData)
-                Log.e(TAG, "Exception fetching weather data: ${e.message}", e)
+                Log.e(tag, "Exception fetching weather data: ${e.message}", e)
             }
         }
     }

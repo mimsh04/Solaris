@@ -2,7 +2,6 @@ package in2000.team42.ui.screens.settings.guide
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,14 +17,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import in2000.team42.ui.screens.settings.guide.components.ArrowBack
+import in2000.team42.ui.screens.settings.guide.components.CustomRoundedBox
+import in2000.team42.ui.screens.settings.guide.components.Montering
+import in2000.team42.ui.screens.settings.guide.components.Subtitle
 import in2000.team42.R
-import in2000.team42.ui.screens.guide.komponenter.Montering
-import in2000.team42.ui.screens.settings.guide.komponenter.ArrowBack
-import in2000.team42.ui.screens.settings.guide.komponenter.CustomRoundedBox
-import in2000.team42.ui.screens.settings.guide.komponenter.Subtitle
-
 @Composable
-fun InstallasjonScreen(navController: NavController){
+fun InstallationScreen(navController: NavController){
     Box(
         modifier=Modifier
             .fillMaxSize()
@@ -50,13 +48,16 @@ fun InstallasjonScreen(navController: NavController){
                 }
 
             }
-            item{Spacer(modifier=Modifier.height(30.dp))}
+            item{Spacer(modifier=Modifier.height(16.dp))}
 
             item { Subtitle(stringResource(R.string.installation_when_self_install_subtitle)) }
 
+            item{Spacer(modifier=Modifier.height(16.dp))}
+
             item{
-                CustomRoundedBox(
-                    text = stringResource(R.string.installation_self_install_description)
+                Text(
+                    text = stringResource(R.string.installation_self_install_description),
+                    modifier = Modifier.padding(start = 16.dp, end=16.dp)
                 )
 
             }
@@ -66,9 +67,9 @@ fun InstallasjonScreen(navController: NavController){
 
                 Subtitle(stringResource(R.string.installation_when_self_install_subtitle))
 
-                CustomRoundedBox(
+                Text(
                     text = stringResource(R.string.installation_self_install_conditions),
-                    height = 100.dp
+                    modifier = Modifier.padding(start = 16.dp, end=16.dp)
                 )
             }
 
@@ -77,13 +78,8 @@ fun InstallasjonScreen(navController: NavController){
 
                 Subtitle(stringResource(R.string.installation_mounting_steps_subtitle))
 
-                CustomRoundedBox(
-                    height = 300.dp
-                ) {
-                    Column{
-                        Montering()
-                    }
-                }
+                Montering()
+
             }
 
             item{

@@ -1,4 +1,4 @@
-package in2000.team42.utils
+package in2000.team42.ui.screens.settings.components
 
 import android.content.Context
 import android.content.res.Configuration
@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,12 +41,12 @@ fun LanguageSwitchButton(currentLanguage: String, onLanguageChanged: (String) ->
             .clip(RoundedCornerShape(24.dp)),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        // English option
+        // Norwegian option
         Box(
             modifier = Modifier
                 .weight(1f)
                 .background(
-                    if (currentLanguage == "no") MaterialTheme.colorScheme.primary //MaterialTheme.colorScheme.primary
+                    if (currentLanguage == "no") MaterialTheme.colorScheme.primary
                     else MaterialTheme.colorScheme.surfaceVariant
                 )
                 .clickable {
@@ -60,20 +59,20 @@ fun LanguageSwitchButton(currentLanguage: String, onLanguageChanged: (String) ->
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = context.getString(R.string.language_english),
-                fontWeight = if (currentLanguage == "en") FontWeight.Bold else FontWeight.Normal,
-                color = if (currentLanguage == "en") MaterialTheme.colorScheme.onPrimary
+                text = context.getString(R.string.language_norwegian),
+                fontWeight = if (currentLanguage == "no") FontWeight.Bold else FontWeight.Normal,
+                color = if (currentLanguage == "no") MaterialTheme.colorScheme.onPrimary
                 else MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center
             )
         }
 
-        // Norwegian option
+        // English option
         Box(
             modifier = Modifier
                 .weight(1f)
                 .background(
-                    if (currentLanguage == "en") MaterialTheme.colorScheme.primary
+                    if (currentLanguage == "en") MaterialTheme.colorScheme.primary //MaterialTheme.colorScheme.primary
                     else MaterialTheme.colorScheme.surfaceVariant
                 )
                 .clickable {
@@ -86,9 +85,9 @@ fun LanguageSwitchButton(currentLanguage: String, onLanguageChanged: (String) ->
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = context.getString(R.string.language_norwegian),
-                fontWeight = if (currentLanguage == "no") FontWeight.Bold else FontWeight.Normal,
-                color = if (currentLanguage == "no") MaterialTheme.colorScheme.onPrimary
+                text = context.getString(R.string.language_english),
+                fontWeight = if (currentLanguage == "en") FontWeight.Bold else FontWeight.Normal,
+                color = if (currentLanguage == "en") MaterialTheme.colorScheme.onPrimary
                 else MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center
             )

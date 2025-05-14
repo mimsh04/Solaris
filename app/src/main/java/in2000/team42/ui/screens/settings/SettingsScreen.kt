@@ -16,7 +16,7 @@ import in2000.team42.R
 import in2000.team42.theme.ThemeManager
 import in2000.team42.ui.screens.settings.components.*
 import in2000.team42.ui.screens.settings.faq.FaqDialog
-import in2000.team42.utils.LanguageSwitchButton
+import in2000.team42.ui.screens.settings.components.LanguageSwitchButton
 import kotlinx.coroutines.launch
 
 @Composable

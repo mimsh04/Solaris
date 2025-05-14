@@ -1,6 +1,7 @@
 package in2000.team42.ui.screens.home.map.weatherIcon
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -31,27 +32,33 @@ import java.util.Locale
 fun WeatherIconButton(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel,
-    context: Context // Add context parameter
+    context: Context
 ) {
     var showPopup by rememberSaveable { mutableStateOf(false) }
     var showImageInfo by rememberSaveable { mutableStateOf(false) }
     val apiData by viewModel.apiDataFlow.collectAsState()
     val weatherData = apiData.weatherData
 
-    val dateFormat = SimpleDateFormat("MMM yyyy", Locale.getDefault())
+    val dateFormat = SimpleDateFormat("MMM yyyy", Locale("no"))
     val latestWeather: DisplayWeather? = weatherData.maxByOrNull { displayWeather ->
         if (displayWeather.month == "ukjent") {
             Long.MIN_VALUE
         } else {
-            dateFormat.parse(displayWeather.month)?.time ?: Long.MIN_VALUE
+            try {
+                // Normalize input by removing dots and ensuring lowercase
+                val normalizedMonth = displayWeather.month.replace(".", "").lowercase()
+                dateFormat.parse(normalizedMonth)?.time ?: Long.MIN_VALUE
+            } catch (e: Exception) {
+                Log.e("WeatherIcon", "Failed to parse month: ${displayWeather.month}", e)
+                Long.MIN_VALUE
+            }
         }
     }
+    Log.d("WeatherIcon", "Latest weather: ${latestWeather?.month ?: "null"}")
 
-    // Parse weather data correctly so it can be displayed
     val snowValue = latestWeather?.snow?.replace("mm", "")?.trim()?.toDoubleOrNull() ?: 0.0
     val cloudValue = latestWeather?.cloud?.replace("%", "")?.trim()?.toDoubleOrNull() ?: 0.0
 
-    // Pick icon based on weather data
     val iconResource = when {
         weatherData.isEmpty() -> R.drawable.ic_unknown_weather
         latestWeather == null -> R.drawable.ic_unknown_weather

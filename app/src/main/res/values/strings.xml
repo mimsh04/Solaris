@@ -37,11 +37,18 @@
     <string name="home_angle_input">Vinkel (0–90°)</string>
     <string name="home_direction_input">Retning (-180–180°)</string>
     <string name="home_effect_and_price">Effektivitet: %.1f%%, Pris: %.2f kr/m²</string>
+    <string name="search_address_input">Søk etter adresse</string>
 
     <!-- Saved Projects -->
     <string name="saved_projects_label">Lagrede prosjekter</string>
     <string name="saved_project_address_label">Adresse: %1$s</string>
     <string name="saved_projects_empty_message">Når du lagrer et prosjekt, vil det vises her.</string>
+
+    <!-- Delete Project Dialog -->
+    <string name="delete_saved_project">Slett prosjekt</string>
+    <string name="delete_project_confirmation">Er du sikker på at du vil slette dette prosjektet?</string>
+    <string name="delete_project_confirmation_label">Slett</string>
+    <string name="delete_project_confirmation_cancel">Avbryt</string>
 
     <!-- Settings -->
     <string name="settings_screen_title">Innstillinger</string>

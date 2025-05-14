@@ -17,13 +17,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import in2000.team42.ui.screens.settings.guide.komponenter.ArrowBack
-import in2000.team42.ui.screens.settings.guide.komponenter.CustomRoundedBox
-import in2000.team42.ui.screens.settings.guide.komponenter.Montering
-import in2000.team42.ui.screens.settings.guide.komponenter.Subtitle
+import in2000.team42.ui.screens.settings.guide.components.ArrowBack
+import in2000.team42.ui.screens.settings.guide.components.CustomRoundedBox
+import in2000.team42.ui.screens.settings.guide.components.Montering
+import in2000.team42.ui.screens.settings.guide.components.Subtitle
 
 @Composable
-fun InstallasjonScreen(navController: NavController){
+fun InstallationScreen(navController: NavController){
     Box(
         modifier=Modifier
             .fillMaxSize()

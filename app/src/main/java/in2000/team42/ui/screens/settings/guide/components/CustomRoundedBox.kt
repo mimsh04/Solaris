@@ -1,4 +1,4 @@
-package in2000.team42.ui.screens.settings.guide.komponenter
+package in2000.team42.ui.screens.settings.guide.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -55,18 +55,5 @@ fun CustomRoundedBox(
             }
             content?.invoke()
         }
-//        if(content != null){
-//            content()
-//        }
-//        else if(text!=null){
-//            Text(
-//                text=text,
-//                modifier=Modifier.padding(5.dp),
-//                fontSize = fontSize,
-//                fontWeight = fontWeight,
-//                color = textColor
-//            )
-//        }
-
     }
 }

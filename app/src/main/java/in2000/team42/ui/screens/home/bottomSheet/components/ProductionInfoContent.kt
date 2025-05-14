@@ -10,7 +10,6 @@ import androidx.compose.material3.Text
 fun ProductionInfoContent(yearlyKwh: Int) {
     val infoText = when {
 
-        // The warnings are about the yearlyKwh being zero. That's the point
         yearlyKwh == 0 -> """
             0 kWh/år (ca. 0. kWh/dag)
             

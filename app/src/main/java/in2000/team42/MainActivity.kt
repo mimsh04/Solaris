@@ -35,7 +35,7 @@ import in2000.team42.ui.screens.home.HomeViewModel
 import in2000.team42.ui.screens.saved.SavedScreen
 import in2000.team42.ui.screens.saved.project.ProjectViewModel
 import in2000.team42.ui.screens.settings.SettingsScreen
-import in2000.team42.ui.screens.settings.guide.InstallasjonScreen
+import in2000.team42.ui.screens.settings.guide.InstallationScreen
 import in2000.team42.utils.NetworkCheck
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -48,7 +48,6 @@ class MainActivity : ComponentActivity() {
     ) { permissions ->
         val locationGranted = permissions.entries.all { it.value }
         //if (!locationGranted) {
-            // TODO: Create a dialog to inform the user that location permissions are required
         //}
     }
 
@@ -152,7 +151,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable(Screen.Guide.route) {
-                            InstallasjonScreen(navController)
+                            InstallationScreen(navController)
                         }
                     }
                 }

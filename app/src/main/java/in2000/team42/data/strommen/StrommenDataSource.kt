@@ -26,12 +26,12 @@ class StrommenDataSource {
 
 
     /**
-     * Henter strømprisdata fra API-et.
-     * @param year Året for forespørselen
-     * @param month Måneden (01-12)
-     * @param day Dagen (01-31)
-     * @param area Strømprisområde (f.eks. NO1, NO2)
-     * @return En liste med strømpriser for den angitte datoen og området.
+     * Fetches electricty price data from the API.
+     * @param year Year for request
+     * @param month Month (01-12)
+     * @param day Day (01-31)
+     * @param area Price area (f.eks. NO1, NO2)
+     * @return  List of prices for the indicated date and area.
      */
     suspend fun getStromInfo(year: Int, month: Int, day: Int, area: String): List<Strommen> {
         val formattedMonth = String.format(Locale.US, "%02d", month)

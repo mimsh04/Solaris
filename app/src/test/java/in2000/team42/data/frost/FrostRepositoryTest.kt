@@ -60,9 +60,9 @@ class FrostRepositoryTest {
         }
 
         // Check if the dates are approximately one year apart (365-366 days)
-        val differenceInDays = (endDate.time - startDate.time) / (1000 * 60 * 60 * 24)
+        val differenceInDays = (endDate?.time?.minus(startDate.time))?.div((1000 * 60 * 60 * 24))
         assertTrue("Date difference should be approximately 365-366 days",
-            differenceInDays.toDouble() in 365.0..366.0)
+            differenceInDays?.toDouble()!! in 365.0..366.0)
     }
 
     @Test

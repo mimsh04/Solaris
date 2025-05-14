@@ -3,7 +3,7 @@ SOLARIS
 Solaris er en app som skal tilby brukere en enkel måte for å planlegge installasjon av solcellepaneler. 
 Brukere kan oppgi adresse, manuelt justere takflateparametere og velge ønsket panel, 
 få beregninger for solenergi, og strømproduksjon samt økonomiske besparelser. 
-Solaris støtter også kartvisning, værdata fra Frost og, polygon-tegning for takflater.
+Solaris støtter også kartvisning, værdata fra Frost, og polygon-tegning for takflater.
 Krever lokasjon fra bruker.
 
 Hvordan kjøre appen:

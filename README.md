@@ -10,7 +10,7 @@ Hvordan kjøre appen:
 
 1.	Åpne prosjektet i Android Studio
 2.	Konfigurer en emulator eller koble til en fysisk enhet. Sørg for at emulatoren eller enheten har API-nivå 34 (Android 14) eller høyere.
-3.	Klikk på ‘Run’ for å bygge og kjøre appen på emulatoren eller enheten.
+3.	Klikk på ‘Run’ for å bygge og kjøre appen
 
 
 Biblioteker:
@@ -19,13 +19,13 @@ Biblioteker:
 •	Jetpack Compose
 •	Jetpack ViewModel
 •	Navigation Compose
-•	Mapbox
+•	Mapbox (search, static image, kartløsning)
 •	Ktor
 •	Coil
 •	Coroutines
 •	Serialization
 •	Material Design 3
-•	Room
+•	Room: For lokal database
 •	Vico: For diagrammer som viser solenergi og strømproduksjon 
 
 

@@ -67,7 +67,7 @@ private fun parseCloudFromPercent(cloud: String) =
 
 private fun sortWeatherDataByMonth(weatherData: List<DisplayWeather>): List<DisplayWeather> {
     return weatherData.sortedBy { displayWeather ->
-        val monthStr = displayWeather.month?.split(" ")?.firstOrNull()
+        val monthStr = displayWeather.month.split(" ").firstOrNull()
         monthNameMap[monthStr] ?: 0
     }
 }

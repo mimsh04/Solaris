@@ -80,13 +80,13 @@ dependencies {
     implementation(libs.android)
     implementation(libs.maps.compose)
 
-    implementation("io.ktor:ktor-client-core:$ktorVersion")
-    implementation("io.ktor:ktor-client-cio:$ktorVersion")
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio)
 
-    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+    implementation(libs.ktor.serialization.kotlinx.json)
 
-    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-    implementation("io.ktor:ktor-client-auth:$ktorVersion")
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.client.auth)
     implementation(libs.ktor.client.logging)
 
     implementation(libs.kotlinx.coroutines.core)

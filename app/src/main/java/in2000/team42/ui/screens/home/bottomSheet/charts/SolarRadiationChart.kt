@@ -31,8 +31,8 @@ import in2000.team42.R
 import in2000.team42.data.pgvis.model.DailyProfile
 
 private val monthNames = listOf(
-    "Januar", "Februar", "Mars", "April", "Mai", "Juni",
-    "Juli", "August", "September", "Oktober", "November", "Desember"
+    R.string.jan, R.string.feb, R.string.mar, R.string.apr, R.string.may, R.string.jun,
+    R.string.jul, R.string.aug, R.string.sept, R.string.oct, R.string.nov, R.string.des
 )
 private fun formatMonthTime (dailyProfile: DailyProfile ) =
 

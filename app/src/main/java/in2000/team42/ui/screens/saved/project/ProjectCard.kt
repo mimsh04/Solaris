@@ -1,5 +1,7 @@
 package in2000.team42.ui.screens.saved.project
 
+import android.R.attr.fontWeight
+import android.R.attr.maxLines
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
@@ -95,9 +97,8 @@ fun ProjectCard(
                     .padding(16.dp),
                 verticalArrangement = Arrangement.Top
             ) {
-
                 Text(
-                    text = /*stringResource(R.string.saved_project_address_label)*/"Adresse " + project.config.address,
+                    text = stringResource(R.string.saved_project_address_label, project.config.address),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.SemiBold,

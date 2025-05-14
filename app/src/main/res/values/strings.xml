@@ -1,6 +1,6 @@
 <resources tools:locale="no" xmlns:tools="http://schemas.android.com/tools">
     <!-- App Metadata -->
-    <string name="app_name">IN2000_team42</string>
+    <string name="app_name">Solaris</string>
     <string name="company_name_otovo">Otovo</string>
 
     <!-- Actions -->
@@ -104,4 +104,18 @@
     <string name="production_info_high">%1$d kWh/år (ca. %2$d kWh/dag)\n\n- Større kjøleskap/fryser\n- Liten oppvaskmaskin\n- Varmtvannstank (liten)\n- Vaskemaskin/tørketrommel\n- Elbillading (lett bruk)\n- Større strømverktøy\n- Elektrisk oppvarming (delvis)\n- Lade mobiltelefoner og nettbrett\n- Fullt utstyrt husholdning\n\n→ Fullt elektrisk hytte, med fornuftig energibruk</string>
     <string name="production_info_medium">%1$d kWh/år (ca. %2$d kWh/dag)\n\n- Større kjøleskap/fryser\n- Kaffetrakter, mikrobølgeovn, vannkoker\n- Liten oppvaskmaskin\n- Strømverktøy\n- Vaskemaskin/tørketrommel (planlagt bruk)\n- Lade mobiltelefoner og nettbrett\n\n→ Nær helårsbruk, men ikke full frihet</string>
     <string name="production_info_low">%1$d kWh/år (ca. %2$d kWh/dag)\n\n- Mindre kjøleskap/fryser\n- Kaffetrakter, mikrobølgeovn, vannkoker\n- Liten oppvaskmaskin\n- Strømverktøy (kortvarig)\n- Lade mobiltelefoner og nettbrett\n\n→ Komfortabel hyttebruk, men fortsatt begrenset</string>
+
+    <!-- Months charts -->
+    <string name="jan">Januar</string>
+    <string name="feb">Februar</string>
+    <string name="mar">Mars</string>
+    <string name="apr">April</string>
+    <string name="may">Mai</string>
+    <string name="jun">Juni</string>
+    <string name="jul">Juli</string>
+    <string name="aug">August</string>
+    <string name="sept">September</string>
+    <string name="oct">October</string>
+    <string name="nov">November</string>
+    <string name="des">Desember</string>
 </resources>

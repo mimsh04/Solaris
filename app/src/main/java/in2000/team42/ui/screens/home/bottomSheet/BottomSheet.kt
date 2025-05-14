@@ -62,6 +62,7 @@ fun BottomSheet(
         viewModel.setBottomSheetDetent(sheetState.currentDetent.identifier)
     }
 
+    // file name is the same as the composable
     com.composables.core.BottomSheet(
         modifier = modifier
             .fillMaxWidth()

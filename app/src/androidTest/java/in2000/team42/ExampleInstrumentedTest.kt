@@ -5,18 +5,16 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import in2000.team42.data.frost.FrostDatasource
 import in2000.team42.data.frost.model.FrostResult
-import java.net.HttpURLConnection
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import org.junit.Before
 import org.junit.After
-import org.junit.Test
-import org.junit.runner.RunWith
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
-
-import org.junit.Assert.*
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
+import java.net.HttpURLConnection
 
 /**
  * Instrumented test, which will execute on an Android device.

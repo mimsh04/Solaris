@@ -1,42 +1,40 @@
 package in2000.team42
 
+import android.Manifest
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import in2000.team42.theme.IN2000_team42Theme
-import in2000.team42.ui.navbar.NavBar
-import in2000.team42.ui.screens.Screen
-import in2000.team42.ui.screens.home.HomeScreen
-import in2000.team42.ui.screens.settings.SettingsScreen
-import android.Manifest
-import android.annotation.SuppressLint
-import androidx.compose.animation.*
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import in2000.team42.ui.screens.settings.guide.InstallasjonScreen
-import in2000.team42.data.saved.*
+import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import in2000.team42.data.saved.SavedProjectDatabase
+import in2000.team42.theme.IN2000_team42Theme
+import in2000.team42.ui.navbar.NavBar
+import in2000.team42.ui.screens.Screen
+import in2000.team42.ui.screens.home.HomeScreen
 import in2000.team42.ui.screens.home.HomeViewModel
 import in2000.team42.ui.screens.saved.SavedScreen
 import in2000.team42.ui.screens.saved.project.ProjectViewModel
+import in2000.team42.ui.screens.settings.SettingsScreen
+import in2000.team42.ui.screens.settings.guide.InstallationScreen
 import in2000.team42.utils.NetworkCheck
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -48,9 +46,6 @@ class MainActivity : ComponentActivity() {
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         val locationGranted = permissions.entries.all { it.value }
-        //if (!locationGranted) {
-            // TODO: Create a dialog to inform the user that location permissions are required
-        //}
     }
 
     private fun requestLocationPermissions() {
@@ -61,7 +56,6 @@ class MainActivity : ComponentActivity() {
         requestPermissionLauncher.launch(permissions)
     }
 
-    @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestLocationPermissions()
@@ -112,16 +106,37 @@ class MainActivity : ComponentActivity() {
                         popExitTransition = { ExitTransition.None }
                     ) {
                         composable(Screen.Home.route){
+                            BackHandler {
+                                // Do nothing when back is pressed on home screen
+                            }
                             HomeScreen(
                                 viewModel = homeViewModel,
                                 modifier = Modifier.padding(innerPadding)
                             )
                         }
                         composable(Screen.Settings.route) {
+                            BackHandler {
+                                navController.navigate(Screen.Home.route) {
+                                    popUpTo(Screen.Home.route) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
                             SettingsScreen(navController)
                         }
 
                         composable(Screen.Saved.route) {
+                            BackHandler {
+                                navController.navigate(Screen.Home.route) {
+                                    popUpTo(Screen.Home.route) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
                             SavedScreen(
                                 viewModel = projectViewModel,
                                 onProjectClick = { project ->
@@ -132,27 +147,11 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable(Screen.Guide.route) {
-                            InstallasjonScreen(navController)
+                            InstallationScreen(navController)
                         }
                     }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    IN2000_team42Theme {
-        Greeting("Android")
     }
 }

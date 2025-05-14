@@ -1,4 +1,4 @@
-package in2000.team42.ui.screens.settings.guide.komponenter
+package in2000.team42.ui.screens.settings.guide.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -30,26 +30,23 @@ fun Montering(){
         modifier=Modifier
             .padding(16.dp)
     ){
-        LazyColumn(
+        Column(
             modifier=Modifier.fillMaxWidth()
         ) {
-            items(installationSteps) { steg ->
+            installationSteps.forEach { steg ->
                 ExpandableMonteringItem(monteringData = steg)
                 Spacer(modifier = Modifier.height(8.dp))
             }
+            }
 
         }
-    }
 }
+
 
 @Composable
 fun ExpandableMonteringItem(monteringData: MonteringData){
     var isExpanded by remember { mutableStateOf(false) }
 
-    CustomRoundedBox(
-        height = if (isExpanded) 200.dp else 45.dp,
-        fontWeight = FontWeight.Bold
-    ){
         Column(
             modifier = Modifier.padding(8.dp)
                 .clickable { isExpanded = !isExpanded }
@@ -84,7 +81,5 @@ fun ExpandableMonteringItem(monteringData: MonteringData){
 
         }
 
-
-    }
 
 }

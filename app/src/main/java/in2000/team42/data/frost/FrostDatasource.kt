@@ -26,8 +26,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 
 class FrostDatasource {
-    private val TAG = "FrostDatasource" // LogCat tag for denne klassen
-    private val CLIENTID = "0791feb2-20aa-4805-9e4d-22765c3a9ff6"
+    private val tag = "FrostDatasource" // LogCat tag for denne klassen
+    private val clientId = "0791feb2-20aa-4805-9e4d-22765c3a9ff6"
 
     private val temp = "best_estimate_mean(air_temperature P1M)" // Opplevde problemer med å velge noe annet enn P1M
     private val snow = "mean(snow_coverage_type P1M)"
@@ -42,7 +42,7 @@ class FrostDatasource {
     private val client = HttpClient(CIO) {
         install(Auth) {
             basic {
-                credentials { BasicAuthCredentials(username = CLIENTID, password = "") }
+                credentials { BasicAuthCredentials(username = clientId, password = "") }
             }
         }
         install(ContentNegotiation) {
@@ -60,7 +60,7 @@ class FrostDatasource {
      */
     suspend fun getNearestStation(latitude: Double, longitude: Double, referenceTime: String): Map<String, List<String>>? = withContext(Dispatchers.IO) {
         val url = "$baseUrl/sources/v0.jsonld"
-        Log.d(TAG, "Searching for nearest stations at coordinates: ($latitude, $longitude)")
+        Log.d(tag, "Searching for nearest stations at coordinates: ($latitude, $longitude)")
 
         val stationMap = mutableMapOf<String, MutableList<String>>()
 
@@ -77,10 +77,10 @@ class FrostDatasource {
                     val json = Json { ignoreUnknownKeys = true }
                     val data = json.decodeFromString<SourceResponse>(response)
                     val stationIds = data.data.map { it.id }
-                    Log.i(TAG, "Found nearest station IDs for $element: $stationIds")
+                    Log.i(tag, "Found nearest station IDs for $element: $stationIds")
                     element to stationIds
                 } catch (e: Exception) {
-                    Log.e(TAG, "Error finding stations for $element: ${e.message}", e)
+                    Log.e(tag, "Error finding stations for $element: ${e.message}", e)
                     element to emptyList()
                 }
             }
@@ -94,7 +94,7 @@ class FrostDatasource {
         }
 
         if (stationMap.isEmpty()) {
-            Log.e(TAG, "No stations found for any elements")
+            Log.e(tag, "No stations found for any elements")
             null
         } else {
             stationMap
@@ -126,7 +126,7 @@ class FrostDatasource {
             async {
                 val supportingStations = stationMap[element]?.filter { it.isNotEmpty() } ?: return@async null
                 if (supportingStations.isEmpty()) {
-                    Log.w(TAG, "No stations support $element")
+                    Log.w(tag, "No stations support $element")
                     return@async null
                 }
 
@@ -139,24 +139,24 @@ class FrostDatasource {
 
                     if (response.status.isSuccess()) {
                         val body = response.body<FrostResponse>()
-                        Log.d(TAG, "Fetched data for $element from stations $supportingStations")
-                        Log.d(TAG, "Raw FrostResponse for $element:")
+                        Log.d(tag, "Fetched data for $element from stations $supportingStations")
+                        Log.d(tag, "Raw FrostResponse for $element:")
                         body.data.forEachIndexed { index, observation ->
-                            Log.d(TAG, "  Observation [$index]:")
-                            Log.d(TAG, "    Station ID: ${observation.sourceId}")
-                            Log.d(TAG, "    Reference Time: ${observation.referenceTime}")
+                            Log.d(tag, "  Observation [$index]:")
+                            Log.d(tag, "    Station ID: ${observation.sourceId}")
+                            Log.d(tag, "    Reference Time: ${observation.referenceTime}")
                             observation.observations.forEach { obs ->
-                                Log.d(TAG, "    Element: ${obs.elementId}, Value: ${obs.value}")
+                                Log.d(tag, "    Element: ${obs.elementId}, Value: ${obs.value}")
                             }
                         }
                         return@async body
                     } else {
                         val errorBody = response.body<FrostErrorResponse>()
-                        Log.e(TAG, "Error fetching $element: ${errorBody.error.reason}")
+                        Log.e(tag, "Error fetching $element: ${errorBody.error.reason}")
                         return@async null
                     }
                 } catch (e: Exception) {
-                    Log.e(TAG, "Error fetching $element: ${e.message}", e)
+                    Log.e(tag, "Error fetching $element: ${e.message}", e)
                     return@async null
                 }
             }
@@ -168,12 +168,12 @@ class FrostDatasource {
         }
 
         if (responses.isEmpty()) {
-            Log.w(TAG, "No weather data retrieved")
+            Log.w(tag, "No weather data retrieved")
             return@withContext FrostResult.Failure("No weather data available")
         }
 
         val weatherData = processWeatherData(responses)
-        Log.i(TAG, "Processed ${weatherData.size} weather data points")
+        Log.i(tag, "Processed ${weatherData.size} weather data points")
         FrostResult.Success(weatherData)
     }
 

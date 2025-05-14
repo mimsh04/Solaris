@@ -26,7 +26,8 @@ abstract class SavedProjectDatabase : RoomDatabase() {
                     SavedProjectDatabase::class.java,
                     "saved_project_database"
                 )
-                    .fallbackToDestructiveMigration() // Handles version change by recreating the database
+                    // Resets database if there are changes to the way we store data
+                    .fallbackToDestructiveMigration(false)
                     .build()
                 INSTANCE = instance
                 instance

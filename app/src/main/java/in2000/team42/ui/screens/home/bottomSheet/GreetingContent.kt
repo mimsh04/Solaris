@@ -48,7 +48,7 @@ fun GreetingContent(modifier: Modifier = Modifier) {
 
         // Quick guide
         Text(
-            text = "For å starte, søk etter en adresse i feltet over og trykk på bygget som skal ha solcellepaneler.",
+            text = "For å starte, søk etter en adresse i feltet over eller trykk på bygget som skal ha solcellepaneler.",
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onBackground

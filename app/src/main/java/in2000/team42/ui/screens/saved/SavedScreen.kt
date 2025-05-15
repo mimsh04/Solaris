@@ -1,8 +1,5 @@
 package in2000.team42.ui.screens.saved
 
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import in2000.team42.ui.screens.saved.project.SwipeToDeleteItem
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +14,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -24,12 +23,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import in2000.team42.R
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import in2000.team42.R
 import in2000.team42.data.saved.SavedProjectEntity
 import in2000.team42.ui.screens.saved.project.ProjectViewModel
+import in2000.team42.ui.screens.saved.project.SwipeToDeleteItem
 
 @Composable
 fun SavedScreen(

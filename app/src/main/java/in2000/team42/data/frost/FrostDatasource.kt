@@ -19,11 +19,11 @@ import io.ktor.http.ContentType
 import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 
 class FrostDatasource {
     private val tag = "FrostDatasource" // LogCat tag for denne klassen

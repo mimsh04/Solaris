@@ -1,7 +1,6 @@
 package in2000.team42.ui.screens.settings.guide.installation
 
 import androidx.annotation.StringRes
-import androidx.compose.ui.res.stringResource
 import in2000.team42.R
 
 data class MonteringData(

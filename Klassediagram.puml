@@ -1,0 +1,282 @@
+@startuml
+class in2000.team42.ui.screens.settings.faq.FAQ {
+}
+class in2000.team42.data.solarPanels.SolarPanelModel {
+}
+class in2000.team42.data.pgvis.PgvisRepository {
++ List<DailyProfile> getRadiationData(Double,Double,Int,Float,Float)
++ List<KwhMonthlyResponse.MonthlyKwhData> getMonthlyKwh(Double,Double,Float,Float,Float,PvTech)
+}
+
+class in2000.team42.data.pgvis.model.KwhMonthlyResponse$Response {
+}
+class in2000.team42.data.pgvis.model.KwhMonthlyResponse$Outputs {
+}
+class in2000.team42.data.pgvis.model.KwhMonthlyResponse$Monthly {
+}
+class in2000.team42.data.pgvis.model.KwhMonthlyResponse$MonthlyKwhData {
+}
+abstract class in2000.team42.data.pgvis.model.KwhMonthlyResponse {
+}
+interface in2000.team42.data.saved.SavedProjectDao {
++ void insert(SavedProjectEntity)
++ Flow<List<SavedProjectEntity>> getAllProjects()
++ void delete(SavedProjectEntity)
++ void update(SavedProjectEntity)
++ SavedProjectEntity? getProjectByConfig(Config)
+}
+
+class in2000.team42.ui.screens.settings.guide.installation.MonteringData {
+}
+class in2000.team42.data.frost.FrostDatasource$SourceResponse {
+}
+class in2000.team42.data.frost.FrostDatasource$Source {
+}
+class in2000.team42.data.frost.FrostDatasource {
+-  tag
+-  clientId
+-  temp
+-  snow
+-  cloudAreaFraction
+-  elements
+-  baseUrl
+-  client
++ Map<String, List<String>>? getNearestStation(Double,Double,String)
++ FrostResult getWeatherData(Map<String, List<String>>,String)
+- List<FrostData> processWeatherData(List<FrostResponse>)
+}
+
+
+class in2000.team42.data.saved.ConfigTypeConverter {
+-  gson
++ String configToString(Config)
++ Config stringToConfig(String)
+}
+
+
+class in2000.team42.ui.screens.home.ApiData {
+}
+class in2000.team42.ui.screens.home.Config {
+}
+class in2000.team42.ui.screens.home.DisplayWeather {
+}
+class in2000.team42.ui.screens.home.HomeViewModel {
+-  radiationRepository
+-  frostRepository
+-  tag
+-  savedProjectDao
+-  config
+-  apiData
+-  _apiData
+-  _config
++  apiDataFlow
++  configFlow
++ void setCoordinates(Double,Double)
++ void setAddress(String)
++ void setGeoAddress(Point)
++ Flow<Boolean> isCurrentProjectSaved()
++ void clearSolarData()
++ void updateAllSolarData()
++ void saveProject()
++ void deleteCurrentProject()
++ void loadProject(SavedProjectEntity)
++ void setIncline(Float)
++ void setDirection(Float)
++ void setArea(Float)
++ void setSelectedSolarPanel(SolarPanelModel)
++ void setPolygon(List<List<Point>>?)
++ void setBottomSheetDetent(String)
++ void clearApiData()
++ void updateAllApi()
+- void launchDataUpdates()
+- void updateSolarRadiation()
++ void updateKwhMonthly(PvTech)
+- void calculatePeakPower()
+- List<DisplayWeather> createDummyWeatherData()
++ void updateWeatherData()
+- DisplayWeather? toDisplayWeather()
+}
+
+
+class in2000.team42.ui.screens.Screen$Home {
+}
+class in2000.team42.ui.screens.Screen$Saved {
+}
+class in2000.team42.ui.screens.Screen$Settings {
+}
+class in2000.team42.ui.screens.Screen$Guide {
+}
+class in2000.team42.ui.screens.Screen {
+}
+class in2000.team42.data.frost.model.FrostData {
+}
+class in2000.team42.data.frost.model.FrostResult$Success {
+}
+class in2000.team42.data.frost.model.FrostResult$Failure {
+}
+class in2000.team42.data.frost.model.FrostResult {
+}
+class in2000.team42.data.frost.model.FrostResponse {
+}
+class in2000.team42.data.frost.model.FrostObservation {
+}
+class in2000.team42.data.frost.model.Observation {
+}
+class in2000.team42.data.frost.model.FrostErrorResponse$ErrorDetails {
+}
+class in2000.team42.data.frost.model.FrostErrorResponse {
+}
+class in2000.team42.utils.NetworkCheck {
++ Boolean isOnline(Context)
++ Flow<Boolean> observeNetworkStatus(Context)
+}
+
+class in2000.team42.data.saved.SavedProjectDatabase$Companion {
+- SavedProjectDatabase? INSTANCE
+- Context appContext
++ void initialize(Context)
++ SavedProjectDatabase getDatabase()
+}
+
+
+abstract class in2000.team42.data.saved.SavedProjectDatabase {
++ SavedProjectDao savedProjectDao()
+}
+
+class in2000.team42.ui.navbar.NavItem {
+}
+class in2000.team42.data.pgvis.model.RadiationResponse {
+}
+class in2000.team42.data.pgvis.model.Inputs {
+}
+class in2000.team42.data.pgvis.model.Location {
+}
+class in2000.team42.data.pgvis.model.MeteoData {
+}
+class in2000.team42.data.pgvis.model.Plane {
+}
+class in2000.team42.data.pgvis.model.Fixed {
+}
+class in2000.team42.data.pgvis.model.SlopeAzimuth {
+}
+class in2000.team42.data.pgvis.model.Outputs {
+}
+class in2000.team42.data.pgvis.model.DailyProfile {
+}
+class in2000.team42.data.pgvis.model.Meta {
+}
+class in2000.team42.data.pgvis.model.MetaInputs {
+}
+class in2000.team42.data.pgvis.model.MetaLocation {
+}
+class in2000.team42.data.pgvis.model.MetaLocationVariables {
+}
+class in2000.team42.data.pgvis.model.MetaVariable {
+}
+class in2000.team42.data.pgvis.model.MetaMeteoData {
+}
+class in2000.team42.data.pgvis.model.MetaMeteoDataVariables {
+}
+class in2000.team42.data.pgvis.model.MetaSimpleVariable {
+}
+class in2000.team42.data.pgvis.model.MetaPlane {
+}
+class in2000.team42.data.pgvis.model.MetaPlaneFields {
+}
+class in2000.team42.data.pgvis.model.MetaTimeFormat {
+}
+class in2000.team42.data.pgvis.model.MetaOutputs {
+}
+class in2000.team42.data.pgvis.model.MetaDailyProfile {
+}
+class in2000.team42.data.pgvis.model.MetaDailyProfileVariables {
+}
+class in2000.team42.ui.screens.home.map.null {
++ void onResults(List<SearchResult>,ResponseInfo)
++ void onError(Exception)
+}
+
+class in2000.team42.data.strommen.model.Strommen {
+}
+class in2000.team42.data.strommen.StrommenRepo {
+-  dataSource
++ Result<List<Strommen>> getStromPriser(Int,Int,Int,String)
+}
+
+
+class in2000.team42.ui.screens.saved.project.ProjectViewModel {
+-  _savedProjects
++  savedProjects
+-  savedProjectDao
++ void deleteProject(SavedProjectEntity)
++ SavedProjectEntity? getProjectById(String)
+}
+
+
+class in2000.team42.MainActivity {
+-  requestPermissionLauncher
+- void requestLocationPermissions()
++ void onCreate(Bundle?)
+}
+
+
+class in2000.team42.data.productionCalculation.model.ProductionCalculation {
+}
+class in2000.team42.data.strommen.StrommenDataSource {
+-  ktorHttpClient
+-  baseUrl
++ List<Strommen> getStromInfo(Int,Int,Int,String)
+}
+
+
+class in2000.team42.data.saved.SavedProjectEntity {
+}
+class in2000.team42.data.frost.FrostRepository {
+-  tag
++ String get1YearReferenceTime()
++ FrostResult getWeatherByCoordinates(Double,Double,String)
+}
+
+
+enum in2000.team42.data.pgvis.PvTech {
++  CRYST_SI
++  CIS
++  CD_TE
++  UNKNOWN
+}
+
+class in2000.team42.data.pgvis.PgvisDatasource {
+-  ktorHttpClient
++ List<DailyProfile> getDailyRadiation(Double,Double,Int,Float,Float)
++ List<KwhMonthlyResponse.MonthlyKwhData> getMonthlyKwh(Double,Double,Float,Float,Float,PvTech)
+}
+
+
+
+
+in2000.team42.data.pgvis.model.KwhMonthlyResponse +.. in2000.team42.data.pgvis.model.KwhMonthlyResponse$Response
+in2000.team42.data.pgvis.model.KwhMonthlyResponse +.. in2000.team42.data.pgvis.model.KwhMonthlyResponse$Outputs
+in2000.team42.data.pgvis.model.KwhMonthlyResponse +.. in2000.team42.data.pgvis.model.KwhMonthlyResponse$Monthly
+in2000.team42.data.pgvis.model.KwhMonthlyResponse +.. in2000.team42.data.pgvis.model.KwhMonthlyResponse$MonthlyKwhData
+in2000.team42.data.frost.FrostDatasource +.. in2000.team42.data.frost.FrostDatasource$SourceResponse
+in2000.team42.data.frost.FrostDatasource +.. in2000.team42.data.frost.FrostDatasource$Source
+androidx.lifecycle.ViewModel <|-- in2000.team42.ui.screens.home.HomeViewModel
+in2000.team42.ui.screens.Screen +.. in2000.team42.ui.screens.Screen$Home
+in2000.team42.ui.screens.Screen <|-- in2000.team42.ui.screens.Screen$Home
+in2000.team42.ui.screens.Screen +.. in2000.team42.ui.screens.Screen$Saved
+in2000.team42.ui.screens.Screen <|-- in2000.team42.ui.screens.Screen$Saved
+in2000.team42.ui.screens.Screen +.. in2000.team42.ui.screens.Screen$Settings
+in2000.team42.ui.screens.Screen <|-- in2000.team42.ui.screens.Screen$Settings
+in2000.team42.ui.screens.Screen +.. in2000.team42.ui.screens.Screen$Guide
+in2000.team42.ui.screens.Screen <|-- in2000.team42.ui.screens.Screen$Guide
+in2000.team42.data.frost.model.FrostResult +.. in2000.team42.data.frost.model.FrostResult$Success
+in2000.team42.data.frost.model.FrostResult <|-- in2000.team42.data.frost.model.FrostResult$Success
+in2000.team42.data.frost.model.FrostResult +.. in2000.team42.data.frost.model.FrostResult$Failure
+in2000.team42.data.frost.model.FrostResult <|-- in2000.team42.data.frost.model.FrostResult$Failure
+in2000.team42.data.frost.model.FrostErrorResponse +.. in2000.team42.data.frost.model.FrostErrorResponse$ErrorDetails
+in2000.team42.data.saved.SavedProjectDatabase +.. in2000.team42.data.saved.SavedProjectDatabase$Companion
+androidx.room.RoomDatabase <|-- in2000.team42.data.saved.SavedProjectDatabase
+in2000.team42.ui.screens.home.map.SearchCallback <|.. in2000.team42.ui.screens.home.map.null
+androidx.lifecycle.ViewModel <|-- in2000.team42.ui.screens.saved.project.ProjectViewModel
+androidx.activity.ComponentActivity <|-- in2000.team42.MainActivity
+@enduml

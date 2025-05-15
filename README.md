@@ -21,7 +21,7 @@ Krever lokasjon fra bruker.
 
 ## Biblioteker:
 
-•	Kotlin
+•	Kotlin/n
 •	Jetpack Compose
 •	Jetpack ViewModel
 •	Navigation Compose

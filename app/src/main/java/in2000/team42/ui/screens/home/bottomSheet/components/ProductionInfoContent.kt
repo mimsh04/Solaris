@@ -11,30 +11,30 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import in2000.team42.R
+import in2000.team42.utils.LocalizationManager
+import in2000.team42.utils.LocalizationManager.getString
 
-@SuppressLint("LocalContextConfigurationRead")
+// ProductionInfoContent.kt
 @Composable
 fun ProductionInfoContent(yearlyKwh: Int) {
     val context = LocalContext.current
-    val currentLocale = context.resources.configuration.locales[0].language
-    Log.d("ProductionInfo","Current locale in ProductionInfoContent: $currentLocale")
-    //val testString = remember(currentLocale) { context.getString(R.string.production_info_zero) }
-    val testString = context.getString(R.string.production_info_zero)
-    println("ProductionInfoContent loaded string: $testString")
 
     val infoText = when {
-        yearlyKwh == 0 -> stringResource(R.string.production_info_zero)
-        yearlyKwh >= 10000 -> stringResource(
+        yearlyKwh == 0 -> getString(context, R.string.production_info_zero)
+        yearlyKwh >= 10000 -> getString(
+            context,
             R.string.production_info_high,
             yearlyKwh,
             (yearlyKwh / 365.0).toInt()
         )
-        yearlyKwh in 5000..9999 -> stringResource(
+        yearlyKwh in 5000..9999 -> getString(
+            context,
             R.string.production_info_medium,
             yearlyKwh,
             (yearlyKwh / 365.0).toInt()
         )
-        else -> stringResource(
+        else -> getString(
+            context,
             R.string.production_info_low,
             yearlyKwh,
             (yearlyKwh / 365.0).toInt()

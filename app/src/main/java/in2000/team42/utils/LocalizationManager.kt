@@ -47,4 +47,13 @@ object LocalizationManager {
         return ConfigurationCompat.getLocales(context.resources.configuration)[0]?.language
             ?: SupportedLanguage.ENGLISH.code
     }
+
+    fun getString(context: Context, stringResId: Int, vararg formatArgs: Any): String {
+        val localizedContext = setLocale(context, getSelectedLanguage(context))
+        return if (formatArgs.isEmpty()) {
+            localizedContext.getString(stringResId)
+        } else {
+            localizedContext.getString(stringResId, *formatArgs)
+        }
+    }
 }

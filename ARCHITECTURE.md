@@ -26,8 +26,6 @@ Arkitekturen legger stor vekt på anerkjente objektorienterte prinsipper og desi
 
 Dette bidrar til et system som er lettere å forstå, vedlikeholde, teste og videreutvikle, da endringer i en komponent har minimal påvirkning på andre.
 
-Arkitekturen er lagdelt og består av:
-
 
 
 ## 3. Prosjektstruktur

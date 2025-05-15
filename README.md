@@ -31,7 +31,7 @@ Biblioteker:
 Kilder:
 
 Installasjonsguide:
-Solcelle. (2023, 10). Solcelle. Retrieved from Montering av solcellepanel: https://solcelle.no/montering-av-solcellepanel
+Solcelle. (2023, 10). Solcelle. Hentet fra Montering av solcellepanel: https://solcelle.no/montering-av-solcellepanel
 
 FAQ: 
 Aalbergh, G. (2025, 30. januar). Case 3: Installasjon av solcellepaneler : https://in2000.met.no/2025/3-solceller

@@ -19,7 +19,13 @@ fun SaveButton(
     modifier: Modifier = Modifier,
     onShowSnackbar: (String) -> Unit
 ) {
-    val isSaved by viewModel.isCurrentProjectSaved().collectAsState(initial = false)
+    var isSaved by remember { mutableStateOf(false) }
+    val config = viewModel.configFlow.collectAsState()
+    LaunchedEffect(config.value.area) {
+        viewModel.isCurrentProjectSaved().collect { saved ->
+            isSaved = saved
+        }
+    }
 
     Button(
         onClick = {

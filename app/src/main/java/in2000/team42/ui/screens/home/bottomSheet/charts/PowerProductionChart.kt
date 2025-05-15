@@ -73,7 +73,7 @@ fun PowerProductionChart(
             lineSeries {
                 series(
                     x = utregnetData.map { it.month },
-                    y = utregnetData.map { it.kWhEtterUtregning }
+                    y = utregnetData.map { it.kWhAfterCalculation }
                 )
             }
             lineSeries {

@@ -86,7 +86,7 @@ fun calculateWithCoverage(
         )
         monthlyProductionCalculations.add(ProductionCalculation(
             kWhPotential = monthlyData.averageMonthly,
-            kWhEtterUtregning = monthlyData.averageMonthly - (snowKwhLoss + cloudKwhLoss),
+            kWhAfterCalculation = monthlyData.averageMonthly - (snowKwhLoss + cloudKwhLoss),
             snoTap = snowKwhLoss,
             skyTap = cloudKwhLoss,
             month = monthlyData.month

@@ -12,7 +12,7 @@ object LocalizationManager {
 
     // Supported languages enum for type safety
     enum class SupportedLanguage(val code: String) {
-        NORWEGIAN("no"),
+        NORWEGIAN("nb"),
         ENGLISH("en")
     }
 

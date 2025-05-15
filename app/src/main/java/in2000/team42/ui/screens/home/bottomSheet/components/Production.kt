@@ -1,5 +1,7 @@
 package in2000.team42.ui.screens.home.bottomSheet.components
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -41,14 +44,20 @@ private fun getYearlyProduction(
     val calculatedData = calculateWithCoverage(apiData.kwhMonthlyData, apiData.weatherData)
     var tot = 0.0
     calculatedData.forEach {
-        tot += it.kWhEtterUtregning
+        tot += it.kWhAfterCalculation
     }
     return tot
 }
 
+@SuppressLint("LocalContextConfigurationRead")
 @Composable
 fun Production(apiData: ApiData) {
     var showInfoDialog by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    val currentLocale = context.resources.configuration.locales[0].language
+    Log.d("Production","Current locale in Production: $currentLocale")
+    val testString = context.getString(R.string.production_info_zero)
 
     Row(
         modifier = Modifier
@@ -74,7 +83,7 @@ fun Production(apiData: ApiData) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "\uD83D\uDCC6" + stringResource(R.string.home_result_annual_production), // Fixed typo and added colon
+                        text = "\uD83D\uDCC6" + stringResource(R.string.home_result_annual_production),
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontSize = MaterialTheme.typography.titleLarge.fontSize * 1.35f
@@ -120,6 +129,9 @@ fun Production(apiData: ApiData) {
     }
 
     if (showInfoDialog) {
+        val testString = context.getString(R.string.production_info_zero)
+        Log.d("Production","Current locale in ProductionInfoContent: $currentLocale")
+        Log.d("Production","Loaded string: $testString")
         Dialog(
             onDismissRequest = { showInfoDialog = false },
             properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)

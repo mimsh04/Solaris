@@ -21,7 +21,7 @@ fun SaveButton(
 ) {
     var isSaved by remember { mutableStateOf(false) }
     val config = viewModel.configFlow.collectAsState()
-    LaunchedEffect(config.value.area) {
+    LaunchedEffect(config.value) {
         viewModel.isCurrentProjectSaved().collect { saved ->
             isSaved = saved
         }

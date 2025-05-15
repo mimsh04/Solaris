@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.LocaleList
 import androidx.core.os.ConfigurationCompat
 import java.util.Locale
+import androidx.core.content.edit
 
 object LocalizationManager {
     private const val PREFS_NAME = "app_localization_prefs"
@@ -31,9 +32,9 @@ object LocalizationManager {
 
     fun saveLanguagePreference(context: Context, languageCode: String) {
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .edit()
-            .putString(KEY_SELECTED_LANGUAGE, languageCode)
-            .apply()
+            .edit() {
+                putString(KEY_SELECTED_LANGUAGE, languageCode)
+            }
     }
 
     fun getSelectedLanguage(context: Context): String {
@@ -46,7 +47,4 @@ object LocalizationManager {
         return ConfigurationCompat.getLocales(context.resources.configuration)[0]?.language
             ?: SupportedLanguage.ENGLISH.code
     }
-
-    fun getSupportedLanguages(): List<SupportedLanguage> =
-        SupportedLanguage.values().toList()
 }

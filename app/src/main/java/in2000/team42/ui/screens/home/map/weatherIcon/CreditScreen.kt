@@ -1,5 +1,6 @@
 package in2000.team42.ui.screens.home.map.weatherIcon
 
+import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -9,9 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import in2000.team42.R
 
 @Composable
-fun CreditsScreen() {
+fun CreditsScreen(context: Context) {
     Surface(
         color = MaterialTheme.colorScheme.background
     ) {
@@ -23,16 +25,16 @@ fun CreditsScreen() {
             horizontalAlignment = androidx.compose.ui.Alignment.Start
         ) {
             Text(
-                text = "Krediteringer",
+                text = context.getString(R.string.credits_label),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 fontSize = 24.sp,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            CreditItem("Snø sky ikon av Freepik fra Flaticon (www.flaticon.com)")
-            CreditItem("Ukjent vær ikon av Vecteezy (www.vecteezy.com)")
-            CreditItem("sky ikon fra CleanPNG (www.cleanpng.com)")
-            CreditItem("sol ikon av Freepik fra Flaticon (www.flaticon.com)")
+            CreditItem(context.getString(R.string.snow_cloud_icon_attribution))
+            CreditItem(context.getString(R.string.unknown_weather_icon_attribution))
+            CreditItem(context.getString(R.string.cloud_icon_attribution))
+            CreditItem(context.getString(R.string.sun_icon_attribution))
         }
     }
 }

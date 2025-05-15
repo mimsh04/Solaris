@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
@@ -32,11 +33,11 @@ fun RecommendedProducts () {
             .padding(horizontal = 20.dp)
     ){
         Text(
-            text="Anbefalte Produkter",
+            text= stringResource(R.string.recommended_products_label),
             fontWeight = FontWeight.Bold,
             fontSize = 30.sp,
             modifier = Modifier
-                .padding(bottom=10.dp)
+                .padding(bottom = 10.dp)
                 .fillMaxWidth()
                 .wrapContentWidth(Alignment.Start),
             color = MaterialTheme.colorScheme.primary
@@ -76,7 +77,7 @@ fun RecommendedProducts () {
                     )
 
                     Text(
-                        text = "Otovo",
+                        text = stringResource(R.string.company_name_otovo),
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 16.sp,
                         color = Color.White,
@@ -97,8 +98,8 @@ fun RecommendedProducts () {
                             val intent = Intent(
                                 Intent.ACTION_VIEW,
                                 Uri.parse("https://sol.fjordkraft.no/")
-                                )
-                                context.startActivity(intent)
+                            )
+                            context.startActivity(intent)
                         }
                 ) {
                     Image(

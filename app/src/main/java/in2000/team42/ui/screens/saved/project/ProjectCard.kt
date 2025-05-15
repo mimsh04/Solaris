@@ -1,5 +1,7 @@
 package in2000.team42.ui.screens.saved.project
 
+import android.R.attr.fontWeight
+import android.R.attr.maxLines
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
@@ -38,6 +40,7 @@ import com.mapbox.maps.Style
 import in2000.team42.R
 import in2000.team42.data.mapboxStaticImage.getStaticImage
 import in2000.team42.data.saved.SavedProjectEntity
+import in2000.team42.theme.ThemeManager
 
 /**
  * A card displaying project details (address, coordinates, etc.).
@@ -52,6 +55,7 @@ fun ProjectCard(
     onClick: () -> Unit = {},
     isInSwipeContext: Boolean
 ) {
+    val themeManager = ThemeManager.isDarkTheme()
     val mapUrl = getStaticImage(
         project.config.longitude,
         project.config.latitude,
@@ -60,7 +64,7 @@ fun ProjectCard(
         300,
         18.3f,
         project.config.polygon!!,
-        if (isSystemInDarkTheme()) Style.DARK else Style.MAPBOX_STREETS
+        if (themeManager.value) Style.DARK else Style.MAPBOX_STREETS
     )
 
     LaunchedEffect (mapUrl){
@@ -94,9 +98,8 @@ fun ProjectCard(
                     .padding(16.dp),
                 verticalArrangement = Arrangement.Top
             ) {
-
                 Text(
-                    text = "Adresse: ${project.config.address}",
+                    text = stringResource(R.string.saved_project_address_label, project.config.address),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.SemiBold,

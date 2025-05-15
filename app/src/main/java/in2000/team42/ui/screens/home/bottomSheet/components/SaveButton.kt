@@ -19,7 +19,13 @@ fun SaveButton(
     modifier: Modifier = Modifier,
     onShowSnackbar: (String) -> Unit
 ) {
-    val isSaved by viewModel.isCurrentProjectSaved().collectAsState(initial = false)
+    var isSaved by remember { mutableStateOf(false) }
+    val config = viewModel.configFlow.collectAsState()
+    LaunchedEffect(config.value) {
+        viewModel.isCurrentProjectSaved().collect { saved ->
+            isSaved = saved
+        }
+    }
 
     Button(
         onClick = {
@@ -50,8 +56,8 @@ fun SaveButton(
                 tint = LocalContentColor.current
             )
             Text(
-                text = if (isSaved) stringResource(R.string.remove_project)
-                else stringResource(R.string.save_project)
+                text = if (isSaved) stringResource(R.string.action_remove_project)
+                else stringResource(R.string.action_save_project)
             )
         }
     }

@@ -26,10 +26,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import in2000.team42.R
 import in2000.team42.data.productionCalculation.calculateWithCoverage
 import in2000.team42.ui.screens.home.ApiData
 
@@ -49,7 +51,9 @@ fun Production(apiData: ApiData) {
     var showInfoDialog by remember { mutableStateOf(false) }
 
     Row(
-        modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 16.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         if (apiData.isLoading.not() and
@@ -70,7 +74,7 @@ fun Production(apiData: ApiData) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "\uD83D\uDCC6 Årlig resultat:", // Fixed typo and added colon
+                        text = "\uD83D\uDCC6" + stringResource(R.string.home_result_annual_production), // Fixed typo and added colon
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontSize = MaterialTheme.typography.titleLarge.fontSize * 1.35f
@@ -98,14 +102,14 @@ fun Production(apiData: ApiData) {
                 }
                 Spacer(modifier = Modifier.size(6.dp))
                 Text(
-                    " ⚡ Produksjon: ${getYearlyProduction(apiData).toInt()} kWh",
+                    " ⚡" + stringResource(R.string.home_label_production) + " ${getYearlyProduction(apiData).toInt()} kWh",
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.size(6.dp))
                 Text(
-                    "💰 Anslått besparelse: ${(getYearlyProduction(apiData) * 0.5).toInt()} kr",
+                    "💰 "+ stringResource(R.string.home_estimated_savings) + " ${(getYearlyProduction(apiData) * 0.5).toInt()} NOK",
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
@@ -137,7 +141,7 @@ fun Production(apiData: ApiData) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Hva kan du drive med forventet produksjon på hytte ikke tilkoblet strømnettet ?",
+                        text = stringResource(R.string.home_expected_operation_off_grid),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground,
@@ -149,7 +153,7 @@ fun Production(apiData: ApiData) {
                         onClick = { showInfoDialog = false },
                         modifier = Modifier.align(Alignment.End)
                     ) {
-                        Text("Lukk")
+                        Text(stringResource(R.string.home_production_close_button))
                     }
                 }
             }

@@ -15,7 +15,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import in2000.team42.R
 import in2000.team42.ui.screens.home.ApiData
 
 @Composable
@@ -29,13 +32,15 @@ fun AllCharts(apiData: ApiData) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
                 Text(
-                    text = "Laster inn data og kalkulerer...",
+                    text = stringResource(R.string.loading_data_message),
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 Spacer(modifier = Modifier.padding(12.dp))
                 CircularProgressIndicator(
-                    modifier = Modifier.size(50.dp).padding(start = 8.dp),
+                    modifier = Modifier
+                        .size(50.dp)
+                        .padding(start = 8.dp),
                     color = MaterialTheme.colorScheme.primary,
                     strokeWidth = 4.dp
                 )

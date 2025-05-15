@@ -7,7 +7,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import in2000.team42.R
 import in2000.team42.data.solarPanels.SolarPanelModel
 import java.util.Locale
 
@@ -28,7 +30,7 @@ fun DropdownItem(
                 Text(
                     text = String.format(
                         Locale.getDefault(),
-                        "Effektivitet: %.1f%%, Pris: %.2f kr/m²",
+                        stringResource(R.string.home_effect_and_price),
                         panelInfo.efficiency,
                         panelInfo.pricePerM2
                     ),

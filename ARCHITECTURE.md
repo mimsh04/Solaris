@@ -74,5 +74,5 @@ For å legge til en ny screen i appen skal man lage en ny pakke i `screens`-pakk
 *   **Testing**: [JUnit](https://junit.org/junit5/), [Mockk](https://mockk.io/)
 
 ### 4.3 Andoid Versjoner
-*   **Min SDK**: 24
+*   **Min SDK**: 26
 *   **Mål SDK**: 35

@@ -9,7 +9,7 @@ Krever lokasjon fra bruker.
 Hvordan kjøre appen:
 
 1.	Åpne prosjektet i Android Studio
-2.	Konfigurer en emulator eller koble til en fysisk enhet. Sørg for at emulatoren eller enheten har minimum API-nivå 24 (Android 7) eller høyere.
+2.	Konfigurer en emulator eller koble til en fysisk enhet. Sørg for at emulatoren eller enheten har minimum API-nivå 26 (Android 8) eller høyere.
 3.	Klikk på ‘Run’ for å bygge og kjøre appen
 
 

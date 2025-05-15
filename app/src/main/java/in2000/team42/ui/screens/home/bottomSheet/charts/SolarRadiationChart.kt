@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisLabelComponent
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLine
@@ -90,11 +91,17 @@ fun SolarRadiationChart(modifier: Modifier = Modifier, solData: List<DailyProfil
                     ),
                 ),
                 startAxis = VerticalAxis.rememberStart(
+                    label = rememberAxisLabelComponent(
+                        color = MaterialTheme.colorScheme.onSurface
+                    ),
                     valueFormatter = { _, value, _ ->
                         "${value.toInt()} kWh/m²"
                     }
                 ),
                 bottomAxis = HorizontalAxis.rememberBottom(
+                    label = rememberAxisLabelComponent(
+                        color = MaterialTheme.colorScheme.onSurface
+                    ),
                     itemPlacer = remember { HorizontalAxis.ItemPlacer.aligned(spacing = { 12 }) },
                     valueFormatter = { _, value, _ ->
                         val dailyProfile = solData[value.toInt()]

@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
+import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisLabelComponent
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLine
@@ -135,11 +136,17 @@ fun PowerProductionChart(
                     ),
                 ),
                 startAxis = VerticalAxis.rememberStart(
+                    label = rememberAxisLabelComponent(
+                        color = MaterialTheme.colorScheme.onSurface
+                    ),
                     valueFormatter = { _, value, _ ->
                         "${value.toInt()} kWh"
                     }
                 ),
                 bottomAxis = HorizontalAxis.rememberBottom(
+                    label = rememberAxisLabelComponent(
+                        color = MaterialTheme.colorScheme.onSurface
+                    ),
                     itemPlacer = remember {
                         HorizontalAxis.ItemPlacer.aligned(
                             spacing = { 1 }

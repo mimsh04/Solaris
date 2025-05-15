@@ -3,7 +3,8 @@
 Vi valgte følgende diagrammer for å modellere applikasjonen:
 
 - **Use Case Diagram**: Gir en oversikt over de viktigste brukerscenariene og aktørene for å kommunisere funksjonalitet til interessenter.  
-- **Sekvensdiagrammer**: Viser detaljert interaksjon mellom komponenter over tid for de viktigste use casene.  
+- **Sekvensdiagrammer**: Viser detaljert interaksjon mellom komponenter over tid for de viktigste use casene.
+- **Klassediagram**: Viser den statiske strukturen i systemet med klasser og relasjoner for å gi en oversikt over systemets datastruktur.
 - **Aktivitetsdiagram**: Viser prosessflyten for en use case.
 
 ---

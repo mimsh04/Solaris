@@ -77,8 +77,21 @@ Brukeren kan:
 
 ### Use Case 1: Søk etter adresse
 
-![Sekvensdiagram 1](Sequence-SøkeEtterAdresse.drawio.png)
+```mermaid
+sequenceDiagram
+    actor Bruker
+    participant UI
+    participant Map
+    participant SearchBar
 
+    Bruker->>UI: søker etter adresse
+    UI->>SearchBar: handleSuggestionClick()
+    SearchBar-->>Map: onLocationSelected(point)
+    Map->>Map: setNewPoint(point)
+    Map->>Map: clearScreen()
+    Map->>Map: mapEaseTo(point, duration=200, latOffset)
+    Map->>UI: viser adressen på kartet
+```
 **Beskrivelse**: Brukeren søker etter en adresse. Systemet viser den på kartet.  
 **Pre-betingelser**: Applikasjonen er åpen med internettilkobling  
 **Post-betingelser**: Adressen vises på kartet  
@@ -92,7 +105,24 @@ Brukeren kan:
 
 ### Use Case 2: Velg bygg og vis polygon
 
-![sekvensdiagarm-2](Sequence-Polygon.drawio.png)
+```mermaid
+sequenceDiagram
+    actor Bruker
+    participant UI
+    participant Map
+    participant HomeViewModel
+    participant MapMath
+
+    Bruker->>UI: trykker på bygget
+    UI->>Map: onMapClicked(point)
+    Map->>Map: loadHouse(point, onComplete)
+    Map->>Map: queryBuildingCoordinatesAt(point)
+    Map->>HomeViewModel: setPolygon(cleanedPolygon)
+    HomeViewModel->>MapMath: calculatePolygonArea(cleanedPolygon)
+    MapMath-->>HomeViewModel: return area
+    HomeViewModel->>Map: setArea(area)
+    Map->>UI: viser polygon over bygget (via PolygonAnnotation)
+```
 
 **Beskrivelse**: Brukeren trykker på bygg på kartet. Systemet viser polygon.  
 **Pre-betingelser**: Kart er lastet inn  
@@ -107,7 +137,37 @@ Brukeren kan:
 
 ### Use Case 3: Søke med hele adressen
 
-![Sekvensdiagram 3](Sequence-SøkeMedHeleAdressen.drawio.png)
+```mermaid
+sequenceDiagram
+actor Bruker
+participant SearchBar
+participant UI
+participant Map
+participant HomeViewModel
+participant MapMath
+participant ForstRepository
+participant ReverseGeoCode
+
+    Bruker ->> SearchBar: skriver hele adressen
+    SearchBar ->> UI: handleSuggestionClick()
+    UI ->> Map: onLocationSelected(point)
+    Map ->> Map:setNewPoint(point)
+    Map ->> Map: mapEaseTo(point, duration=200, latOffset)
+    Map ->> HomeViewModel: setGeoAddress(point)
+    HomeViewModel ->> ReverseGeoCode: getAddressOfPoint(point, callback)
+    ReverseGeoCode ->>HomeViewModel: setAddress(address)
+    Map ->> Map: loadHouse(point, onComplete)
+    Map ->> Map: queryBuildingCoordinatesAt(point)
+    Map ->> HomeViewModel: setPolygon(cleanedPolygon)
+    Map ->> HomeViewModel: setCoordinates(longitude, latitude)
+    Map ->> MapMath: calculatePolygonArea(cleanedPolygon)
+    MapMath -->> Map: return area
+    Map ->> HomeViewModel: setArea(area)
+    Map ->> HomeViewModel: updateWeatherData()
+    HomeViewModel ->> ForstRepository: getWeatherByCoordinates(longitude, latitude, referenceTime)
+    ForstRepository -->> HomeViewModel: return DisplayWeather
+    HomeViewModel ->> UI: viser polygon over bygget og været i WeatherIcon
+```
 
 **Beskrivelse**: Full adresse gir både posisjon og værdata  
 **Pre-betingelser**: Applikasjonen har internettilkobling  
@@ -122,7 +182,27 @@ Brukeren kan:
 
 ### Use Case 4: Kalkuler og vis årlig produksjon
 
-![Sekvensdiagram 4](Sequence-Kalkuler&ÅrligProduksjon.drawio.png)
+```mermaid
+sequenceDiagram
+actor Bruker
+participant UI
+participant HomeViewModel
+participant PgvisRespository
+participant ProductionCalc
+
+    Bruker->>UI: klikker på knapp for å kalkulere
+    UI->>HomeViewModel: clearSolarData()
+    UI->>HomeViewModel: updateAllSolarData()
+    HomeViewModel->>HomeViewModel: updatedSolarRadiation()
+    HomeViewModel->>PgvisRespository: getRadiationData(lat, lon, month, incline, direction)
+    PgvisRespository-->>HomeViewModel: return DailyProfile
+    HomeViewModel->>HomeViewModel: updatedKwhMonthly()
+    HomeViewModel->>PgvisRespository: getMonthlyKwh(lat, lon, incline, direction, peakPower, pvTech)
+    PgvisRespository-->>HomeViewModel: return MonthlyKwhData
+    UI->>ProductionCalc: calculateWithCoverage(kwhMonthlyData, weatherData)
+    ProductionCalc-->>HomeViewModel: return ProductionCalculation
+    HomeViewModel->>UI: viser årlig produksjon
+```
 
 **Beskrivelse**: Brukeren beregner produksjon for valgt bygg og konfigurasjon  
 **Pre-betingelser**: Bygg er valgt og konfigurasjon er satt  

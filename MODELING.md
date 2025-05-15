@@ -92,23 +92,7 @@ Brukeren kan:
 
 ### Use Case 2: Velg bygg og vis polygon
 
-sequenceDiagram
-    actor Bruker
-    participant UI
-    participant Map
-    participant HomeViewModel
-    participant MapMath
-
-    Bruker->>UI: trykker på bygget
-    UI->>Map: onMapClicked(point)
-    Map->>Map: loadHouse(point, onComplete)
-    Map->>Map: queryBuildingCoordinatesAt(point)
-    Map->>HomeViewModel: setPolygon(cleanedPolygon)
-    Map->>MapMath: calculatePolygonArea(cleanedPolygon)
-    MapMath-->>HomeViewModel: return area
-    Map->>HomeViewModel: setArea(area)
-    Map->>UI: viser polygon over bygget (via PolygonAnnotation)
-
+![sekvensdiagarm-2](Sequence-Polygon.drawio.png)
 
 **Beskrivelse**: Brukeren trykker på bygg på kartet. Systemet viser polygon.  
 **Pre-betingelser**: Kart er lastet inn  

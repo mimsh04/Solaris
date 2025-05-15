@@ -10,7 +10,7 @@ Vi valgte følgende diagrammer for å modellere applikasjonen:
 
 ## Use Case
 
-![Use Case Diagram](UseCase.drawio.png)
+![Use Case Diagram](diagrams/UseCase.drawio.png)
 
 **Navn**: Interaksjon med solcelleberegningsapplikasjon  
 **Primæraktør**: Bruker  
@@ -135,7 +135,7 @@ sequenceDiagram
 
 ---
 
-### Use Case 3: Søke med hele adressen
+#### Use Case 3: Søke med hele adressen
 
 ```mermaid
 sequenceDiagram
@@ -167,6 +167,99 @@ participant ReverseGeoCode
     HomeViewModel ->> ForstRepository: getWeatherByCoordinates(longitude, latitude, referenceTime)
     ForstRepository -->> HomeViewModel: return DisplayWeather
     HomeViewModel ->> UI: viser polygon over bygget og været i WeatherIcon
+```
+
+##### Klassediagram
+```mermaid
+
+classDiagram
+    %% Classes
+    class MainActivity {
+        - requestPermissionLauncher: ActivityResult
+        - snackbarHostState: SnackbarHostViewState
+        - homeViewModel: HomeViewModel
+        - projectViewModel: ProjectViewModel
+        + requestLocationPermissions()
+        + onCreate(savedInstanceState: Bundle?)
+    }
+
+    class HomeViewModel {
+        - apiDataFlow: StateFlow<ApiData>
+        - configFlow: StateFlow<Config>
+        + setCoordinates()
+        + setAddress()
+        + setGeoAddress()
+        + clearSolarData()
+        + updateAllSolarData()
+        + setIncline()
+        + setDirection()
+        + setArea()
+        + setSelectedSolarPanel()
+        + setPolygon()
+        + clearApiData()
+        + updateApiData()
+        + updateWeatherData()
+    }
+
+    class DisplayWeather {
+        val month: String
+        val temp: String
+        val snow: String
+        val cloud: String
+    }
+
+    class Config {
+        var longitude: Double = 0.0
+        var latitude: Double = 0.0
+        var incline: Float = 35f
+        var direction: Float = 0f
+        var area: Float = 1f
+        var polygon: List<?>? = null
+        var bottomSheetIntent: String = "medium"
+        var address: String = ""
+        var selectedPanelModel: SolarPanelModel = defaultPanels[0]
+    }
+
+    class ApiData {
+        val sunRadiation: List<DailyProfile> = emptyList()
+        val weatherData: List<DisplayWeather> = emptyList()
+        val kwhMonthlyData: List<KwhMonthlyResponse.MonthlyKwhData> = emptyList()
+        val isLoading: Boolean = false
+    }
+
+    class FrostDataSource {
+        - client: HttpClient(CIO)
+        + getWeatherData()
+        + getNearestStation()
+    }
+
+    class FrostRepository {
+        - dataSource: FrostDataSource
+        + get1yearReferenceTime()
+        + getWeatherByCoordinates()
+    }
+
+    class PgvisDataSource {
+        - ktorHttpClient: HttpClient(CIO)
+        + getDailyRadiation()
+        + getMonthlyKwh()
+    }
+
+    class PgvisRepository {
+        - dataSource: PgvisDataSource
+        + getDailyRadiation()
+        + getMonthlyKwh()
+    }
+
+    %% Relationships with multiplicity
+    MainActivity "1" --> "1" HomeViewModel
+    HomeViewModel "1" --> "1" FrostRepository
+    HomeViewModel "1" --> "1" PgvisRepository
+    HomeViewModel "1" --> "1" Config
+    HomeViewModel "1" --> "1" ApiData
+    FrostRepository "1" --> "1" FrostDataSource
+    PgvisRepository "1" --> "1" PgvisDataSource
+    ApiData "1" --> "0..*" DisplayWeather
 ```
 
 **Beskrivelse**: Full adresse gir både posisjon og værdata  
@@ -214,10 +307,11 @@ participant ProductionCalc
 3. Systemet kalkulerer produksjon  
 4. Resultat vises
 
+
 ---
 
 ## Aktivitetsdiagram
 
-![Aktivitetsdiagram](Aktivitetsdiagram.drawio.png)
+![Aktivitetsdiagram](diagrams/Aktivitetsdiagram.drawio.png)
 
 **Beskrivelse**: Viser prosessflyt fra søk til visning av resultater i applikasjonen.

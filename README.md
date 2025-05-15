@@ -28,5 +28,15 @@ Biblioteker:
 •	Room: For lokal database
 •	Vico: For diagrammer som viser solenergi og strømproduksjon 
 
+Kilder:
+
+Installasjonsguide:
+Solcelle. (2023, 10). Solcelle. Retrieved from Montering av solcellepanel: https://solcelle.no/montering-av-solcellepanel
+
+FAQ: 
+Aalbergh, G. (2025, 30. januar). Case 3: Installasjon av solcellepaneler : https://in2000.met.no/2025/3-solceller
+informasjon om solcellepaneler er hentet fra: https://www.solsmart.no/pris/solcellepanel
+
+
 
 

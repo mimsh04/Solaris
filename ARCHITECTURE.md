@@ -11,9 +11,9 @@ Applikasjonen benytter en moderne Android-arkitektur basert på prinsipper fra [
 Arkitekturen legger stor vekt på anerkjente objektorienterte prinsipper og designmønstre for å bygge en robust og vedlikeholdbar kodebase.
 
 *   **MVVM (Model-View-ViewModel)**: Som nevnt er MVVM kjernen. Dette mønsteret separerer ansvarsområder tydelig:
-    *   **View (UI-laget)**: Håndterer presentasjon og brukerinteraksjon.
-    *   **ViewModel**: Forbereder og holder data for UI, er livssyklusbevisst, og eksponerer data via observerbare kilder (f.eks. StateFlow).
-    *   **Model (Repository/Datasource)**: Abstraherer datakilder og logikk.
+    *   **View-laget (UI)**: Ansvarlig for å vise data på skjermen og håndtere brukerinteraksjon. Dette laget består av og kommer fra MainActivity som inneholder NavBar for navigering mellom screens og logikk for å håndtere de forskjellige screensa som inneholder Jetpack Compose Compasable UI-elementer.
+    *   **ViewModel-laget**: Holder og forbereder data for UI-laget. ViewModel overlever konfigurasjonsendringer og er uavhengig av View-livssyklusen. Den eksponerer data via observerbare datakilder (f.eks. StateFlow) og håndterer brukerhandlinger.
+    *   **Model-laget (Repository/Datasource)**: Abstraherer datakilder, inneholder matematiske kalkulasjoenr og logikk. Repositories henter data fra ulike kilder (APIer) og leverer det til ViewModels.
 *   **UDF (Unidirectional Data Flow)**: Komplementerer MVVM ved å sikre at data flyter i én retning. Dette gir forutsigbar tilstandshåndtering og gjør det enklere å feilsøke. Hendelser går fra UI til ViewModel, som kan oppdatere tilstanden via model laget tilbake i ViewModel, som deretter observeres av UI-laget.
 
 *   **Lav Kobling**:
@@ -28,9 +28,7 @@ Dette bidrar til et system som er lettere å forstå, vedlikeholde, teste og vid
 
 Arkitekturen er lagdelt og består av:
 
-*   **UI-laget (View)**: Ansvarlig for å vise data på skjermen og håndtere brukerinteraksjon. Dette laget består av og kommer fra MainActivity som inneholder NavBar for navigering mellom screens og logikk for å håndtere de forskjellige screensa som inneholder Jetpack Compose Compasable UI-elementer.
-*   **ViewModel-laget**: Holder og forbereder data for UI-laget. ViewModel overlever konfigurasjonsendringer og er uavhengig av View-livssyklusen. Den eksponerer data via observerbare datakilder (f.eks. StateFlow) og håndterer brukerhandlinger.
-*   **Repository-laget/Datasource (Model)**: Abstraherer datakilder, inneholder matematiske kalkulasjoenr og logikk. Repositories henter data fra ulike kilder (APIer) og leverer det til ViewModels.
+
 
 ## 3. Prosjektstruktur
 

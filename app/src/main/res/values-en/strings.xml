@@ -1,0 +1,129 @@
+<resources>
+    <!-- App Metadata -->
+    <string name="app_name">Solaris</string>
+    <string name="company_name_otovo">Otovo</string>
+
+    <!-- Actions -->
+    <string name="action_remove_project">Remove project</string>
+    <string name="action_save_project">Save project</string>
+
+    <!-- Language Options -->
+    <string name="language_norwegian">Norwegian</string>
+    <string name="language_english">English</string>
+
+    <!-- Navigation Labels -->
+    <string name="nav_home">Home</string>
+    <string name="nav_saved">Saved</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Home Screen -->
+    <string name="home_welcome_message">Welcome!</string>
+    <string name="home_start_intro">To get started, search for an address in the field above and click on the building that will have solar panels.</string>
+    <string name="home_button_calculate_production">Calculate annual production</string>
+    <string name="home_result_annual_production">Annual result:</string>
+    <string name="home_label_production">Production:</string>
+    <string name="home_estimated_savings">Estimated savings:</string>
+    <string name="home_expected_operation_off_grid">What can you power with the expected production on a cabin not connected to the grid?</string>
+    <string name="home_production_close_button">Close</string>
+    <string name="home_average_sun_radiation">Average monthly solar radiation</string>
+    <string name="home_production_with_weather_data">Production with weather data</string>
+    <string name="home_potential_production">Potential production</string>
+    <string name="home_production_after_loss">Production after calculated loss</string>
+    <string name="home_loss_cloud_coverage">Loss to cloud cover</string>
+    <string name="home_loss_snowfall">Loss to snowfall</string>
+    <string name="home_production_unknown">Unknown</string>
+    <string name="home_choose_solar_panel">Choose solar panel</string>
+    <string name="home_chosen_address">Selected address:</string>
+    <string name="home_angle_input">Angle (0–90°)</string>
+    <string name="home_direction_input">Direction (-180–180°)</string>
+    <string name="home_effect_and_price">Efficiency: %.1f%%, Price: %.2f kr/m²</string>
+    <string name="search_address_input">Search for address</string>
+
+    <!-- Saved Projects -->
+    <string name="saved_projects_label">Saved projects</string>
+    <string name="saved_project_address_label">Address: %1$s</string>
+    <string name="saved_projects_empty_message">When you save a project, it will be displayed here.</string>
+    <!-- Delete Dialog -->
+    <string name="delete_saved_project">Delete project</string>
+    <string name="delete_project_confirmation">Are you sure you want to delete this project?</string>
+    <string name="delete_project_confirmation_label">Delete</string>
+    <string name="delete_project_confirmation_cancel">Cancel</string>
+
+    <!-- Settings -->
+    <string name="settings_screen_title">Settings</string>
+    <string name="setting_dark_theme">Dark theme</string>
+
+    <!-- Installation Guide -->
+    <string name="installation_guide_title">Solar Panel Guide</string>
+    <string name="installation_label_guide">Installation\nGuide</string>
+    <string name="installation_self_install_subtitle">Can you install solar panels yourself?</string>
+    <string name="installation_self_install_description">You cannot install solar panels yourself, except in certain cases. We strongly recommend using professionals for larger solar power installations for homes and cabins connected to the grid. This ensures that the installation is done correctly, without fire and health hazards. You can also feel safe that the solar cells are functioning optimally.</string>
+    <string name="installation_when_self_install_subtitle">When can you install yourself?</string>
+    <string name="installation_self_install_conditions">1. It is a standalone solar power installation\n2. You are not connected to the grid\n3. The solar power installation is under 50V and 200VA\n4. You do not wish to apply for Enova support</string>
+    <string name="installation_mounting_steps_subtitle">Mounting – step by step</string>
+    <string name="installation_step1_title">1. Assess the possibility of a solar power installation</string>
+    <string name="installation_step1_description">Before installing solar panels, check if it is allowed in the municipality. Some places require an application or have restrictions. Also, make sure the roof is in good condition and has good solar exposure. A solar panel dealer can help you with the assessment.</string>
+    <string name="installation_step2_title">2. Choose a dealer and installer</string>
+    <string name="installation_step2_description">Choose a dealer and installer who collaborate for a smooth process. The dealer will help you find the right solar power installation, and most work with certified installers. This reduces the risk of misunderstandings and conflicts.</string>
+    <string name="installation_step3_title">3. Mounting the panels</string>
+    <string name="installation_step3_description">The installer first mounts suitable fixtures on the roof, adapted to the material and slope. Then the solar panels are securely fastened, so they can withstand both strong wind and heavy snow.</string>
+    <string name="installation_step4_title">4. Safety and connection</string>
+    <string name="installation_step4_description">The inverter makes the solar energy from your panels usable in your home\'s electrical outlets. The installer places the inverter in a suitable location and pulls cables from the panels, which are then connected to the inverter.</string>
+
+    <!-- FAQs -->
+    <string name="faqs_label">FAQs</string>
+    <string name="faq_dialog_title">FAQ</string>
+    <string name="faq_dialog_close_button">Close</string>
+    <string name="faq_have_question_text">Do you have any questions?</string>
+    <string name="faq1_question">Why is this app being developed?</string>
+    <string name="faq1_answer">The app aims to help users calculate the expected electricity production from solar panels based on local climate data, roof conditions, and solar cell efficiency.</string>
+    <string name="faq2_question">How can solar cells work effectively in Norway?</string>
+    <string name="faq2_answer">Although one might think that solar cells work best in warm climates, they are most effective at around -5°C and perform poorly at temperatures above 25°C. In Southern Norway, solar cells can actually produce more energy than in Africa, as long as there is no snow cover.</string>
+    <string name="faq3_question">Can I get support for a solar panel installation?</string>
+    <string name="faq3_answer">Enova offers support of up to NOK 32,500 for electricity production that can be fed back into the grid. It is also possible to get support for holiday homes.</string>
+    <string name="faq4_question">Can I rely on the calculations in the app?</string>
+    <string name="faq4_answer">The app is based on available data and documented calculation models, but the values may differ from actual conditions. It is always recommended to compare the results with multiple sources.</string>
+    <string name="faq5_question">What is the difference between the different panels?</string>
+    <string name="faq5_answer">Solar panel plates and solar roof tiles are the two most common types of solar cells in Norway. Solar panel plates are mounted on existing roofs and cost between NOK 2,500 and NOK 3,000 per m². They provide slightly more efficiency per panel than solar roof tiles but often cover a smaller part of the roof. Solar roof tiles replace regular roof tiles and cost between NOK 4,000 and NOK 5,000 per m². They are particularly beneficial for roof renovations, as they function both as a roof and as solar cells, which can result in total cost savings. They are also known for a more aesthetic and discreet appearance.</string>
+
+    <!-- Miscellaneous -->
+    <string name="recommended_products_label">Recommended products</string>
+
+    <!-- Weather -->
+    <string name="weather_data_unavailable_description">Weather data unknown.\n\nCould not retrieve weather data from this area.\n\nTry choosing a different address.</string>
+    <string name="temperature_label">Temperature: %1$s</string>
+    <string name="snow_label">Snow: %1$s</string>
+    <string name="cloud_coverage_label">Cloud Coverage: %1$s</string>
+    <string name="weather_label_close">Close</string>
+    <string name="monthly_weather_average_description">Average weather for the month</string>
+    <string name="credits_label">Credits</string>
+    <string name="snow_cloud_icon_attribution">Snow cloud icon by Freepik from Flaticon (www.flaticon.com)</string>
+    <string name="unknown_weather_icon_attribution">Unknown weather icon by Vecteezy (www.vecteezy.com)</string>
+    <string name="cloud_icon_attribution">Cloud icon from CleanPNG (www.cleanpng.com)</string>
+    <string name="sun_icon_attribution">Sun icon by Freepik from Flaticon (www.flaticon.com)</string>
+
+    <!-- Charts -->
+    <string name="loading_data_message">Loading data and calculating…</string>
+    <string name="standard_solar_panel_type">Solcelleplater</string>
+    <string name="premium_solar_panel_type">Solcelletakstein</string>
+
+    <!-- ProductionInfoContent -->
+    <string name="production_info_zero">0 kWh/year (approx. 0 kWh/day)\n\n- No energy produced\n\n→ No electrical cabin usage</string>
+    <string name="production_info_high">%1$d kWh/year (approx. %2$d kWh/day)\n\n- Larger refrigerator/freezer\n- Small dishwasher\n- Small water heater\n- Washing machine/dryer\n- Electric vehicle charging (light use)\n- Larger power tools\n- Electric heating (partial)\n- Charging mobile phones and tablets\n- Fully equipped household\n\n→ Fully electric cabin with sensible energy use</string>
+    <string name="production_info_medium">%1$d kWh/year (approx. %2$d kWh/day)\n\n- Larger refrigerator/freezer\n- Coffee maker, microwave, kettle\n- Small dishwasher\n- Power tools\n- Washing machine/dryer (planned use)\n- Charging mobile phones and tablets\n\n→ Near year-round use, but not full freedom</string>
+    <string name="production_info_low">%1$d kWh/year (approx. %2$d kWh/day)\n\n- Smaller refrigerator/freezer\n- Coffee maker, microwave, kettle\n- Small dishwasher\n- Power tools (short-term use)\n- Charging mobile phones and tablets\n\n→ Comfortable cabin use, but still limited</string>
+
+    <!-- Months charts -->
+    <string name="jan">January</string>
+    <string name="feb">February</string>
+    <string name="mar">March</string>
+    <string name="apr">April</string>
+    <string name="may">May</string>
+    <string name="jun">June</string>
+    <string name="jul">July</string>
+    <string name="aug">August</string>
+    <string name="sept">September</string>
+    <string name="oct">October</string>
+    <string name="nov">November</string>
+    <string name="des">Desember</string>
+</resources>

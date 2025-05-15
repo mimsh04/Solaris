@@ -13,7 +13,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
@@ -26,21 +28,34 @@ import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
 import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
+import in2000.team42.R
 import in2000.team42.data.pgvis.model.DailyProfile
-
-private val monthNames = listOf(
-    "Januar", "Februar", "Mars", "April", "Mai", "Juni",
-    "Juli", "August", "September", "Oktober", "November", "Desember"
-)
-private fun formatMonthTime (dailyProfile: DailyProfile ) =
-
-    "${dailyProfile.time} ${monthNames[dailyProfile.month!! - 1]}"
-
 
 @Composable
 fun SolarRadiationChart(modifier: Modifier = Modifier, solData: List<DailyProfile>) {
     val modelProducer = remember { CartesianChartModelProducer() }
     val lineColor = Color(0xffd4ac3f)
+
+    val context = LocalContext.current
+
+    val monthNames = remember {
+        listOf(
+            context.getString(R.string.jan),
+            context.getString(R.string.feb),
+            context.getString(R.string.mar),
+            context.getString(R.string.apr),
+            context.getString(R.string.may),
+            context.getString(R.string.jun),
+            context.getString(R.string.jul),
+            context.getString(R.string.aug),
+            context.getString(R.string.sept),
+            context.getString(R.string.oct),
+            context.getString(R.string.nov),
+            context.getString(R.string.des)
+        )
+    }
+
+    // Update the chart model when solData changes
     LaunchedEffect(solData) {
         modelProducer.runTransaction {
             lineSeries {
@@ -51,50 +66,45 @@ fun SolarRadiationChart(modifier: Modifier = Modifier, solData: List<DailyProfil
             }
         }
     }
+
     Column {
-        Box (
-            modifier = Modifier
-                .fillMaxWidth(),
+        Box(
+            modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-            Text("Gjennomsnittlig solstråling hver måned",
+            Text(
+                stringResource(R.string.home_average_sun_radiation),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(top = 12.dp)
             )
         }
 
         CartesianChartHost(
-            chart =
-                rememberCartesianChart(
-                    rememberLineCartesianLayer(
-                        pointSpacing = 10.dp,
-                        lineProvider = LineCartesianLayer.LineProvider.series(
-                            LineCartesianLayer.rememberLine(
-                                fill = LineCartesianLayer.LineFill.single(fill(lineColor)),
-                            )
-                        ),
-                    ),
-                    startAxis = VerticalAxis.rememberStart(
-                        valueFormatter =
-                            { _, value, _ ->
-                                "${value.toInt()} kWh/m²"
-                            }
-                    ),
-                    bottomAxis = HorizontalAxis.rememberBottom(
-                        itemPlacer = remember { HorizontalAxis.ItemPlacer.aligned(
-                            spacing = {12}
-                        ) },
-                        valueFormatter =
-                            { _, value, _ ->
-                                formatMonthTime(solData[value.toInt()])
-                            }
-                        ,
+            chart = rememberCartesianChart(
+                rememberLineCartesianLayer(
+                    pointSpacing = 10.dp,
+                    lineProvider = LineCartesianLayer.LineProvider.series(
+                        LineCartesianLayer.rememberLine(
+                            fill = LineCartesianLayer.LineFill.single(fill(lineColor)),
+                        )
                     ),
                 ),
+                startAxis = VerticalAxis.rememberStart(
+                    valueFormatter = { _, value, _ ->
+                        "${value.toInt()} kWh/m²"
+                    }
+                ),
+                bottomAxis = HorizontalAxis.rememberBottom(
+                    itemPlacer = remember { HorizontalAxis.ItemPlacer.aligned(spacing = { 12 }) },
+                    valueFormatter = { _, value, _ ->
+                        val dailyProfile = solData[value.toInt()]
+                        "${dailyProfile.time} ${monthNames[dailyProfile.month!! - 1]}"
+                    }
+                ),
+            ),
             modelProducer = modelProducer,
             modifier = modifier,
         )
         Spacer(modifier = Modifier.padding(6.dp))
     }
-
 }

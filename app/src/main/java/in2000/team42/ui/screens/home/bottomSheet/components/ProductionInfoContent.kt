@@ -5,57 +5,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.ui.res.stringResource
+import in2000.team42.R
 
 @Composable
 fun ProductionInfoContent(yearlyKwh: Int) {
     val infoText = when {
-
-        yearlyKwh == 0 -> """
-            0 kWh/år (ca. 0. kWh/dag)
-            
-            - Ingen energi produsert
-                        
-            → Ingen elektrisk hyttebruk
-        """.trimIndent()
-        yearlyKwh >= 10000 -> """
-            $yearlyKwh kWh/år (ca. ${(yearlyKwh / 365.0).toInt()} kWh/dag)
-            
-            - Større kjøleskap/fryser
-            - Liten oppvaskmaskin
-            - Varmtvannstank (liten)
-            - Vaskemaskin/tørketrommel
-            - Elbillading (lett bruk)
-            - Større strømverktøy
-            - Elektrisk oppvarming (delvis)
-            - Lade mobiltelefoner og nettbrett
-            - Fullt utstyrt husholdning
-            
-            → Fullt elektrisk hytte, med fornuftig energibruk
-        """.trimIndent()
-        yearlyKwh in 5000..9999 -> """
-            $yearlyKwh kWh/år (ca. ${(yearlyKwh / 365.0).toInt()} kWh/dag)
-            
-            - Større kjøleskap/fryser
-            - Kaffetrakter, mikrobølgeovn, vannkoker
-            - Liten oppvaskmaskin
-            - Strømverktøy 
-            - Vaskemaskin/tørketrommel (planlagt bruk)
-            - Lade mobiltelefoner og nettbrett
-            
-            → Nær helårsbruk, men ikke full frihet
-        """.trimIndent()
-        else -> """
-            $yearlyKwh kWh/år (ca. ${(yearlyKwh / 365.0).toInt()} kWh/dag)
-            
-            - Mindre kjøleskap/fryser
-            - Kaffetrakter, mikrobølgeovn, vannkoker
-            - Liten oppvaskmaskin
-            - Strømverktøy (kortvarig)
-            - Lade mobiltelefoner og nettbrett
-            
-            → Komfortabel hyttebruk, men fortsatt begrenset
-        """.trimIndent()
-
+        yearlyKwh == 0 -> stringResource(R.string.production_info_zero)
+        yearlyKwh >= 10000 -> stringResource(
+            R.string.production_info_high,
+            yearlyKwh,
+            (yearlyKwh / 365.0).toInt()
+        )
+        yearlyKwh in 5000..9999 -> stringResource(
+            R.string.production_info_medium,
+            yearlyKwh,
+            (yearlyKwh / 365.0).toInt()
+        )
+        else -> stringResource(
+            R.string.production_info_low,
+            yearlyKwh,
+            (yearlyKwh / 365.0).toInt()
+        )
     }
 
     Text(

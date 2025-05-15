@@ -50,8 +50,8 @@ fun SaveButton(
                 tint = LocalContentColor.current
             )
             Text(
-                text = if (isSaved) stringResource(R.string.remove_project)
-                else stringResource(R.string.save_project)
+                text = if (isSaved) stringResource(R.string.action_remove_project)
+                else stringResource(R.string.action_save_project)
             )
         }
     }

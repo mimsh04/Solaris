@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
@@ -25,17 +26,13 @@ import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
 import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
+import in2000.team42.R
 import in2000.team42.data.pgvis.model.KwhMonthlyResponse
 import in2000.team42.data.productionCalculation.calculateWithCoverage
 import in2000.team42.ui.screens.home.DisplayWeather
 
-private val monthNames = listOf(
-    "Januar", "Februar", "Mars", "April", "Mai", "Juni",
-    "Juli", "August", "September", "Oktober", "November", "Desember"
-)
-
 @Composable
-fun PowerProductionChart (
+fun PowerProductionChart(
     kwhMonthlyData: List<KwhMonthlyResponse.MonthlyKwhData>,
     weatherData: List<DisplayWeather>,
     modifier: Modifier = Modifier
@@ -47,6 +44,22 @@ fun PowerProductionChart (
         Color(0xff73e8dc),
         Color(0xfff6b93b)
     )
+
+    val monthNames = listOf(
+        stringResource(R.string.jan),
+        stringResource(R.string.feb),
+        stringResource(R.string.mar),
+        stringResource(R.string.apr),
+        stringResource(R.string.may),
+        stringResource(R.string.jun),
+        stringResource(R.string.jul),
+        stringResource(R.string.aug),
+        stringResource(R.string.sept),
+        stringResource(R.string.oct),
+        stringResource(R.string.nov),
+        stringResource(R.string.des)
+    ).map { it.toString() }
+
     LaunchedEffect(kwhMonthlyData, weatherData) {
         val utregnetData = calculateWithCoverage(kwhMonthlyData, weatherData)
         modelProducer.runTransaction {
@@ -77,12 +90,13 @@ fun PowerProductionChart (
         }
     }
     Column {
-        Box (
+        Box(
             modifier = Modifier
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-            Text("Produksjon med værdata",
+            Text(
+                stringResource(R.string.home_production_with_weather_data),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(top = 12.dp)
             )
@@ -90,58 +104,55 @@ fun PowerProductionChart (
 
         PowerProductionLegend(colors)
         CartesianChartHost(
-            chart =
-                rememberCartesianChart(
-                    // This is very ugly but for some reason i cant make a list of the lines
-                    rememberLineCartesianLayer(
-                        lineProvider = LineCartesianLayer.LineProvider.series(
-                            LineCartesianLayer.rememberLine(
-                                fill = LineCartesianLayer.LineFill.single(fill(colors[0])),
-                            )
-                        ),
-                    ),
-                    rememberLineCartesianLayer(
-                        lineProvider = LineCartesianLayer.LineProvider.series(
-                            LineCartesianLayer.rememberLine(
-                                fill = LineCartesianLayer.LineFill.single(fill(colors[1])),
-                            )
-                        ),
-                    ),
-                    rememberLineCartesianLayer(
-                        lineProvider = LineCartesianLayer.LineProvider.series(
-                            LineCartesianLayer.rememberLine(
-                                fill = LineCartesianLayer.LineFill.single(fill(colors[2])),
-                            )
-                        ),
-                    ),
-                    rememberLineCartesianLayer(
-                        lineProvider = LineCartesianLayer.LineProvider.series(
-                            LineCartesianLayer.rememberLine(
-                                fill = LineCartesianLayer.LineFill.single(fill(colors[3])),
-                            )
-                        ),
-                    ),
-                    startAxis = VerticalAxis.rememberStart(
-                        valueFormatter =
-                            { _, value, _ ->
-                                "${value.toInt()} kWh"
-                            }
-                    ),
-                    bottomAxis = HorizontalAxis.rememberBottom(
-                        itemPlacer = remember { HorizontalAxis.ItemPlacer.aligned(
-                            spacing = { 1 }
-                        ) },
-                        valueFormatter =
-                            { _, value, _ ->
-                                monthNames[value.toInt() - 1]
-                            },
-
-                        labelRotationDegrees = 90f
+            chart = rememberCartesianChart(
+                // This is very ugly but for some reason i cant make a list of the lines
+                rememberLineCartesianLayer(
+                    lineProvider = LineCartesianLayer.LineProvider.series(
+                        LineCartesianLayer.rememberLine(
+                            fill = LineCartesianLayer.LineFill.single(fill(colors[0])),
+                        )
                     ),
                 ),
+                rememberLineCartesianLayer(
+                    lineProvider = LineCartesianLayer.LineProvider.series(
+                        LineCartesianLayer.rememberLine(
+                            fill = LineCartesianLayer.LineFill.single(fill(colors[1])),
+                        )
+                    ),
+                ),
+                rememberLineCartesianLayer(
+                    lineProvider = LineCartesianLayer.LineProvider.series(
+                        LineCartesianLayer.rememberLine(
+                            fill = LineCartesianLayer.LineFill.single(fill(colors[2])),
+                        )
+                    ),
+                ),
+                rememberLineCartesianLayer(
+                    lineProvider = LineCartesianLayer.LineProvider.series(
+                        LineCartesianLayer.rememberLine(
+                            fill = LineCartesianLayer.LineFill.single(fill(colors[3])),
+                        )
+                    ),
+                ),
+                startAxis = VerticalAxis.rememberStart(
+                    valueFormatter = { _, value, _ ->
+                        "${value.toInt()} kWh"
+                    }
+                ),
+                bottomAxis = HorizontalAxis.rememberBottom(
+                    itemPlacer = remember {
+                        HorizontalAxis.ItemPlacer.aligned(
+                            spacing = { 1 }
+                        )
+                    },
+                    valueFormatter = { _, value, _ ->
+                        monthNames[value.toInt() - 1]
+                    },
+                    labelRotationDegrees = 90f
+                ),
+            ),
             modelProducer = modelProducer,
             modifier = modifier,
         )
     }
-
 }

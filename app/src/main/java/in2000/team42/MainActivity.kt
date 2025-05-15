@@ -7,39 +7,43 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import in2000.team42.data.saved.SavedProjectDatabase
 import in2000.team42.theme.IN2000_team42Theme
+import in2000.team42.theme.ThemeManager
 import in2000.team42.ui.navbar.NavBar
 import in2000.team42.ui.screens.Screen
 import in2000.team42.ui.screens.home.HomeScreen
+import in2000.team42.ui.screens.settings.SettingsScreen
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import in2000.team42.ui.screens.home.HomeViewModel
 import in2000.team42.ui.screens.saved.SavedScreen
 import in2000.team42.ui.screens.saved.project.ProjectViewModel
-import in2000.team42.ui.screens.settings.SettingsScreen
 import in2000.team42.ui.screens.settings.guide.InstallationScreen
+import in2000.team42.utils.LocalizationManager
 import in2000.team42.utils.NetworkCheck
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-
 
 class MainActivity : ComponentActivity() {
     private val requestPermissionLauncher = registerForActivityResult(
@@ -61,14 +65,20 @@ class MainActivity : ComponentActivity() {
         requestLocationPermissions()
         enableEdgeToEdge()
         SavedProjectDatabase.initialize(applicationContext)
+        ThemeManager.initialize(applicationContext)
         setContent {
             val navController = rememberNavController()
+            // Initialize language state using LocalizationManager
+            var language by remember { mutableStateOf(LocalizationManager.getSelectedLanguage(this)) }
+            // Create localized context using LocalizationManager
+            val localizedContext = remember(language) { LocalizationManager.setLocale(this, language) }
 
             val homeViewModel: HomeViewModel = viewModel()
             val projectViewModel: ProjectViewModel = viewModel()
 
             val snackbarHostState = remember { SnackbarHostState() }
             val scope = rememberCoroutineScope()
+            val isDarkTheme = ThemeManager.isDarkTheme().value
 
             // Observes the network status and launches a snack bar if the user is offline
             LaunchedEffect(Unit) {
@@ -90,64 +100,70 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            IN2000_team42Theme {
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    bottomBar = { NavBar(navController) },
-                    containerColor = MaterialTheme.colorScheme.background,
-                    snackbarHost = {SnackbarHost(snackbarHostState)}
-                ) { innerPadding ->
-                    NavHost(
-                        navController = navController,
-                        startDestination = Screen.Home.route,
-                        enterTransition = { fadeIn()},
-                        exitTransition = { fadeOut() },
-                        popEnterTransition = { EnterTransition.None },
-                        popExitTransition = { ExitTransition.None }
-                    ) {
-                        composable(Screen.Home.route){
-                            BackHandler {
-                                // Do nothing when back is pressed on home screen
+            IN2000_team42Theme(darkTheme = isDarkTheme, dynamicColor = false) {
+                CompositionLocalProvider(LocalContext provides localizedContext) {
+                    Scaffold(
+                        modifier = Modifier.fillMaxSize(),
+                        bottomBar = { NavBar(navController, LocalContext.current) },
+                        containerColor = MaterialTheme.colorScheme.background,
+                        snackbarHost = { SnackbarHost(snackbarHostState) }
+                    ) { innerPadding ->
+                        NavHost(
+                            navController = navController,
+                            startDestination = Screen.Home.route,
+                            enterTransition = { fadeIn() },
+                            exitTransition = { fadeOut() },
+                            popEnterTransition = { androidx.compose.animation.EnterTransition.None },
+                            popExitTransition = { androidx.compose.animation.ExitTransition.None }
+                        ) {
+                            composable(Screen.Home.route) {
+                                BackHandler {
+                                    // Do nothing when back is pressed on home screen
+                                }
+                                HomeScreen(
+                                    viewModel = homeViewModel,
+                                    modifier = Modifier.padding(innerPadding)
+                                )
                             }
-                            HomeScreen(
-                                viewModel = homeViewModel,
-                                modifier = Modifier.padding(innerPadding)
-                            )
-                        }
-                        composable(Screen.Settings.route) {
-                            BackHandler {
-                                navController.navigate(Screen.Home.route) {
-                                    popUpTo(Screen.Home.route) {
-                                        saveState = true
+                            composable(Screen.Settings.route) {
+                                BackHandler {
+                                    navController.navigate(Screen.Home.route) {
+                                        popUpTo(Screen.Home.route) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
                                     }
-                                    launchSingleTop = true
-                                    restoreState = true
                                 }
-                            }
-                            SettingsScreen(navController)
-                        }
-
-                        composable(Screen.Saved.route) {
-                            BackHandler {
-                                navController.navigate(Screen.Home.route) {
-                                    popUpTo(Screen.Home.route) {
-                                        saveState = true
+                                SettingsScreen(
+                                    navController = navController,
+                                    currentLanguage = language,
+                                    onLanguageChanged = { newLanguage ->
+                                        language = newLanguage
                                     }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
+                                )
                             }
-                            SavedScreen(
-                                viewModel = projectViewModel,
-                                onProjectClick = { project ->
-                                    homeViewModel.loadProject(project)
-                                    navController.navigate(Screen.Home.route)
+                            composable(Screen.Saved.route) {
+                                BackHandler {
+                                    navController.navigate(Screen.Home.route) {
+                                        popUpTo(Screen.Home.route) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
                                 }
-                            )
-                        }
-
-                        composable(Screen.Guide.route) {
-                            InstallationScreen(navController)
+                                SavedScreen(
+                                    viewModel = projectViewModel,
+                                    onProjectClick = { project ->
+                                        homeViewModel.loadProject(project)
+                                        navController.navigate(Screen.Home.route)
+                                    }
+                                )
+                            }
+                            composable(Screen.Guide.route) {
+                                InstallationScreen(navController)
+                            }
                         }
                     }
                 }

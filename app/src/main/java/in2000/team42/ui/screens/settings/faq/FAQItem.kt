@@ -1,5 +1,6 @@
 package in2000.team42.ui.screens.settings.faq
 
+import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -9,40 +10,39 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun FAQItem(faq: FAQ){
+fun FAQItem(context: Context, faq: FAQ) {
     var expanded by remember { mutableStateOf(false) }
 
-    Column (
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { expanded = !expanded }
             .padding(vertical = 8.dp)
-    ){
-        Row (
+    ) {
+        Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             Text(
-                text = faq.question,
-                style= MaterialTheme.typography.bodyLarge,
+                text = context.getString(faq.questionResId),
+                style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.weight(1f),
                 fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.onSurface
-
             )
             Text(
-                text= if (expanded)"-" else "+",
+                text = if (expanded) "-" else "+",
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(start= 8.dp)
+                modifier = Modifier.padding(start = 8.dp)
             )
         }
 
-        if (expanded){
+        if (expanded) {
             Text(
-                text = faq.answer,
+                text = context.getString(faq.answerResId),
                 style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(top=10.dp),
+                modifier = Modifier.padding(top = 10.dp),
                 color = MaterialTheme.colorScheme.onSurface
             )
         }

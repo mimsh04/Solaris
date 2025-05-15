@@ -1,5 +1,6 @@
 package in2000.team42.ui.screens.settings.faq
 
+import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -11,38 +12,40 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-
-
+import in2000.team42.R
 
 @Composable
-fun FaqDialog(onDismiss:()->Unit){
+fun FaqDialog(context: Context, onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title={
+        title = {
             Text(
-                text= "FAQ",
-                style= MaterialTheme.typography.headlineSmall,
+                text = context.getString(R.string.faq_dialog_title),
+                style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
-            )},
-        text={
+            )
+        },
+        text = {
             Column {
-                LazyColumn (
-                    modifier = Modifier.heightIn(max= 300.dp)
+                LazyColumn(
+                    modifier = Modifier
+                        .heightIn(max = 300.dp)
                         .fillMaxWidth()
-                )
-                {
-                    items(faqItems){ faq->
-                        FAQItem(faq =faq)
-
+                ) {
+                    items(faqItems) { faq ->
+                        FAQItem(context = context, faq = faq)
                     }
                 }
-            } },
+            }
+        },
         confirmButton = {
-            Button(onClick = onDismiss){
-                Text("Lukk", color = MaterialTheme.colorScheme.onPrimary)
+            Button(onClick = onDismiss) {
+                Text(
+                    text = context.getString(R.string.faq_dialog_close_button),
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
             }
         }
     )
-
 }

@@ -39,11 +39,10 @@ import com.mapbox.maps.interactions.TypedFeaturesetDescriptor
 import com.mapbox.maps.plugin.animation.MapAnimationOptions
 import com.mapbox.search.autocomplete.PlaceAutocomplete
 import in2000.team42.R
-import in2000.team42.theme.ThemeManager
 import in2000.team42.theme.ThemeManager.isDarkTheme
 import in2000.team42.ui.screens.home.HomeViewModel
-import in2000.team42.ui.screens.home.map.weatherIcon.WeatherIconButton
 import in2000.team42.ui.screens.home.map.search.SearchBar
+import in2000.team42.ui.screens.home.map.weatherIcon.WeatherIconButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

@@ -7,9 +7,9 @@ import in2000.team42.data.pgvis.model.RadiationResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
-import io.ktor.serialization.kotlinx.json.*
-import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
+import io.ktor.serialization.kotlinx.json.json
 
 enum class PvTech(val value: String) {
     CRYST_SI("crystSi"),

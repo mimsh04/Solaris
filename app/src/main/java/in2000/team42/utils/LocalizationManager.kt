@@ -2,7 +2,6 @@ package in2000.team42.utils
 
 import android.content.Context
 import android.os.LocaleList
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.ConfigurationCompat
 import java.util.Locale
 

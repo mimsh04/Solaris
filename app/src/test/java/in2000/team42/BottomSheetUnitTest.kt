@@ -4,26 +4,26 @@ import in2000.team42.data.solarPanels.SolarPanelModel
 import in2000.team42.data.solarPanels.defaultPanels
 import in2000.team42.ui.screens.home.ApiData
 import in2000.team42.ui.screens.home.Config
-import org.junit.Test
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.setMain
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runTest
-import org.junit.After
-import org.junit.Before
+import in2000.team42.ui.screens.home.HomeViewModel
 import in2000.team42.ui.screens.home.bottomSheet.Medium
 import in2000.team42.ui.screens.home.bottomSheet.Peek
-import in2000.team42.ui.screens.home.HomeViewModel
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
+import io.mockk.mockk
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class BottomSheetUnitTest {
     private lateinit var viewModel: HomeViewModel

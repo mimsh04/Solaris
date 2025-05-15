@@ -1,13 +1,29 @@
 package in2000.team42.ui.screens.home.bottomSheet
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalFocusManager
@@ -19,13 +35,13 @@ import com.composables.core.rememberBottomSheetState
 import in2000.team42.data.solarPanels.defaultPanels
 import in2000.team42.ui.screens.home.HomeViewModel
 import in2000.team42.ui.screens.home.bottomSheet.charts.AllCharts
-import in2000.team42.ui.screens.home.bottomSheet.configuration.AddressField
-import in2000.team42.ui.screens.home.bottomSheet.configuration.AreaDisplay
-import in2000.team42.ui.screens.home.bottomSheet.configuration.SolarPanelDropdown
-import in2000.team42.ui.screens.home.bottomSheet.configuration.AngleInputs
 import in2000.team42.ui.screens.home.bottomSheet.components.Production
 import in2000.team42.ui.screens.home.bottomSheet.components.SaveButton
 import in2000.team42.ui.screens.home.bottomSheet.components.UpdateApiButton
+import in2000.team42.ui.screens.home.bottomSheet.configuration.AddressField
+import in2000.team42.ui.screens.home.bottomSheet.configuration.AngleInputs
+import in2000.team42.ui.screens.home.bottomSheet.configuration.AreaDisplay
+import in2000.team42.ui.screens.home.bottomSheet.configuration.SolarPanelDropdown
 import kotlinx.coroutines.launch
 
 val Peek = SheetDetent("peek") { containerHeight, _ ->

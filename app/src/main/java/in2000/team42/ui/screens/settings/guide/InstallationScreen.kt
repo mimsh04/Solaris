@@ -17,11 +17,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import in2000.team42.R
 import in2000.team42.ui.screens.settings.guide.components.ArrowBack
-import in2000.team42.ui.screens.settings.guide.components.CustomRoundedBox
 import in2000.team42.ui.screens.settings.guide.components.Montering
 import in2000.team42.ui.screens.settings.guide.components.Subtitle
-import in2000.team42.R
+
 @Composable
 fun InstallationScreen(navController: NavController){
     Box(

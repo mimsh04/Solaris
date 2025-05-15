@@ -1,11 +1,11 @@
 package in2000.team42.ui.screens.home.bottomSheet.components
 
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import in2000.team42.R
 
 @Composable

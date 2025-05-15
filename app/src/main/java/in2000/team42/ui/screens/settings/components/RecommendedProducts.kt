@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -26,7 +27,7 @@ import in2000.team42.theme.IN2000_team42Theme
 fun RecommendedProducts () {
     val gridState= rememberLazyGridState()
     val context = LocalContext.current
-
+    val uriHandler = LocalUriHandler.current
     Column (
         modifier = Modifier
             .fillMaxWidth()
@@ -58,11 +59,8 @@ fun RecommendedProducts () {
                         .clip(RoundedCornerShape(10.dp))
                         .background(MaterialTheme.colorScheme.secondary)
                         .clickable {
-                            val intent = Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse("https://www.otovo.no/produkter/solcellepaneler/#content-row")
-                            )
-                            context.startActivity(intent)
+                            val url = "https://www.otovo.no/produkter/solcellepaneler/#content-row"
+                            uriHandler.openUri(url)
                         }
                 ) {
                     Image(
@@ -95,11 +93,8 @@ fun RecommendedProducts () {
                         .clip(RoundedCornerShape(10.dp))
                         .background(MaterialTheme.colorScheme.secondary)
                         .clickable {
-                            val intent = Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse("https://sol.fjordkraft.no/")
-                            )
-                            context.startActivity(intent)
+                            val url = "https://sol.fjordkraft.no/"
+                            uriHandler.openUri(url)
                         }
                 ) {
                     Image(

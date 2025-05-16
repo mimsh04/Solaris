@@ -11,11 +11,11 @@ import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.request.get import io.ktor.client.request.parameter
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpStatusCode
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import kotlinx.coroutines.Dispatchers
@@ -61,7 +61,7 @@ class FrostDatasourceTest {
                 {"id": "SN18701"}
             ]
         }
-    """.trimIndent()
+        """.trimIndent()
 
         coEvery {
             mockClient.get("https://frost.met.no/sources/v0.jsonld") {
@@ -76,14 +76,24 @@ class FrostDatasourceTest {
         coEvery { mockResponse.status } returns HttpStatusCode.OK
 
         // Act
-        val result = frostDatasource.getNearestStation(latitude, longitude, referenceTime)
+        val result =
+            frostDatasource.getNearestStation(latitude, longitude, referenceTime)
 
         // Assert
         assertNotNull(result)
         assertEquals(3, result.size) // One for each element (temp, snow, cloud)
-        assertEquals(listOf("SN18700", "SN18701"), result["best_estimate_mean(air_temperature P1M)"])
-        assertEquals(listOf("SN18700", "SN18701"), result["mean(snow_coverage_type P1M)"])
-        assertEquals(listOf("SN18700", "SN18701"), result["mean(cloud_area_fraction P1M)"])
+        assertEquals(
+            listOf("SN18700", "SN18701"),
+            result["best_estimate_mean(air_temperature P1M)"]
+        )
+        assertEquals(
+            listOf("SN18700", "SN18701"),
+            result["mean(snow_coverage_type P1M)"]
+        )
+        assertEquals(
+            listOf("SN18700", "SN18701"),
+            result["mean(cloud_area_fraction P1M)"]
+        )
     }
 
     @Test
@@ -99,7 +109,8 @@ class FrostDatasourceTest {
         } throws Exception("API error")
 
         // Act
-        val result = frostDatasource.getNearestStation(latitude, longitude, referenceTime)
+        val result =
+            frostDatasource.getNearestStation(latitude, longitude, referenceTime)
 
         // Assert
         assertNull(result)
@@ -288,5 +299,4 @@ class FrostDatasourceTest {
         // Assert
         assertTrue(result.isEmpty())
     }
-
 }

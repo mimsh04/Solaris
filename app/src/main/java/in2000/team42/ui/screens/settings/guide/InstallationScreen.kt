@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import in2000.team42.R
 import in2000.team42.ui.screens.settings.guide.components.ArrowBack
-import in2000.team42.ui.screens.settings.guide.components.Montering
+import in2000.team42.ui.screens.settings.guide.components.Assembly
 import in2000.team42.ui.screens.settings.guide.components.Subtitle
 
 @Composable
@@ -78,7 +78,7 @@ fun InstallationScreen(navController: NavController){
 
                 Subtitle(stringResource(R.string.installation_mounting_steps_subtitle))
 
-                Montering()
+                Assembly()
 
             }
 

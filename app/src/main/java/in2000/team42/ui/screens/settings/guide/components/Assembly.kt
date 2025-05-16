@@ -19,11 +19,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import in2000.team42.ui.screens.settings.guide.installation.MonteringData
+import in2000.team42.ui.screens.settings.guide.installation.AssemblyData
 import in2000.team42.ui.screens.settings.guide.installation.installationSteps
 
 @Composable
-fun Montering(){
+fun Assembly(){
 
     Column(
         modifier=Modifier.padding(16.dp)
@@ -32,7 +32,7 @@ fun Montering(){
             modifier=Modifier.fillMaxWidth()
         ) {
             installationSteps.forEach { steg ->
-                ExpandableMonteringItem(monteringData = steg)
+                ExpandableAssemblyItem(assemblyData = steg)
                 Spacer(modifier = Modifier.height(8.dp))
             }
         }
@@ -40,7 +40,7 @@ fun Montering(){
 }
 
 @Composable
-fun ExpandableMonteringItem(monteringData: MonteringData){
+fun ExpandableAssemblyItem(assemblyData: AssemblyData){
     var isExpanded by remember { mutableStateOf(false) }
 
     Column(
@@ -52,7 +52,7 @@ fun ExpandableMonteringItem(monteringData: MonteringData){
             verticalAlignment = Alignment.CenterVertically
         ){
             Text(
-                text = stringResource(id = monteringData.questionResId),
+                text = stringResource(id = assemblyData.questionResId),
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.weight(1f)
@@ -67,7 +67,7 @@ fun ExpandableMonteringItem(monteringData: MonteringData){
 
         if (isExpanded){
             Text(
-                text = stringResource(id = monteringData.answerResId),
+                text = stringResource(id = assemblyData.answerResId),
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(top=10.dp),
             )

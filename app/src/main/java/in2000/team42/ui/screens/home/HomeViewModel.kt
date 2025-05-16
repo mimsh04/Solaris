@@ -280,7 +280,6 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    @SuppressLint("DefaultLocale")
     private fun FrostData.toDisplayWeather(): DisplayWeather? {
         if (temperature == null && snow == null && cloudAreaFraction == null) {
             return null

@@ -13,7 +13,7 @@ abstract class SavedProjectDatabase : RoomDatabase() {
     companion object {
         @Volatile
         private var INSTANCE: SavedProjectDatabase? = null
-        private lateinit var appContext: Context
+        lateinit var appContext: Context
 
         fun initialize(context: Context) {
             appContext = context.applicationContext

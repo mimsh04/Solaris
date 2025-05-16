@@ -13,9 +13,9 @@ class PgvisRepository (private val pgvisDatasource: PgvisDatasource) {
         lon: Double,
         month: Int,
         incline: Float,
-        retning: Float
+        direction: Float
     ): List<DailyProfile> {
-        return pgvisDatasource.getDailyRadiation(lat, lon, month, incline, retning)
+        return pgvisDatasource.getDailyRadiation(lat, lon, month, incline, direction)
     }
 
     /**
@@ -25,10 +25,10 @@ class PgvisRepository (private val pgvisDatasource: PgvisDatasource) {
         lat: Double,
         lon: Double,
         incline: Float,
-        retning: Float = 0f,
+        direction: Float = 0f,
         peakPower: Float,
         pvTech: PvTech,
     ): List<KwhMonthlyResponse.MonthlyKwhData> {
-        return pgvisDatasource.getMonthlyKwh(lat, lon, incline, retning, peakPower, pvTech)
+        return pgvisDatasource.getMonthlyKwh(lat, lon, incline, direction, peakPower, pvTech)
     }
 }

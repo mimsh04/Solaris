@@ -56,7 +56,7 @@
 
     <!-- Installation Guide -->
     <string name="installation_guide_title">Solcellepanel guide</string>
-    <string name="installation_label_guide">Installasjons\nguide</string>
+    <string name="installation_label_guide">Installasjon\nguide</string>
     <string name="installation_self_install_subtitle">Kan man montere solcellepaneler selv?</string>
     <string name="installation_self_install_description">Du kan ikke montere solcellepaneler selv, unntatt i visse tilfeller. Vi oppfordrer på det sterkeste å bruke fagfolk til større solcelleanlegg til boliger og hytter som er tilkoblet strømnettet.\n\nDette sikrer at anlegget blir korrekt installert, uten brann- og helsefare. Du kan dessuten føle deg trygg på at solcellene fungerer optimalt.</string>
     <string name="installation_when_self_install_subtitle">Når kan du montere selv?</string>

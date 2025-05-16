@@ -1,5 +1,7 @@
 package in2000.team42.ui.screens.home.map.weatherIcon
 
+import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -47,27 +49,34 @@ import java.util.Locale
 @Composable
 fun WeatherIconButton(
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel
+    viewModel: HomeViewModel,
+    context: Context
 ) {
     var showPopup by rememberSaveable { mutableStateOf(false) }
     var showImageInfo by rememberSaveable { mutableStateOf(false) }
     val apiData by viewModel.apiDataFlow.collectAsState()
     val weatherData = apiData.weatherData
 
-    val dateFormat = SimpleDateFormat("MMM yyyy", Locale.getDefault())
+    val dateFormat = SimpleDateFormat("MMM yyyy", Locale("no"))
     val latestWeather: DisplayWeather? = weatherData.maxByOrNull { displayWeather ->
         if (displayWeather.month == "ukjent") {
             Long.MIN_VALUE
         } else {
-            dateFormat.parse(displayWeather.month)?.time ?: Long.MIN_VALUE
+            try {
+                // Normalize input by removing dots and ensuring lowercase
+                val normalizedMonth = displayWeather.month.replace(".", "").lowercase()
+                dateFormat.parse(normalizedMonth)?.time ?: Long.MIN_VALUE
+            } catch (e: Exception) {
+                Log.e("WeatherIcon", "Failed to parse month: ${displayWeather.month}", e)
+                Long.MIN_VALUE
+            }
         }
     }
+    Log.d("WeatherIcon", "Latest weather: ${latestWeather?.month ?: "null"}")
 
-    // Parseses weather data correctly so it can be displayed
     val snowValue = latestWeather?.snow?.replace("mm", "")?.trim()?.toDoubleOrNull() ?: 0.0
     val cloudValue = latestWeather?.cloud?.replace("%", "")?.trim()?.toDoubleOrNull() ?: 0.0
 
-    // Picks icon based on weather data
     val iconResource = when {
         weatherData.isEmpty() -> R.drawable.ic_unknown_weather
         latestWeather == null -> R.drawable.ic_unknown_weather
@@ -138,7 +147,7 @@ fun WeatherIconButton(
                                 .padding(bottom = 8.dp)
                         ) {
                             Text(
-                                text = "Gjennomsnittlig vær for måneden",
+                                text = context.getString(R.string.monthly_weather_average_description),
                                 style = MaterialTheme.typography.titleMedium,
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.fillMaxWidth()
@@ -148,11 +157,11 @@ fun WeatherIconButton(
                                 modifier = Modifier
                                     .size(32.dp)
                                     .align(Alignment.CenterEnd)
-                                    .offset(x = ((10).dp))
+                                    .offset(x = 10.dp)
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.Info,
-                                    contentDescription = "Bildeinfo",
+                                    contentDescription = "info",
                                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                     modifier = Modifier.size(24.dp)
                                 )
@@ -162,14 +171,14 @@ fun WeatherIconButton(
 
                     if (weatherData.isEmpty() || latestWeather == null) {
                         Text(
-                            text = "Værdata ukjent.\n\nKunne ikke hente værdata fra dette området.\n\nPrøv å velge en annen adresse.",
+                            text = context.getString(R.string.weather_data_unavailable_description),
                             textAlign = TextAlign.Center,
                             modifier = Modifier.fillMaxWidth()
                         )
                     } else {
-                        Text("Temperatur: ${latestWeather.temp}")
-                        Text("Snø: ${latestWeather.snow}")
-                        Text("Skydekke: ${latestWeather.cloud}")
+                        Text(context.getString(R.string.temperature_label, latestWeather.temp))
+                        Text(context.getString(R.string.snow_label, latestWeather.snow))
+                        Text(context.getString(R.string.cloud_coverage_label, latestWeather.cloud))
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -180,7 +189,7 @@ fun WeatherIconButton(
                             containerColor = MaterialTheme.colorScheme.primary
                         )
                     ) {
-                        Text("Lukk")
+                        Text(context.getString(R.string.weather_label_close))
                     }
                 }
             }
@@ -211,14 +220,14 @@ fun WeatherIconButton(
                         modifier = Modifier.padding(24.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        CreditsScreen()
+                        CreditsScreen(context = context)
                         Button(
                             onClick = { showImageInfo = false },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.primary
                             )
                         ) {
-                            Text("Lukk")
+                            Text(context.getString(R.string.weather_label_close))
                         }
                     }
                 }

@@ -1,29 +1,16 @@
 package in2000.team42.ui.screens.settings.guide.installation
 
-data class AssemblyData(val question: String, val answer: String)
+import androidx.annotation.StringRes
+import in2000.team42.R
 
-val installationSteps= listOf(
-    AssemblyData(" 1. Vurder muligheten for solcelleanlegg","Før du monterer solcellepaneler, sjekk om det er tillatt i kommunen. " +
-            "Noen steder krever søknad eller har restriksjoner." +
-            " Sørg også for at taket er i god stand og har gode solforhold. " +
-            "En solcelleforhandler kan hjelpe deg med vurderingen."
-    ),
-    AssemblyData(
-        " 2. Velg forhandler og installatør",
-        "Velg en forhandler og installatør som samarbeider for en smidig prosess. " +
-                "Forhandleren vil hjelpe deg med å finne riktig solcelleanlegg, og de fleste jobber med sertifiserte installatører." +
-                " Dette reduserer risikoen for misforståelser og konflikter."
-    ),
-    AssemblyData(
-        " 3. Montering av paneler",
-        "Installatøren monterer først passende fester på taket, tilpasset materiale og helning." +
-                " Deretter festes solcellepanelene sikkert, slik at de tåler både kraftig vind og tung snø. "
+data class MonteringData(
+    @StringRes val questionResId: Int,
+    @StringRes val answerResId: Int
+)
 
-    ),
-    AssemblyData(
-        " 4. Sikring og tilkobling",
-        "Inverteren gjør solenergien fra panelene dine brukbar i hjemmets stikkontakter. " +
-                "Installatøren plasserer inverteren på et passende sted og trekker kabler fra panelene, " +
-                "som deretter kobles til inverteren."
-    )
+val installationSteps = listOf(
+    MonteringData(R.string.installation_step1_title, R.string.installation_step1_description),
+    MonteringData(R.string.installation_step2_title, R.string.installation_step2_description),
+    MonteringData(R.string.installation_step3_title, R.string.installation_step3_description),
+    MonteringData(R.string.installation_step4_title, R.string.installation_step4_description)
 )

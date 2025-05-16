@@ -26,6 +26,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.mapbox.geojson.Point
@@ -34,6 +35,7 @@ import com.mapbox.search.autocomplete.PlaceAutocompleteOptions
 import com.mapbox.search.autocomplete.PlaceAutocompleteSuggestion
 import com.mapbox.search.autocomplete.PlaceAutocompleteType
 import com.mapbox.search.common.IsoCountryCode
+import in2000.team42.R
 import kotlinx.coroutines.launch
 
 @Composable
@@ -121,7 +123,7 @@ fun SearchBar(
                 placeholder = {
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        "Søk etter adresse",
+                        stringResource(R.string.search_address_input),
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 },

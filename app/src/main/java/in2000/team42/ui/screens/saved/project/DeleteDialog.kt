@@ -5,6 +5,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import in2000.team42.R
 
 /**
  * A confirmation dialog shown before deleting a project.
@@ -19,20 +21,20 @@ fun DeleteDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Slett prosjekt", color = MaterialTheme.colorScheme.onSurface) },
-        text = { Text("Er du sikker på at du vil slette dette prosjektet?", color = MaterialTheme.colorScheme.onSurface) },
+        title = { Text(stringResource(R.string.delete_saved_project), color = MaterialTheme.colorScheme.onSurface) },
+        text = { Text(stringResource(R.string.delete_project_confirmation), color = MaterialTheme.colorScheme.onSurface) },
         confirmButton = {
             TextButton(
                 onClick = onConfirm
             ) {
-                Text("Slett", color = MaterialTheme.colorScheme.error)
+                Text(stringResource(R.string.delete_project_confirmation_label), color = MaterialTheme.colorScheme.error)
             }
         },
         dismissButton = {
             TextButton(
                 onClick = onDismiss
             ) {
-                Text("Avbryt", color = MaterialTheme.colorScheme.primary)
+                Text(stringResource(R.string.delete_project_confirmation_cancel), color = MaterialTheme.colorScheme.primary)
             }
         }
     )

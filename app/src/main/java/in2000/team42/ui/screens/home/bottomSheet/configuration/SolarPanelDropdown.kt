@@ -10,14 +10,20 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.res.stringResource
+import in2000.team42.R
 import in2000.team42.data.solarPanels.SolarPanelModel
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 
 @Composable
 fun SolarPanelDropdown(
@@ -25,7 +31,7 @@ fun SolarPanelDropdown(
     panelOptions: List<SolarPanelModel>,
     selectedPanel: SolarPanelModel,
     onPanelSelected: (SolarPanelModel) -> Unit,
-    label: String = "Velg Solcellepanel"
+    label: String = stringResource(R.string.home_choose_solar_panel)
 ) {
     var expanded by remember { mutableStateOf(false) }
     val interactionSource = remember { MutableInteractionSource() }

@@ -1,11 +1,26 @@
 package in2000.team42.ui.screens.home.bottomSheet.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.*
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -19,7 +34,13 @@ fun SaveButton(
     modifier: Modifier = Modifier,
     onShowSnackbar: (String) -> Unit
 ) {
-    val isSaved by viewModel.isCurrentProjectSaved().collectAsState(initial = false)
+    var isSaved by remember { mutableStateOf(false) }
+    val config = viewModel.configFlow.collectAsState()
+    LaunchedEffect(config.value) {
+        viewModel.isCurrentProjectSaved().collect { saved ->
+            isSaved = saved
+        }
+    }
 
     Button(
         onClick = {
@@ -50,8 +71,8 @@ fun SaveButton(
                 tint = LocalContentColor.current
             )
             Text(
-                text = if (isSaved) stringResource(R.string.remove_project)
-                else stringResource(R.string.save_project)
+                text = if (isSaved) stringResource(R.string.action_remove_project)
+                else stringResource(R.string.action_save_project)
             )
         }
     }

@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,7 +46,7 @@ fun SavedScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
-            text = "Lagrede Prosjekter",
+            text = stringResource(R.string.saved_projects_label),
             fontWeight = FontWeight.Bold,
             fontSize = 30.sp,
             color = MaterialTheme.colorScheme.primary, // Use primary color
@@ -76,7 +77,7 @@ fun SavedScreen(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Når du lagrer et prosjekt, vil det vises her.",
+                        text = stringResource(R.string.saved_projects_empty_message),
                         fontSize = 16.sp,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )

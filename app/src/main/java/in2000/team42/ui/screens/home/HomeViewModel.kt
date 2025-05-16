@@ -11,10 +11,11 @@ import in2000.team42.data.frost.model.FrostData
 import in2000.team42.data.frost.model.FrostResult
 import in2000.team42.data.pgvis.PgvisDatasource
 import in2000.team42.data.pgvis.PgvisRepository
-import in2000.team42.data.pgvis.model.DailyProfile
 import in2000.team42.data.pgvis.PvTech
+import in2000.team42.data.pgvis.model.DailyProfile
 import in2000.team42.data.pgvis.model.KwhMonthlyResponse
-import in2000.team42.data.saved.*
+import in2000.team42.data.saved.SavedProjectDatabase
+import in2000.team42.data.saved.SavedProjectEntity
 import in2000.team42.data.solarPanels.SolarPanelModel
 import in2000.team42.data.solarPanels.defaultPanels
 import in2000.team42.ui.screens.home.map.getAddressOfPoint
@@ -153,7 +154,6 @@ class HomeViewModel : ViewModel() {
     }
 
     fun setSelectedSolarPanel(panel: SolarPanelModel) {
-        Log.d(tag, "Panel selected: ${panel.name}")
         _config.value = _config.value.copy(selectedPanelModel = panel)
     }
 

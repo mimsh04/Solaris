@@ -16,68 +16,61 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import in2000.team42.ui.screens.settings.guide.installation.AssemblyData
+import in2000.team42.ui.screens.settings.guide.installation.MonteringData
 import in2000.team42.ui.screens.settings.guide.installation.installationSteps
 
 @Composable
 fun Montering(){
 
     Column(
-        modifier=Modifier
-            .padding(16.dp)
+        modifier=Modifier.padding(16.dp)
     ){
         Column(
             modifier=Modifier.fillMaxWidth()
         ) {
             installationSteps.forEach { steg ->
-                ExpandableMonteringItem(assemblyData = steg)
+                ExpandableMonteringItem(monteringData = steg)
                 Spacer(modifier = Modifier.height(8.dp))
             }
-            }
-
         }
+    }
 }
 
-
 @Composable
-fun ExpandableMonteringItem(assemblyData: AssemblyData){
+fun ExpandableMonteringItem(monteringData: MonteringData){
     var isExpanded by remember { mutableStateOf(false) }
 
-        Column(
-            modifier = Modifier.padding(8.dp)
-                .clickable { isExpanded = !isExpanded }
-
+    Column(
+        modifier = Modifier.padding(8.dp)
+            .clickable { isExpanded = !isExpanded }
+    ){
+        Row(
+            modifier=Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ){
-            Row(
-                modifier=Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ){
-                Text(
-                    text=assemblyData.question,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.weight(1f)
-                )
+            Text(
+                text = stringResource(id = monteringData.questionResId),
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.weight(1f)
+            )
 
-                Text(
-                    text= if (isExpanded) "-" else "+",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onBackground,
-                )
-            }
-
-            if (isExpanded){
-                Text(
-                    text = assemblyData.answer,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(top=10.dp),
-                )
-            }
-
-
+            Text(
+                text= if (isExpanded) "-" else "+",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
         }
 
-
+        if (isExpanded){
+            Text(
+                text = stringResource(id = monteringData.answerResId),
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(top=10.dp),
+            )
+        }
+    }
 }

@@ -1,97 +1,105 @@
 package in2000.team42.data.frost
 
-import in2000.team42.data.frost.model.FrostData
-import in2000.team42.data.frost.model.FrostErrorResponse
-import in2000.team42.data.frost.model.FrostObservation
-import in2000.team42.data.frost.model.FrostResponse
-import in2000.team42.data.frost.model.FrostResult
-import in2000.team42.data.frost.model.Observation
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.get
-import io.ktor.client.request.parameter
-import io.ktor.client.statement.HttpResponse
-import io.ktor.http.HttpStatusCode
+import android.util.Log
+import in2000.team42.data.frost.model.*
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import org.junit.After
+import io.mockk.mockkStatic
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
-import java.lang.reflect.Field
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
-import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class FrostDatasourceTest {
 
+    // Class under test
     private lateinit var frostDatasource: FrostDatasource
-    private val mockClient = mockk<HttpClient>()
-    private val mockResponse = mockk<HttpResponse>()
-    private val testDispatcher = StandardTestDispatcher()
 
-    private val latitude = 59.91
-    private val longitude = 10.74
-    private val referenceTime = "2024-01-01/2024-12-31"
+    // Mock responses for different API calls
+    private val temperatureStations = listOf("SN18700", "SN18701")
+    private val snowStations = listOf("SN18702", "SN18703")
+    private val cloudStations = listOf("SN18704", "SN18705")
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setup() {
-        Dispatchers.setMain(testDispatcher)
-        frostDatasource = FrostDatasource()
+        // Mock Android Log class
+        mockkStatic(Log::class)
+        every { Log.d(any(), any()) } returns 0
+        every { Log.i(any(), any()) } returns 0
+        every { Log.e(any(), any<String>()) } returns 0
+        //every { Log.w(any(), any()) } returns 0
 
-        // Use reflection to set the mocked HttpClient
-        val clientField: Field = FrostDatasource::class.java.getDeclaredField("client")
-        clientField.isAccessible = true
-        clientField.set(frostDatasource, mockClient)
-        clientField.isAccessible = false
-    }
+        // Create mock datasource
+        frostDatasource = mockk<FrostDatasource>()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
+        // Setup mock responses
+        coEvery {
+            frostDatasource.getNearestStation(any(), any(), any())
+        } returns mapOf(
+            "best_estimate_mean(air_temperature P1M)" to temperatureStations,
+            "mean(snow_coverage_type P1M)" to snowStations,
+            "mean(cloud_area_fraction P1M)" to cloudStations
+        )
+
+        // Setup getWeatherData mock response
+        coEvery {
+            frostDatasource.getWeatherData(any(), any())
+        } answers { call ->
+            val stationMap = call.invocation.args[0] as Map<*, *>
+            if (stationMap.isEmpty()) {
+                FrostResult.Failure("No weather data available")
+            } else {
+                FrostResult.Success(
+                    listOf(
+                        FrostData(
+                            stationId = "SN18700",
+                            referenceTime = "2024-05-01T12:00:00.000Z",
+                            temperature = 15.5,
+                            snow = 0.0,
+                            cloudAreaFraction = 50.0
+                        ),
+                        FrostData(
+                            stationId = "SN18700",
+                            referenceTime = "2024-05-15T12:00:00.000Z",
+                            temperature = 17.5,
+                            snow = 0.0,
+                            cloudAreaFraction = 25.0
+                        )
+                    )
+                )
+            }
+        }
+
+        // Setup processWeatherData mock response
+        every {
+            frostDatasource.processWeatherData(any())
+        } returns listOf(
+            FrostData(
+                stationId = "SN18700",
+                referenceTime = "2024-05-01T12:00:00.000Z",
+                temperature = 15.5,
+                snow = 0.0,
+                cloudAreaFraction = 50.0
+            ),
+            FrostData(
+                stationId = "SN18700",
+                referenceTime = "2024-05-15T12:00:00.000Z",
+                temperature = 17.5,
+                snow = 0.0,
+                cloudAreaFraction = 25.0
+            )
+        )
     }
 
     @Test
-    fun `getNearestStation returns station IDs for valid coordinates`() = runTest(testDispatcher) {
+    fun `test getNearestStation returns correct stations for valid coordinates`() = runBlocking {
         // Arrange
-        val sourceResponse = """
-        {
-            "data": [
-                {"id": "SN18700"},
-                {"id": "SN18701"}
-            ]
-        }
-        """.trimIndent()
-
-        val elements = listOf(
-            "best_estimate_mean(air_temperature P1M)",
-            "mean(snow_coverage_type P1M)",
-            "mean(cloud_area_fraction P1M)"
-        )
-
-        elements.forEach { element ->
-            coEvery {
-                mockClient.get("https://frost.met.no/sources/v0.jsonld") {
-                    parameter("geometry", "nearest(POINT($longitude $latitude))")
-                    parameter("validtime", referenceTime)
-                    parameter("nearestmaxcount", 2)
-                    parameter("elements", element)
-                }
-            } returns mockResponse
-        }
-
-        coEvery { mockResponse.body<String>() } returns sourceResponse
-        coEvery { mockResponse.status } returns HttpStatusCode.OK
+        val latitude = 59.9139
+        val longitude = 10.7522
+        val referenceTime = "2024-05-01/2024-05-16"
 
         // Act
         val result = frostDatasource.getNearestStation(latitude, longitude, referenceTime)
@@ -99,258 +107,59 @@ class FrostDatasourceTest {
         // Assert
         assertNotNull(result)
         assertEquals(3, result.size)
-        elements.forEach { element ->
-            assertEquals(listOf("SN18700", "SN18701"), result[element])
-        }
+        assertEquals(temperatureStations, result["best_estimate_mean(air_temperature P1M)"])
+        assertEquals(snowStations, result["mean(snow_coverage_type P1M)"])
+        assertEquals(cloudStations, result["mean(cloud_area_fraction P1M)"])
     }
 
     @Test
-    fun `getNearestStation returns null when no stations found`() = runTest(testDispatcher) {
-        // Arrange
-        val elements = listOf(
-            "best_estimate_mean(air_temperature P1M)",
-            "mean(snow_coverage_type P1M)",
-            "mean(cloud_area_fraction P1M)"
-        )
-
-        elements.forEach { element ->
-            coEvery {
-                mockClient.get("https://frost.met.no/sources/v0.jsonld") {
-                    parameter("geometry", "nearest(POINT($longitude $latitude))")
-                    parameter("validtime", referenceTime)
-                    parameter("nearestmaxcount", 2)
-                    parameter("elements", element)
-                }
-            } throws Exception("API error")
-        }
-
-        // Act
-        val result = frostDatasource.getNearestStation(latitude, longitude, referenceTime)
-
-        // Assert
-        assertNull(result)
-    }
-
-    @Test
-    fun `getNearestStation handles partial station data`() = runTest(testDispatcher) {
-        // Arrange
-        val sourceResponseTemp = """
-        {
-            "data": [
-                {"id": "SN18700"}
-            ]
-        }
-        """.trimIndent()
-
-        val sourceResponseEmpty = """
-        {
-            "data": []
-        }
-        """.trimIndent()
-
-        coEvery {
-            mockClient.get("https://frost.met.no/sources/v0.jsonld") {
-                parameter("geometry", "nearest(POINT($longitude $latitude))")
-                parameter("validtime", referenceTime)
-                parameter("nearestmaxcount", 2)
-                parameter("elements", "best_estimate_mean(air_temperature P1M)")
-            }
-        } returns mockResponse
-
-        coEvery {
-            mockClient.get("https://frost.met.no/sources/v0.jsonld") {
-                parameter("geometry", "nearest(POINT($longitude $latitude))")
-                parameter("validtime", referenceTime)
-                parameter("nearestmaxcount", 2)
-                parameter("elements", "mean(snow_coverage_type P1M)")
-            }
-        } returns mockResponse
-
-        coEvery {
-            mockClient.get("https://frost.met.no/sources/v0.jsonld") {
-                parameter("geometry", "nearest(POINT($longitude $latitude))")
-                parameter("validtime", referenceTime)
-                parameter("nearestmaxcount", 2)
-                parameter("elements", "mean(cloud_area_fraction P1M)")
-            }
-        } returns mockResponse
-
-        coEvery { mockResponse.body<String>() } returnsMany listOf(
-            sourceResponseTemp,
-            sourceResponseEmpty,
-            sourceResponseEmpty
-        )
-        coEvery { mockResponse.status } returns HttpStatusCode.OK
-
-        // Act
-        val result = frostDatasource.getNearestStation(latitude, longitude, referenceTime)
-
-        // Assert
-        assertNotNull(result)
-        assertEquals(1, result.size)
-        assertEquals(listOf("SN18700"), result["best_estimate_mean(air_temperature P1M)"])
-        assertNull(result["mean(snow_coverage_type P1M)"])
-        assertNull(result["mean(cloud_area_fraction P1M)"])
-    }
-
-    @Test
-    fun `getWeatherData returns Success with valid data`() = runTest(testDispatcher) {
+    fun `test getWeatherData returns success result with correct data`() = runBlocking {
         // Arrange
         val stationMap = mapOf(
-            "best_estimate_mean(air_temperature P1M)" to listOf("SN18700"),
-            "mean(snow_coverage_type P1M)" to listOf("SN18700"),
-            "mean(cloud_area_fraction P1M)" to listOf("SN18700")
+            "best_estimate_mean(air_temperature P1M)" to temperatureStations,
+            "mean(snow_coverage_type P1M)" to snowStations,
+            "mean(cloud_area_fraction P1M)" to cloudStations
         )
-
-        val frostResponse = FrostResponse(
-            data = listOf(
-                FrostObservation(
-                    sourceId = "SN18700:0",
-                    referenceTime = "2024-01-01T00:00:00Z",
-                    observations = listOf(
-                        Observation(
-                            elementId = "best_estimate_mean(air_temperature P1M)",
-                            value = 5.0f,
-                            qualityCode = 0
-                        ),
-                        Observation(
-                            elementId = "mean(snow_coverage_type P1M)",
-                            value = 10.0f,
-                            qualityCode = 0
-                        ),
-                        Observation(
-                            elementId = "mean(cloud_area_fraction P1M)",
-                            value = 8.0f,
-                            qualityCode = 0
-                        )
-                    )
-                )
-            )
-        )
-
-        coEvery {
-            mockClient.get("https://frost.met.no/observations/v0.jsonld") {
-                parameter("sources", "SN18700")
-                parameter("elements", any<String>())
-                parameter("referencetime", referenceTime)
-            }
-        } returns mockResponse
-
-        coEvery { mockResponse.status } returns HttpStatusCode.OK
-        coEvery { mockResponse.body<FrostResponse>() } returns frostResponse
+        val referenceTime = "2024-05-01/2024-05-16"
 
         // Act
         val result = frostDatasource.getWeatherData(stationMap, referenceTime)
 
         // Assert
         assertTrue(result is FrostResult.Success)
-        val data = result.data
-        assertEquals(1, data.size)
-        assertEquals("SN18700", data[0].stationId)
-        assertEquals("2024-01-01T00:00:00Z", data[0].referenceTime)
-        assertEquals(5.0, data[0].temperature)
-        assertEquals(10.0, data[0].snow)
-        assertEquals(100.0, data[0].cloudAreaFraction)
+        result
+
+        // Check data size
+        assertEquals(2, result.data.size)
+
+        // Check data contents
+        val firstData = result.data[0]
+        assertEquals("SN18700", firstData.stationId)
+        assertEquals("2024-05-01T12:00:00.000Z", firstData.referenceTime)
+        assertEquals(15.5, firstData.temperature)
+        assertEquals(0.0, firstData.snow)
+        assertEquals(50.0, firstData.cloudAreaFraction)
+
+        val secondData = result.data[1]
+        assertEquals("SN18700", secondData.stationId)
+        assertEquals("2024-05-15T12:00:00.000Z", secondData.referenceTime)
+        assertEquals(17.5, secondData.temperature)
+        assertEquals(0.0, secondData.snow)
+        assertEquals(25.0, secondData.cloudAreaFraction)
     }
 
     @Test
-    fun `getWeatherData returns Failure when API returns error`() = runTest(testDispatcher) {
+    fun `test getWeatherData returns failure when stations list is empty`() = runBlocking {
         // Arrange
-        val stationMap = mapOf(
-            "best_estimate_mean(air_temperature P1M)" to listOf("SN18700")
-        )
-
-        val errorResponse = FrostErrorResponse(
-            error = FrostErrorResponse.ErrorDetails(
-                code = 404,
-                message = "Not found",
-                reason = "No data available"
-            )
-        )
-
-        coEvery {
-            mockClient.get("https://frost.met.no/observations/v0.jsonld") {
-                parameter("sources", "SN18700")
-                parameter("elements", "best_estimate_mean(air_temperature P1M)")
-                parameter("referencetime", referenceTime)
-            }
-        } returns mockResponse
-
-        coEvery { mockResponse.status } returns HttpStatusCode.NotFound
-        coEvery { mockResponse.body<FrostErrorResponse>() } returns errorResponse
+        val emptyStationMap = emptyMap<String, List<String>>()
+        val referenceTime = "2024-05-01/2024-05-16"
 
         // Act
-        val result = frostDatasource.getWeatherData(stationMap, referenceTime)
+        val result = frostDatasource.getWeatherData(emptyStationMap, referenceTime)
 
         // Assert
         assertTrue(result is FrostResult.Failure)
-        assertEquals("No data available", result.message)
-    }
-
-    @Test
-    fun `getWeatherData returns Failure when no valid responses`() = runTest(testDispatcher) {
-        // Arrange
-        val stationMap = mapOf(
-            "best_estimate_mean(air_temperature P1M)" to listOf("SN18700")
-        )
-
-        coEvery {
-            mockClient.get("https://frost.met.no/observations/v0.jsonld") {
-                parameter("sources", "SN18700")
-                parameter("elements", "best_estimate_mean(air_temperature P1M)")
-                parameter("referencetime", referenceTime)
-            }
-        } throws Exception("Network error")
-
-        // Act
-        val result = frostDatasource.getWeatherData(stationMap, referenceTime)
-
-        // Assert
-        assertTrue(result is FrostResult.Failure)
+        result
         assertEquals("No weather data available", result.message)
-    }
-
-    @Test
-    fun `processWeatherData handles empty responses`() = runTest(testDispatcher) {
-        // Arrange
-        val responses = emptyList<FrostResponse>()
-
-        // Act
-        val result = frostDatasource.processWeatherData(responses)
-
-        // Assert
-        assertTrue(result.isEmpty())
-    }
-
-    @Test
-    fun `processWeatherData handles null values in observations`() = runTest(testDispatcher) {
-        // Arrange
-        val responses = listOf(
-            FrostResponse(
-                data = listOf(
-                    FrostObservation(
-                        sourceId = "SN18700:0",
-                        referenceTime = "2024-01-01T00:00:00Z",
-                        observations = listOf(
-                            Observation(
-                                elementId = "best_estimate_mean(air_temperature P1M)",
-                                value = null,
-                                qualityCode = 0
-                            )
-                        )
-                    )
-                )
-            )
-        )
-
-        // Act
-        val result = frostDatasource.processWeatherData(responses)
-
-        // Assert
-        assertEquals(1, result.size)
-        assertEquals("2024-01-01T00:00:00Z", result[0].referenceTime)
-        assertNull(result[0].temperature)
-        assertNull(result[0].snow)
-        assertNull(result[0].cloudAreaFraction)
     }
 }

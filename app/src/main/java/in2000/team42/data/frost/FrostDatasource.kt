@@ -26,10 +26,10 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 class FrostDatasource {
-    private val tag = "FrostDatasource" // LogCat tag for denne klassen
+    private val tag = "FrostDatasource"
     private val clientId = "0791feb2-20aa-4805-9e4d-22765c3a9ff6"
 
-    private val temp = "best_estimate_mean(air_temperature P1M)" // Opplevde problemer med å velge noe annet enn P1M
+    private val temp = "best_estimate_mean(air_temperature P1M)"
     private val snow = "mean(snow_coverage_type P1M)"
     private val cloudAreaFraction = "mean(cloud_area_fraction P1M)"
     private val elements = listOf(
@@ -177,7 +177,7 @@ class FrostDatasource {
         FrostResult.Success(weatherData)
     }
 
-    private fun processWeatherData(responses: List<FrostResponse>): List<FrostData> {
+    fun processWeatherData(responses: List<FrostResponse>): List<FrostData> {
         // Collects all reference times from all responses
         val allRefTimes = responses.flatMap { response ->
             response.data.map { it.referenceTime }

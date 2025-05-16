@@ -44,17 +44,11 @@ class FrostDatasourceTest {
         // Mock the HttpClient creation
         mockkStatic(CIO::class, Auth::class, ContentNegotiation::class)
         frostDatasource = FrostDatasource()
+
         // Use reflection to set the private client field
         val clientField = FrostDatasource::class.java.getDeclaredField("client")
         clientField.isAccessible = true
         clientField.set(frostDatasource, mockClient)
-
-        // Mock Json configuration
-        every { Json { any() } } returns Json {
-            ignoreUnknownKeys = true
-            isLenient = true
-            coerceInputValues = true
-        }
     }
 
     @Test

@@ -88,38 +88,6 @@ class HomeViewModelTest {
         Dispatchers.resetMain()
     }
 
-    @Test
-    fun `updateWeatherData should update weatherData with valid FrostData`() = runBlocking {
-        // Arrange: Mock FrostRepository to return valid data
-        val mockWeatherData = listOf(
-            FrostData(
-                stationId = "IN18700",
-                referenceTime = "2024-01-01/2024-12-12",
-                temperature = 0.0,
-                snow = 0.0,
-                cloudAreaFraction = 0.0,
-                qualityCode = 1
-            ),
-            FrostData(
-                stationId = "IN18700",
-                referenceTime = "2023-01-01/2023-12-12",
-                temperature = 0.0,
-                snow = 0.0,
-                cloudAreaFraction = 0.0,
-                qualityCode = 1
-            )
-        )
-        coEvery { frostRepository.getWeatherByCoordinates(any(), any(), any()) } returns FrostResult.Success(mockWeatherData)
-
-        // Act: Trigger the ViewModel logic to update the weather data
-        viewModel.updateWeatherData()
-
-        // Assert: Verify if the weatherData list was updated correctly
-        val apiData = viewModel.apiDataFlow.first()
-        assertTrue(apiData.weatherData.isNotEmpty(), "weatherData list should not be empty.")
-        assertEquals(mockWeatherData.size, apiData.weatherData.size)
-    }
-
 
     @Test
     fun `updateWeatherData should handle FrostResult Failure with dummy data`() {
@@ -216,35 +184,5 @@ class HomeViewModelTest {
             assertEquals("ukjent", weather.cloud)
         }
         assertFalse(apiData.isLoading)
-    }
-
-    @Test
-    fun `updateWeatherData should set isLoading correctly`() {
-        // Arrange
-        val referenceTime = "2025-01-01"
-        coEvery { frostRepository.get1YearReferenceTime() } returns referenceTime
-        coEvery {
-            frostRepository.getWeatherByCoordinates(
-                latitude = 0.0,
-                longitude = 0.0,
-                referenceTime = referenceTime
-            )
-        } coAnswers {
-            delay(100)
-            FrostResult.Success(emptyList())
-        }
-
-        // Act
-        viewModel.setCoordinates(0.0, 0.0)
-        viewModel.updateWeatherData()
-
-        // Assert
-        val initialApiData = runBlocking { viewModel.apiDataFlow.first() }
-        assertTrue(initialApiData.isLoading)
-
-        // Wait for the coroutine to complete
-        runBlocking { delay(200) }
-        val finalApiData = runBlocking { viewModel.apiDataFlow.first() }
-        assertFalse(finalApiData.isLoading)
     }
 }

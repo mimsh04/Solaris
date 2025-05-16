@@ -47,21 +47,21 @@ fun LanguageSwitchButton(
             modifier = Modifier
                 .weight(1f)
                 .background(
-                    if (currentLanguage == "no") MaterialTheme.colorScheme.primary
+                    if (currentLanguage == "nb") MaterialTheme.colorScheme.primary
                     else MaterialTheme.colorScheme.surfaceVariant
                 )
-                .clickable(enabled = currentLanguage != "no") {
-                    LocalizationManager.setLocale(context, "no")
-                    LocalizationManager.saveLanguagePreference(context, "no")
-                    onLanguageChanged("no")
+                .clickable(enabled = currentLanguage != "nb") {
+                    LocalizationManager.setLocale(context, "nb")
+                    LocalizationManager.saveLanguagePreference(context, "nb")
+                    onLanguageChanged("nb")
                 }
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = context.getString(R.string.language_norwegian),
-                fontWeight = if (currentLanguage == "no") FontWeight.Bold else FontWeight.Normal,
-                color = if (currentLanguage == "no") MaterialTheme.colorScheme.onPrimary
+                fontWeight = if (currentLanguage == "nb") FontWeight.Bold else FontWeight.Normal,
+                color = if (currentLanguage == "nb") MaterialTheme.colorScheme.onPrimary
                 else MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center
             )

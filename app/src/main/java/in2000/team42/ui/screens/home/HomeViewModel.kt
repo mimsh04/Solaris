@@ -154,7 +154,6 @@ class HomeViewModel : ViewModel() {
     }
 
     fun setSelectedSolarPanel(panel: SolarPanelModel) {
-        Log.d(tag, "Panel selected: ${panel.name}")
         _config.value = _config.value.copy(selectedPanelModel = panel)
     }
 

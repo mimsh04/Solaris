@@ -12,7 +12,7 @@ object LocalizationManager {
 
     // Supported languages enum for type safety
     enum class SupportedLanguage(val code: String) {
-        NORWEGIAN("no"),
+        NORWEGIAN("nb"),
         ENGLISH("en")
     }
 
@@ -46,5 +46,14 @@ object LocalizationManager {
     private fun getDeviceDefaultLanguage(context: Context): String {
         return ConfigurationCompat.getLocales(context.resources.configuration)[0]?.language
             ?: SupportedLanguage.ENGLISH.code
+    }
+
+    fun getString(context: Context, stringResId: Int, vararg formatArgs: Any): String {
+        val localizedContext = setLocale(context, getSelectedLanguage(context))
+        return if (formatArgs.isEmpty()) {
+            localizedContext.getString(stringResId)
+        } else {
+            localizedContext.getString(stringResId, *formatArgs)
+        }
     }
 }

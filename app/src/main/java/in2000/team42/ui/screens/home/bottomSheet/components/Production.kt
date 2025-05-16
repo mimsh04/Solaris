@@ -1,5 +1,7 @@
 package in2000.team42.ui.screens.home.bottomSheet.components
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -34,6 +37,7 @@ import androidx.compose.ui.window.DialogProperties
 import in2000.team42.R
 import in2000.team42.data.productionCalculation.calculateWithCoverage
 import in2000.team42.ui.screens.home.ApiData
+import in2000.team42.utils.LocalizationManager
 
 private fun getYearlyProduction(
     apiData: ApiData
@@ -41,7 +45,7 @@ private fun getYearlyProduction(
     val calculatedData = calculateWithCoverage(apiData.kwhMonthlyData, apiData.weatherData)
     var tot = 0.0
     calculatedData.forEach {
-        tot += it.kWhEtterUtregning
+        tot += it.kWhAfterCalculation
     }
     return tot
 }
@@ -49,6 +53,7 @@ private fun getYearlyProduction(
 @Composable
 fun Production(apiData: ApiData) {
     var showInfoDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current // Get the current context
 
     Row(
         modifier = Modifier
@@ -74,7 +79,7 @@ fun Production(apiData: ApiData) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "\uD83D\uDCC6" + stringResource(R.string.home_result_annual_production), // Fixed typo and added colon
+                        text = "\uD83D\uDCC6" + LocalizationManager.getString(context, R.string.home_result_annual_production),
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontSize = MaterialTheme.typography.titleLarge.fontSize * 1.35f
@@ -102,14 +107,14 @@ fun Production(apiData: ApiData) {
                 }
                 Spacer(modifier = Modifier.size(6.dp))
                 Text(
-                    " ⚡" + stringResource(R.string.home_label_production) + " ${getYearlyProduction(apiData).toInt()} kWh",
+                    " ⚡" + LocalizationManager.getString(context, R.string.home_label_production) + " ${getYearlyProduction(apiData).toInt()} kWh",
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.size(6.dp))
                 Text(
-                    "💰 "+ stringResource(R.string.home_estimated_savings) + " ${(getYearlyProduction(apiData) * 0.5).toInt()} NOK",
+                    "💰 " + LocalizationManager.getString(context, R.string.home_estimated_savings) + " ${(getYearlyProduction(apiData) * 0.5).toInt()} NOK",
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
@@ -141,7 +146,7 @@ fun Production(apiData: ApiData) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = stringResource(R.string.home_expected_operation_off_grid),
+                        text = LocalizationManager.getString(context, R.string.home_expected_operation_off_grid),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground,
@@ -153,7 +158,7 @@ fun Production(apiData: ApiData) {
                         onClick = { showInfoDialog = false },
                         modifier = Modifier.align(Alignment.End)
                     ) {
-                        Text(stringResource(R.string.home_production_close_button))
+                        Text(LocalizationManager.getString(context, R.string.home_production_close_button))
                     }
                 }
             }

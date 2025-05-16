@@ -57,21 +57,8 @@ fun WeatherIconButton(
     val apiData by viewModel.apiDataFlow.collectAsState()
     val weatherData = apiData.weatherData
 
-    val dateFormat = SimpleDateFormat("MMM yyyy", Locale("no"))
-    val latestWeather: DisplayWeather? = weatherData.maxByOrNull { displayWeather ->
-        if (displayWeather.month == "ukjent") {
-            Long.MIN_VALUE
-        } else {
-            try {
-                // Normalize input by removing dots and ensuring lowercase
-                val normalizedMonth = displayWeather.month.replace(".", "").lowercase()
-                dateFormat.parse(normalizedMonth)?.time ?: Long.MIN_VALUE
-            } catch (e: Exception) {
-                Log.e("WeatherIcon", "Failed to parse month: ${displayWeather.month}", e)
-                Long.MIN_VALUE
-            }
-        }
-    }
+    val latestWeather: DisplayWeather? = weatherData.getOrNull(11)
+
     Log.d("WeatherIcon", "Latest weather: ${latestWeather?.month ?: "null"}")
 
     val snowValue = latestWeather?.snow?.replace("mm", "")?.trim()?.toDoubleOrNull() ?: 0.0

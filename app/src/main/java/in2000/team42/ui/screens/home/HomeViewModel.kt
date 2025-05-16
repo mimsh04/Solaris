@@ -280,13 +280,12 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    @SuppressLint("DefaultLocale")
     private fun FrostData.toDisplayWeather(): DisplayWeather? {
         if (temperature == null && snow == null && cloudAreaFraction == null) {
             return null
         }
-        val dateFormat = SimpleDateFormat("MMM yyyy", Locale.getDefault())
-        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val dateFormat = SimpleDateFormat("MMM yyyy", Locale.US)
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
         val date = inputFormat.parse(referenceTime) ?: Date()
         return DisplayWeather(
             month = dateFormat.format(date),
